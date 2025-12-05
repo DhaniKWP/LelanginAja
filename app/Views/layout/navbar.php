@@ -1,34 +1,36 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
-  <div class="container">
-    <a class="navbar-brand fw-bold text-primary" href="/">LelanginAja</a>
+<nav class="gradient-blue sticky top-0 z-50 shadow-lg">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center py-4">
+            <a href="<?= base_url('/') ?>" class="text-white text-2xl font-bold flex items-center">
+                <i class="fas fa-gavel mr-2"></i> LelanginAja
+            </a>
+            
+            <!-- Mobile Menu Button -->
+            <button class="lg:hidden text-white" onclick="toggleMenu()">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+            <!-- Desktop Menu -->
+            <div class="hidden lg:flex items-center space-x-8">
+                <a href="<?= base_url('/') ?>#home" class="text-white hover:text-blue-100 transition-all">Home</a>
+                <a href="<?= base_url('/') ?>#barang" class="text-white hover:text-blue-100 transition-all">Barang Lelang</a>
+                <a href="<?= base_url('/') ?>#tentang" class="text-white hover:text-blue-100 transition-all">Tentang</a>
+                <a href="<?= base_url('/') ?>#kontak" class="text-white hover:text-blue-100 transition-all">Kontak</a>
+                <a href="<?= base_url('auth/login') ?>" class="bg-white text-primary px-6 py-2 rounded-full font-semibold hover:scale-105 transition-transform">
+                    <i class="fas fa-sign-in-alt"></i> Login / Register
+                </a>
+            </div>
+        </div>
 
-    <div class="collapse navbar-collapse" id="navMenu">
-      <ul class="navbar-nav ms-auto align-items-center">
-
-        <li class="nav-item mx-2"><a class="nav-link" href="/">Home</a></li>
-        <li class="nav-item mx-2"><a class="nav-link" href="/#kategori">Kategori</a></li>
-        <li class="nav-item mx-2"><a class="nav-link" href="/#lelang">Lelang</a></li>
-
-        <?php if(session()->get('logged_in')): ?>
-            <li class="nav-item mx-2">
-                <a class="btn btn-primary px-3" href="/dashboard">Dashboard</a>
-            </li>
-            <li class="nav-item ms-2">
-                <a class="btn btn-outline-danger" href="/logout">Logout</a>
-            </li>
-        <?php else: ?>
-            <li class="nav-item mx-2">
-                <a class="btn btn-outline-primary px-3" href="/login">Login</a>
-            </li>
-            <li class="nav-item ms-2">
-                <a class="btn btn-primary px-3" href="/register">Register</a>
-            </li>
-        <?php endif; ?>
-      </ul>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden lg:hidden pb-4">
+            <a href="<?= base_url('/') ?>#home" class="block text-white py-2 hover:text-blue-100">Home</a>
+            <a href="<?= base_url('/') ?>#barang" class="block text-white py-2 hover:text-blue-100">Barang Lelang</a>
+            <a href="<?= base_url('/') ?>#tentang" class="block text-white py-2 hover:text-blue-100">Tentang</a>
+            <a href="<?= base_url('/') ?>#kontak" class="block text-white py-2 hover:text-blue-100">Kontak</a>
+            <a href="<?= base_url('auth/login') ?>" class="block bg-white text-primary px-6 py-2 rounded-full font-semibold text-center mt-3">
+                <i class="fas fa-sign-in-alt"></i> Login / Register
+            </a>
+        </div>
     </div>
-  </div>
 </nav>
