@@ -18,7 +18,7 @@ Platform Lelang Online Terpercaya
                     Lelang dan dapatkan barang impian Anda dengan mudah, aman, dan transparan. Bergabunglah dengan ribuan pengguna lainnya!
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <a href="<?= base_url('auth/register') ?>" class="bg-white text-primary px-8 py-4 rounded-full font-bold text-lg hover:scale-105 transition-transform text-center shadow-xl">
+                    <a href="<?= base_url('/register') ?>" class="bg-white text-primary px-8 py-4 rounded-full font-bold text-lg hover:scale-105 transition-transform text-center shadow-xl">
                         <i class="fas fa-user-plus"></i> Daftar Sekarang
                     </a>
                     <a href="#barang" class="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-primary transition-all text-center">

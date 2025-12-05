@@ -16,7 +16,7 @@
                 <a href="<?= base_url('/') ?>#barang" class="text-white hover:text-blue-100 transition-all">Barang Lelang</a>
                 <a href="<?= base_url('/') ?>#tentang" class="text-white hover:text-blue-100 transition-all">Tentang</a>
                 <a href="<?= base_url('/') ?>#kontak" class="text-white hover:text-blue-100 transition-all">Kontak</a>
-                <a href="<?= base_url('auth/login') ?>" class="bg-white text-primary px-6 py-2 rounded-full font-semibold hover:scale-105 transition-transform">
+                <a href="<?= base_url('/login') ?>" class="bg-white text-primary px-6 py-2 rounded-full font-semibold hover:scale-105 transition-transform">
                     <i class="fas fa-sign-in-alt"></i> Login / Register
                 </a>
             </div>

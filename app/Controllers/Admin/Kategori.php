@@ -7,11 +7,16 @@ use App\Models\KategoriModel;
 
 class Kategori extends BaseController
 {
+    protected $kategori;
+
+    public function __construct()
+    {
+        $this->kategori = new KategoriModel();
+    }
+
     public function index()
     {
-        $model = new KategoriModel();
-        $data['kategori'] = $model->findAll();
-
+        $data['kategori'] = $this->kategori->findAll();
         return view('admin/kategori/index', $data);
     }
 
@@ -22,8 +27,7 @@ class Kategori extends BaseController
 
     public function store()
     {
-        $model = new KategoriModel();
-        $model->insert([
+        $this->kategori->save([
             'nama_kategori' => $this->request->getPost('nama_kategori')
         ]);
 
@@ -32,27 +36,22 @@ class Kategori extends BaseController
 
     public function edit($id)
     {
-        $model = new KategoriModel();
-        $data['kategori'] = $model->find($id);
-
+        $data['kategori'] = $this->kategori->find($id);
         return view('admin/kategori/edit', $data);
     }
 
     public function update($id)
     {
-        $model = new KategoriModel();
-        $model->update($id, [
+        $this->kategori->update($id, [
             'nama_kategori' => $this->request->getPost('nama_kategori')
         ]);
 
-        return redirect()->to('/admin/kategori')->with('success','Kategori berhasil diperbarui');
+        return redirect()->to('/admin/kategori')->with('success','Kategori berhasil diupdate');
     }
 
     public function delete($id)
     {
-        $model = new KategoriModel();
-        $model->delete($id);
-
+        $this->kategori->delete($id);
         return redirect()->to('/admin/kategori')->with('success','Kategori berhasil dihapus');
     }
 }

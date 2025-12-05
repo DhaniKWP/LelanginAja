@@ -25,9 +25,6 @@
         </main>
     </div>
 
-    <!-- Footer -->
-    <?= $this->include('layout/admin_footer') ?>
-
     <script>
         function toggleSubmenu(id) {
             const submenu = document.getElementById(id + '-submenu');
