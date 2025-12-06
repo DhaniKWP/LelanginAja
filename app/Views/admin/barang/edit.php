@@ -44,26 +44,11 @@
         <input type="file" name="foto" class="form-control">
         <input type="hidden" name="foto_lama" value="<?= $barang['foto']; ?>">
 
-        <label class="mt-2">Tanggal Mulai</label>
-        <input type="datetime-local" name="tanggal_mulai" class="form-control" 
-            value="<?= $barang['tanggal_mulai']; ?>">
-
-        <label class="mt-2">Tanggal Selesai</label>
-        <input type="datetime-local" name="tanggal_selesai" class="form-control" 
-            value="<?= $barang['tanggal_selesai']; ?>">
-
         <label class="mt-2">Status Pengajuan</label>
         <select name="status_pengajuan" class="form-control">
             <option value="pending"  <?= $barang['status_pengajuan']=='pending'?'selected':''; ?>>Pending</option>
             <option value="approved" <?= $barang['status_pengajuan']=='approved'?'selected':''; ?>>Approved</option>
             <option value="rejected" <?= $barang['status_pengajuan']=='rejected'?'selected':''; ?>>Rejected</option>
-        </select>
-
-        <label class="mt-2">Status Lelang</label>
-        <select name="status" class="form-control">
-            <option value="nonaktif" <?= $barang['status']=='nonaktif'?'selected':''; ?>>Nonaktif</option>
-            <option value="aktif"    <?= $barang['status']=='aktif'?'selected':''; ?>>Aktif</option>
-            <option value="selesai"  <?= $barang['status']=='selesai'?'selected':''; ?>>Selesai</option>
         </select>
 
         <button class="btn btn-primary mt-3" type="submit">Simpan Perubahan</button>

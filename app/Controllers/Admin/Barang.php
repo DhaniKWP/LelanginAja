@@ -19,7 +19,7 @@ class Barang extends BaseController
     }
 
     /* ======================
-    |  LIST SEMUA BARANG
+    | LIST SEMUA BARANG
     =======================*/
     public function index()
     {
@@ -28,7 +28,7 @@ class Barang extends BaseController
     }
 
     /* ======================
-    |  FORM EDIT BARANG
+    | FORM EDIT BARANG
     =======================*/
     public function edit($id)
     {
@@ -40,7 +40,7 @@ class Barang extends BaseController
     }
 
     /* ======================
-    |  UPDATE BARANG
+    | UPDATE BARANG (NO tanggal)
     =======================*/
     public function update($id)
     {
@@ -52,7 +52,7 @@ class Barang extends BaseController
             $file->move('uploads/barang/', $newName);
             $foto = $newName;
         } else {
-            $foto = $this->request->getPost('foto_lama'); // tetap pakai foto lama
+            $foto = $this->request->getPost('foto_lama'); 
         }
 
         $this->barang->update($id, [
@@ -61,10 +61,7 @@ class Barang extends BaseController
             'kondisi_id'       => $this->request->getPost('kondisi_id'),
             'harga_awal'       => $this->request->getPost('harga_awal'),
             'deskripsi'        => $this->request->getPost('deskripsi'),
-            'tanggal_mulai'    => $this->request->getPost('tanggal_mulai'),
-            'tanggal_selesai'  => $this->request->getPost('tanggal_selesai'),
             'status_pengajuan' => $this->request->getPost('status_pengajuan'),
-            'status'           => $this->request->getPost('status'),
             'foto'             => $foto
         ]);
 
@@ -81,7 +78,7 @@ class Barang extends BaseController
     }
 
     /* ======================
-    | PENGAJUAN PENDING PAGE
+    | PENGAJUAN PENDING
     =======================*/
     public function pengajuan()
     {
@@ -89,10 +86,13 @@ class Barang extends BaseController
         return view('admin/pengajuanbarang/index',$data);
     }
 
+    /* ======================
+    | APPROVE / REJECT BARANG
+    =======================*/
     public function approve($id)
     {
         $this->barang->update($id,['status_pengajuan'=>'approved']);
-        return redirect()->back()->with('success','Barang berhasil disetujui!');
+        return redirect()->back()->with('success','Barang berhasil disetujui! Silakan atur jadwal lelang pada menu lelang.');
     }
 
     public function reject($id)
@@ -101,4 +101,3 @@ class Barang extends BaseController
         return redirect()->back()->with('success','Barang ditolak!');
     }
 }
-

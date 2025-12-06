@@ -59,3 +59,15 @@ $routes->group('admin', ['filter'=>'admin'], function($routes){
     $routes->get('pengajuanbarang/reject/(:num)','Admin\Barang::reject/$1'); 
 });
 
+// ADMIN LELANG
+$routes->group('admin/lelang',['filter'=>'admin'],function($routes){
+    $routes->get('jadwal','Admin\Lelang::jadwal');
+    $routes->get('create','Admin\Lelang::create');
+    $routes->post('store','Admin\Lelang::store');
+
+    $routes->get('aktif','Admin\Lelang::aktif');
+    $routes->get('monitor/(:num)','Admin\Lelang::monitoring/$1');
+    $routes->get('stop/(:num)','Admin\Lelang::stop/$1');
+});
+
+

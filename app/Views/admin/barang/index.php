@@ -11,10 +11,7 @@
     <th>Kondisi</th>
     <th>Harga Awal</th>
     <th>Status Pengajuan</th>
-    <th>Status Lelang</th>
     <th>Tgl Pengajuan</th>
-    <th>Tgl Mulai</th>
-    <th>Tgl Selesai</th>
     <th>Aksi</th>
 </tr>
 
@@ -37,10 +34,7 @@
         <?php endif; ?>
     </td>
 
-    <td><?= $b['status'] ?></td>
     <td><?= $b['tanggal_pengajuan'] ?></td>
-    <td><?= $b['tanggal_mulai'] ?></td>
-    <td><?= $b['tanggal_selesai'] ?></td>
 
     <td>
         <!-- Approve Reject -->

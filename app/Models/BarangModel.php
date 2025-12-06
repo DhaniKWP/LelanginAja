@@ -10,9 +10,15 @@ class BarangModel extends Model
     protected $primaryKey = 'id_barang';
 
     protected $allowedFields = [
-        'nama_barang','kategori_id','kondisi_id','id_user',
-        'harga_awal','deskripsi','foto','tanggal_pengajuan',
-        'status_pengajuan','status'
+        'nama_barang',
+        'kategori_id',
+        'kondisi_id',
+        'id_user',
+        'harga_awal',
+        'deskripsi',
+        'foto',
+        'tanggal_pengajuan',
+        'status_pengajuan'
     ];
 
     protected $useTimestamps = false;

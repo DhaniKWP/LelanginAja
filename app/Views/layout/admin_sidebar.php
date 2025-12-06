@@ -48,9 +48,8 @@
                     <i class="fas fa-chevron-down text-sm"></i>
                 </button>
                 <ul id="lelang-submenu" class="ml-8 mt-2 space-y-1 hidden">
-                    <li><a href="<?= base_url('admin/jadwal') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Jadwal Lelang</a></li>
-                    <li><a href="<?= base_url('admin/aktif') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Lelang Aktif</a></li>
-                    <li><a href="<?= base_url('admin/monitoring') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Monitoring Real-time</a></li>
+                    <li><a href="<?= base_url('admin/lelang/jadwal') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Jadwal Lelang</a></li>
+                    <li><a href="<?= base_url('admin/lelang/aktif') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Lelang Aktif</a></li>
                 </ul>
             </li>
 
