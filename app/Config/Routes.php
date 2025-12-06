@@ -44,8 +44,18 @@ $routes->get('/user/barang','User\Barang::index',['filter'=>'user']);
 $routes->get('/user/barang/create','User\Barang::create',['filter'=>'user']);
 $routes->post('/user/barang/store','User\Barang::store',['filter'=>'user']);
 
-// ADMIN BARANG (Approve/Reject) 
-$routes->get('/admin/barang','Admin\Barang::index',['filter'=>'admin']);
-$routes->get('/admin/barang/approve/(:num)','Admin\Barang::approve/$1',['filter'=>'admin']);
-$routes->get('/admin/barang/reject/(:num)','Admin\Barang::reject/$1',['filter'=>'admin']);
+// ADMIN BARANG 
+$routes->group('admin', ['filter'=>'admin'], function($routes){
+
+    // Barang yang sudah approved / manage data
+    $routes->get('barang','Admin\Barang::index');
+    $routes->get('barang/edit/(:num)','Admin\Barang::edit/$1'); 
+    $routes->post('barang/update/(:num)','Admin\Barang::update/$1'); 
+    $routes->get('barang/delete/(:num)','Admin\Barang::delete/$1'); 
+
+    // Barang pengajuan pending
+    $routes->get('pengajuanbarang','Admin\Barang::pengajuan'); 
+    $routes->get('pengajuanbarang/approve/(:num)','Admin\Barang::approve/$1'); 
+    $routes->get('pengajuanbarang/reject/(:num)','Admin\Barang::reject/$1'); 
+});
 

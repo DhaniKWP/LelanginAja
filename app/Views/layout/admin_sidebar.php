@@ -30,12 +30,11 @@
 
             <!-- Pengajuan Barang -->
             <li>
-                <a href="<?= base_url('admin/pengajuan') ?>" class="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 transition">
+                <a href="<?= base_url('admin/pengajuanbarang') ?>" class="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 transition">
                     <div class="flex items-center gap-3">
                         <i class="fas fa-inbox w-5"></i>
                         <span>Pengajuan Barang</span>
                     </div>
-                    <span class="bg-red-500 text-white text-xs rounded-full px-2 py-1">12</span>
                 </a>
             </li>
 
@@ -107,7 +106,7 @@
             <li class="pt-4">
                 <hr class="border-gray-200">
             </li>
-            
+
         </ul>
     </div>
 </aside>
