@@ -20,7 +20,7 @@
                     <i class="fas fa-chevron-down text-sm"></i>
                 </button>
                 <ul id="master-submenu" class="ml-8 mt-2 space-y-1 hidden">
-                    <li><a href="<?= base_url('admin/users') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Manage User</a></li>
+                    <li><a href="<?= base_url('admin/user') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Manage User</a></li>
                     <li><a href="<?= base_url('admin/kategori') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Manage Kategori</a></li>
                     <li><a href="<?= base_url('admin/kondisi') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Manage Kondisi</a></li>
                     <li><a href="<?= base_url('admin/barang') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Manage Barang</a></li>

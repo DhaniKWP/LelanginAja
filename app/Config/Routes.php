@@ -21,6 +21,16 @@ $routes->get('/user/dashboard','User\Dashboard::index',['filter'=>'user']);
 // ADMIN Dashboard
 $routes->get('/admin/dashboard','Admin\Dashboard::index',['filter'=>'admin']);
 
+// CRUD USER
+$routes->group('admin', ['filter' => 'admin'], function($routes){
+    $routes->get('user','Admin\User::index');
+    $routes->get('user/create','Admin\User::create');
+    $routes->post('user/store','Admin\User::store');
+    $routes->get('user/edit/(:num)','Admin\User::edit/$1');
+    $routes->post('user/update/(:num)','Admin\User::update/$1');
+    $routes->get('user/delete/(:num)','Admin\User::delete/$1');
+});
+
 // ADMIN KATEGORI
 $routes->group('admin', ['filter' => 'admin'], function($routes){
     $routes->get('kategori','Admin\Kategori::index');
