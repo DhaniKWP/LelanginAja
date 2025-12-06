@@ -1,29 +1,42 @@
 <?= $this->extend('layout/admin_main') ?>
 <?= $this->section('content') ?>
 
-<div class="container mt-4" style="max-width:600px">
-    <h3 class="mb-3">Tambah Jadwal Lelang</h3>
+<div class="p-6 max-w-xl mx-auto">
 
-    <form action="/admin/lelang/store" method="POST">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">🗓 Buat Jadwal Lelang</h2>
 
-        <label class="form-label">Pilih Barang</label>
-        <select name="id_barang" class="form-select mb-3" required>
-            <option value="">-- Pilih Barang --</option>
-            <?php foreach($barang as $b): ?>
-            <option value="<?= $b['id_barang'] ?>">
-                <?= $b['nama_barang'] ?> - Rp<?= number_format($b['harga_awal']) ?>
-            </option>
-            <?php endforeach; ?>
-        </select>
+    <form action="/admin/lelang/store" method="POST" 
+          class="bg-white shadow-md rounded-lg p-5 space-y-4">
 
-        <label class="form-label">Tanggal Mulai</label>
-        <input type="datetime-local" name="tanggal_mulai" class="form-control mb-3" required>
+        <div>
+            <label class="block font-medium text-gray-700">Pilih Barang</label>
+            <select name="id_barang" required
+                class="w-full border rounded px-3 py-2 focus:ring-blue-500">
+                <option value="">-- Pilih Barang --</option>
+                <?php foreach($barang as $b): ?>
+                    <option value="<?= $b['id_barang'] ?>"><?= $b['nama_barang'] ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
 
-        <label class="form-label">Tanggal Selesai</label>
-        <input type="datetime-local" name="tanggal_selesai" class="form-control mb-3" required>
+        <div>
+            <label class="block font-medium text-gray-700">Tanggal Mulai</label>
+            <input type="datetime-local" name="tanggal_mulai" required
+                   class="w-full border rounded px-3 py-2 focus:ring-blue-500">
+        </div>
 
-        <button type="submit" class="btn btn-success">Simpan</button>
-        <a href="/admin/lelang/jadwal" class="btn btn-secondary">Kembali</a>
+        <div>
+            <label class="block font-medium text-gray-700">Tanggal Selesai</label>
+            <input type="datetime-local" name="tanggal_selesai" required
+                   class="w-full border rounded px-3 py-2 focus:ring-blue-500">
+        </div>
+
+        <div class="flex gap-3 pt-2">
+            <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow">
+                Simpan Jadwal
+            </button>
+            <a href="/admin/lelang/jadwal" class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded">Kembali</a>
+        </div>
     </form>
 </div>
 

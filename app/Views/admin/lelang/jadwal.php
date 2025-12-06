@@ -1,45 +1,63 @@
 <?= $this->extend('layout/admin_main') ?>
 <?= $this->section('content') ?>
 
-<div class="container mt-4">
-    <h3 class="mb-3">📅 Jadwal Lelang</h3>
+<div class="p-6">
 
-    <a href="/admin/lelang/create" class="btn btn-primary mb-3">+ Buat Jadwal Lelang</a>
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-semibold text-gray-800">⏳ Jadwal Lelang</h2>
+        <a href="/admin/lelang/create" 
+           class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow transition">
+            + Buat Jadwal Lelang
+        </a>
+    </div>
 
     <?php if(session()->getFlashdata('success')): ?>
-        <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
+        <div class="mb-4 p-3 bg-green-100 border border-green-300 text-green-700 rounded">
+            <?= session()->getFlashdata('success') ?>
+        </div>
     <?php endif; ?>
 
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>#</th>
-            <th>Nama Barang</th>
-            <th>Tgl Mulai</th>
-            <th>Tgl Selesai</th>
-            <th>Status</th>
-            <th>Aksi</th>
-        </tr>
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <table class="w-full border-collapse text-left">
+            <thead class="bg-blue-600 text-white">
+                <tr>
+                    <th class="px-4 py-3">No</th>
+                    <th class="px-4 py-3">Barang</th>
+                    <th class="px-4 py-3">Mulai</th>
+                    <th class="px-4 py-3">Selesai</th>
+                    <th class="px-4 py-3">Status</th>
+                    <th class="px-4 py-3 text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $no=1; foreach($lelang as $l): ?>
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="px-4 py-3"><?= $no++ ?></td>
+                    <td class="px-4 py-3 font-medium text-blue-700"><?= $l['nama_barang'] ?></td>
+                    <td class="px-4 py-3"><?= date('d M Y H:i', strtotime($l['tanggal_mulai'])) ?></td>
+                    <td class="px-4 py-3"><?= date('d M Y H:i', strtotime($l['tanggal_selesai'])) ?></td>
+                    <td class="px-4 py-3">
+                        <?php if($l['status']=="aktif"): ?>
+                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded text-sm">Aktif</span>
+                        <?php elseif($l['status']=="selesai"): ?>
+                            <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm">Selesai</span>
+                        <?php else: ?>
+                            <span class="px-3 py-1 bg-red-100 text-red-700 rounded text-sm">Dibatalkan</span>
+                        <?php endif; ?>
+                    </td>
+                    <td class="px-4 py-3 text-center space-x-2">
+                        <a href="/admin/lelang/edit/<?= $l['id_lelang'] ?>" 
+                           class="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white rounded text-sm">Edit</a>
 
-        <?php $no = 1; foreach($lelang as $l): ?>
-        <tr>
-            <td><?= $no++ ?></td>
-            <td><?= $l['nama_barang'] ?></td>
-            <td><?= date('d-m-Y H:i', strtotime($l['tanggal_mulai'])) ?></td>
-            <td><?= date('d-m-Y H:i', strtotime($l['tanggal_selesai'])) ?></td>
-            <td>
-                <span class="badge bg-<?= $l['status']=='aktif'?'success':'secondary' ?>">
-                    <?= $l['status'] ?>
-                </span>
-            </td>
-            <td>
-                <a href="#" class="btn btn-info btn-sm">Detail</a>
-                <a href="#" class="btn btn-warning btn-sm">Edit</a>
-                <a href="#" class="btn btn-danger btn-sm"
-                   onclick="return confirm('Hapus jadwal lelang ini?')">Hapus</a>
-            </td>
-        </tr>
-        <?php endforeach; ?>
-    </table>
+                        <a href="/admin/lelang/delete/<?= $l['id_lelang'] ?>" 
+                           onclick="return confirm('Hapus jadwal lelang ini?')" 
+                           class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-sm">Hapus</a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <?= $this->endSection() ?>

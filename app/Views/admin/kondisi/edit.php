@@ -1,12 +1,32 @@
 <?= $this->extend('layout/admin_main') ?>
 <?= $this->section('content') ?>
 
-<h3>Edit Kondisi</h3>
-<form method="post" action="/admin/kondisi/update/<?= $kondisi['id_kondisi'] ?>" style="max-width:400px" class="mt-3">
-    <label>Nama Kondisi</label>
-    <input class="form-control" name="nama_kondisi" value="<?= $kondisi['nama_kondisi'] ?>" required>
-    <button class="btn btn-success mt-3">Update</button>
-    <a href="/admin/kondisi" class="btn btn-secondary mt-3">Batal</a>
-</form>
+<div class="flex justify-center items-center min-h-[75vh] p-6">
+
+    <div class="w-full max-w-lg bg-white p-6 rounded-lg shadow">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-5 text-center">✏ Edit Kondisi Barang</h2>
+
+        <form action="/admin/kondisi/update/<?= $kondisi['id_kondisi'] ?>" method="POST" class="space-y-4">
+
+            <div>
+                <label class="block mb-1 font-medium text-gray-700">Nama Kondisi</label>
+                <input type="text" name="nama_kondisi" 
+                       value="<?= $kondisi['nama_kondisi'] ?>" required
+                       class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+
+            <div class="flex gap-3 justify-center pt-3">
+                <button class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow">
+                    Update
+                </button>
+                <a href="/admin/kondisi" 
+                   class="px-5 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md shadow">
+                   Kembali
+                </a>
+            </div>
+        </form>
+    </div>
+
+</div>
 
 <?= $this->endSection() ?>
