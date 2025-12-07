@@ -80,4 +80,23 @@ $routes->group('admin/lelang',['filter'=>'admin'],function($routes){
     $routes->get('stop/(:num)','Admin\Lelang::stop/$1');
 });
 
+// USER LELANG & BID
+$routes->group('user', ['filter'=>'user'], function($routes){
+    // Lelang
+    $routes->get('lelang/aktif','User\Lelang::aktif');
+    $routes->get('lelang/detail/(:num)','User\Lelang::detail/$1');
+    // Bid
+    $routes->post('bid/(:num)','User\Bid::submit/$1');
+});
+
+
+// USER PESERTA REGISTRATION
+$routes->group('user', ['filter'=>'user'], function($routes){
+    $routes->get('peserta','User\Peserta::index');
+    $routes->get('peserta/daftar','User\Peserta::daftar');
+    $routes->post('peserta/store','User\Peserta::store');
+});
+
+
+
 

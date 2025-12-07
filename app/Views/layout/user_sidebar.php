@@ -39,33 +39,45 @@
 
             <!-- Lelang -->
             <li>
-                <button class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-blue-50 text-gray-700 transition" 
-                        onclick="toggleSubmenu('lelang')">
+                <button class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-blue-50 
+                    text-gray-700 transition"
+                    onclick="toggleSubmenu('lelang')">
+
                     <div class="flex items-center gap-3">
                         <i class="fas fa-gavel w-5 text-blue-500"></i>
                         <span>Lelang</span>
                     </div>
+
                     <i class="fas fa-chevron-down text-sm transition-transform" id="lelang-icon"></i>
                 </button>
-                <ul id="lelang-submenu" class="ml-8 mt-2 space-y-1 hidden">
+
+                <ul id="lelang-submenu" class="ml-8 mt-2 space-y-1 
+                    <?= (service('uri')->getSegment(2) == 'lelang') ? '' : 'hidden' ?>">
+                    
                     <li>
-                        <a href="<?= base_url('user/lelang-aktif') ?>" 
-                           class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm transition">
+                        <a href="<?= base_url('user/lelang/aktif') ?>" 
+                        class="block px-4 py-2 rounded-lg text-sm transition
+                            <?= (service('uri')->getSegment(3)=='aktif') ? 'bg-blue-100 text-blue-700 font-semibold' : 'hover:bg-blue-50 text-gray-600' ?>">
                             Lelang Aktif
                         </a>
                     </li>
+
                     <li>
-                        <a href="<?= base_url('user/riwayat-penawaran') ?>" 
-                           class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm transition">
+                        <a href="<?= base_url('user/lelang/riwayat') ?>" 
+                        class="block px-4 py-2 rounded-lg text-sm transition
+                            <?= (service('uri')->getSegment(3)=='riwayat') ? 'bg-blue-100 text-blue-700 font-semibold' : 'hover:bg-blue-50 text-gray-600' ?>">
                             Riwayat Penawaran
                         </a>
                     </li>
+
                     <li>
-                        <a href="<?= base_url('user/status-pemenang') ?>" 
-                           class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm transition">
+                        <a href="<?= base_url('user/lelang/pemenang') ?>" 
+                        class="block px-4 py-2 rounded-lg text-sm transition
+                            <?= (service('uri')->getSegment(3)=='pemenang') ? 'bg-blue-100 text-blue-700 font-semibold' : 'hover:bg-blue-50 text-gray-600' ?>">
                             Status Pemenang
                         </a>
                     </li>
+
                 </ul>
             </li>
 

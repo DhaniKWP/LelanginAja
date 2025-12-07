@@ -129,7 +129,7 @@
                             <span class="text-sm">Status Pemenang</span>
                         </a>
                         <hr class="my-2 border-gray-200">
-                        <a href="<?= base_url('auth/logout') ?>" 
+                        <a href="<?= base_url('/') ?>" 
                            class="flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 transition"
                            onclick="return confirm('Yakin ingin logout?')">
                             <i class="fas fa-sign-out-alt w-5"></i>
