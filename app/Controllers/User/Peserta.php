@@ -4,47 +4,63 @@ namespace App\Controllers\User;
 
 use App\Controllers\BaseController;
 use App\Models\PesertaModel;
+use App\Models\TransaksiRegistrasiModel;
 
 class Peserta extends BaseController
 {
     protected $peserta;
+    protected $registrasi;
 
     public function __construct()
     {
         $this->peserta = new PesertaModel();
+        $this->registrasi = new TransaksiRegistrasiModel();
     }
 
-    // CEK STATUS PESERTA
     public function index()
     {
         $id_user = session()->get('id_user');
-        $data['peserta'] = $this->peserta->where('id_user', $id_user)->first();
 
-        return view('user/peserta/index', $data); // halaman informasi peserta
+        $data['registrasi'] = $this->registrasi
+                                   ->where('id_user',$id_user)
+                                   ->orderBy('id_reg','DESC')
+                                   ->first();
+
+        $data['peserta'] = $this->peserta
+                               ->where('id_user',$id_user)
+                               ->first(); // hanya ada kalau sudah di-approve admin
+
+        return view('user/peserta/index', $data);
     }
 
-    // FORM Pendaftaran
     public function daftar()
     {
+        $id_user = session()->get('id_user');
+
+        // Jika sudah pernah daftar & pending approve
+        if($this->registrasi->where('id_user',$id_user)->where('status','pending')->first()){
+            return redirect()->to('/user/peserta')->with('info','Pengajuan sedang menunggu verifikasi admin.');
+        }
+
+        // Jika sudah peserta resmi
+        if($this->peserta->where('id_user',$id_user)->first()){
+            return redirect()->to('/user/peserta')->with('success','Kamu sudah menjadi peserta.');
+        }
+
         return view('user/peserta/register');
     }
 
-    // STORE DATA PEMESERTAAN
     public function store()
     {
         $id_user = session()->get('id_user');
 
-        // Cek jika sudah peserta, tidak bisa daftar lagi
-        if($this->peserta->where('id_user', $id_user)->countAllResults() > 0){
-            return redirect()->to('/user/peserta')->with('info','Kamu sudah terdaftar sebagai peserta!');
-        }
-
-        $this->peserta->save([
+        // Insert ke tabel registrasi bukan peserta
+        $this->registrasi->save([
             'id_user' => $id_user,
-            'alamat'  => $this->request->getPost('alamat'),
-            'no_hp'   => $this->request->getPost('no_hp'),
+            'tanggal_daftar' => date('Y-m-d H:i:s'),
+            'status' => 'pending'
         ]);
 
-        return redirect()->to('/user/peserta')->with('success','Berhasil daftar peserta lelang!');
+        return redirect()->to('/user/peserta')->with('success','Pendaftaran peserta dikirim, menunggu persetujuan admin.');
     }
 }

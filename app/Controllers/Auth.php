@@ -28,12 +28,16 @@ class Auth extends BaseController
         }
 
         // Set session
+        // Set session
         session()->set([
-            'id_user' => $user['id_user'],
+            'id_user'  => $user['id_user'],
             'username' => $user['username'],
-            'role' => $user['role'],
-            'logged_in' => true
+            'nama'     => $user['nama'],         // <-- tambah ini
+            'email'    => $user['email'],        // <-- tambah ini
+            'role'     => $user['role'],
+            'logged_in'=> true
         ]);
+
 
         // Redirect sesuai role
         if ($user['role'] == 'admin') {

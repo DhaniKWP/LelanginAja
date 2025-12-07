@@ -29,7 +29,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="<?= base_url('user/barang-saya') ?>" 
+                        <a href="<?= base_url('user/barang/') ?>" 
                            class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm transition">
                             Status Barang
                         </a>

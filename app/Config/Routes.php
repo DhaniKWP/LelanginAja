@@ -71,14 +71,23 @@ $routes->group('admin', ['filter'=>'admin'], function($routes){
 
 // ADMIN LELANG
 $routes->group('admin/lelang',['filter'=>'admin'],function($routes){
+
+    // Jadwal
     $routes->get('jadwal','Admin\Lelang::jadwal');
     $routes->get('create','Admin\Lelang::create');
     $routes->post('store','Admin\Lelang::store');
 
+    // Edit/Delete
+    $routes->get('edit/(:num)','Admin\Lelang::edit/$1');
+    $routes->post('update/(:num)','Admin\Lelang::update/$1');
+    $routes->get('delete/(:num)','Admin\Lelang::delete/$1');
+
+    // Status proses
     $routes->get('aktif','Admin\Lelang::aktif');
-    $routes->get('monitor/(:num)','Admin\Lelang::monitoring/$1');
     $routes->get('stop/(:num)','Admin\Lelang::stop/$1');
+    $routes->get('monitor/(:num)','Admin\Lelang::monitoring/$1');
 });
+
 
 // USER LELANG & BID
 $routes->group('user', ['filter'=>'user'], function($routes){
@@ -97,6 +106,20 @@ $routes->group('user', ['filter'=>'user'], function($routes){
     $routes->post('peserta/store','User\Peserta::store');
 });
 
+// ADMIN PESERTA MANAGEMENT
+$routes->group('admin', ['filter'=>'admin'], function($routes){
+
+    $routes->get('peserta','Admin\Peserta::index');
+    $routes->get('peserta/approve/(:num)','Admin\Peserta::approve/$1');
+    $routes->get('peserta/reject/(:num)','Admin\Peserta::reject/$1');
+});
+
+// ADMIN PEMENANG LELANG
+$routes->group('admin',['filter'=>'admin'],function($routes){
+
+    $routes->get('pemenang','Admin\Pemenang::index');
+    $routes->get('pemenang/pilih/(:num)','Admin\Pemenang::pilih/$1');
+});
 
 
 

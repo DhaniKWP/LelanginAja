@@ -4,59 +4,66 @@
 <div class="p-6">
 
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-semibold text-gray-800">⏳ Jadwal Lelang</h2>
+        <h2 class="text-2xl font-semibold text-blue-700">📅 Jadwal Lelang Barang</h2>
         <a href="/admin/lelang/create" 
-           class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow transition">
+           class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow">
             + Buat Jadwal Lelang
         </a>
     </div>
 
     <?php if(session()->getFlashdata('success')): ?>
-        <div class="mb-4 p-3 bg-green-100 border border-green-300 text-green-700 rounded">
+        <div class="p-3 mb-4 bg-green-100 border-l-4 border-green-600 text-green-700 rounded">
             <?= session()->getFlashdata('success') ?>
         </div>
     <?php endif; ?>
 
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
-        <table class="w-full border-collapse text-left">
-            <thead class="bg-blue-600 text-white">
-                <tr>
-                    <th class="px-4 py-3">No</th>
-                    <th class="px-4 py-3">Barang</th>
-                    <th class="px-4 py-3">Mulai</th>
-                    <th class="px-4 py-3">Selesai</th>
-                    <th class="px-4 py-3">Status</th>
-                    <th class="px-4 py-3 text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $no=1; foreach($lelang as $l): ?>
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="px-4 py-3"><?= $no++ ?></td>
-                    <td class="px-4 py-3 font-medium text-blue-700"><?= $l['nama_barang'] ?></td>
-                    <td class="px-4 py-3"><?= date('d M Y H:i', strtotime($l['tanggal_mulai'])) ?></td>
-                    <td class="px-4 py-3"><?= date('d M Y H:i', strtotime($l['tanggal_selesai'])) ?></td>
-                    <td class="px-4 py-3">
-                        <?php if($l['status']=="aktif"): ?>
-                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded text-sm">Aktif</span>
-                        <?php elseif($l['status']=="selesai"): ?>
-                            <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm">Selesai</span>
-                        <?php else: ?>
-                            <span class="px-3 py-1 bg-red-100 text-red-700 rounded text-sm">Dibatalkan</span>
-                        <?php endif; ?>
-                    </td>
-                    <td class="px-4 py-3 text-center space-x-2">
-                        <a href="/admin/lelang/edit/<?= $l['id_lelang'] ?>" 
-                           class="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white rounded text-sm">Edit</a>
+    <!-- Card Grid -->
+    <div class="grid md:grid-cols-3 sm:grid-cols-2 gap-5">
 
-                        <a href="/admin/lelang/delete/<?= $l['id_lelang'] ?>" 
-                           onclick="return confirm('Hapus jadwal lelang ini?')" 
-                           class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-sm">Hapus</a>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+        <?php foreach($lelang as $l): ?>
+        <div class="bg-white shadow-md rounded-xl overflow-hidden hover:shadow-lg transition p-4">
+
+            <img src="/uploads/barang/<?= $l['foto'] ?>" 
+                 class="w-full h-40 object-cover rounded-lg mb-3">
+
+            <h3 class="text-lg font-bold text-gray-800"><?= $l['nama_barang'] ?></h3>
+
+            <p class="text-gray-600 text-sm mt-1">Mulai: 
+                <b><?= date('d M Y H:i',strtotime($l['tanggal_mulai'])) ?></b>
+            </p>
+            <p class="text-gray-600 text-sm">Selesai: 
+                <b><?= date('d M Y H:i',strtotime($l['tanggal_selesai'])) ?></b>
+            </p>
+
+            <!-- Status Badge -->
+            <div class="mt-2">
+                <?php if($l['status']=="aktif"): ?>
+                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded text-xs font-medium">Aktif</span>
+                <?php elseif($l['status']=="selesai"): ?>
+                    <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded text-xs font-medium">Selesai</span>
+                <?php else: ?>
+                    <span class="bg-red-100 text-red-700 px-3 py-1 rounded text-xs font-medium">Dibatalkan</span>
+                <?php endif; ?>
+            </div>
+
+            <!-- Aksi -->
+            <div class="flex gap-2 mt-4">
+
+                <a href="/admin/lelang/edit/<?= $l['id_lelang'] ?>"
+                   class="flex-1 text-center bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded text-sm">
+                    Edit
+                </a>
+                
+                <a href="/admin/lelang/delete/<?= $l['id_lelang'] ?>" 
+                   onclick="return confirm('Hapus jadwal ini?')"
+                   class="flex-1 text-center bg-red-600 hover:bg-red-700 text-white py-2 rounded text-sm">
+                    Delete
+                </a>
+            </div>
+
+        </div>
+        <?php endforeach; ?>
+
     </div>
 </div>
 

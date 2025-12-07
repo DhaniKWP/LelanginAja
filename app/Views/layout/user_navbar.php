@@ -103,40 +103,50 @@
 
                 <!-- Profile Dropdown -->
                 <div class="hidden group-hover:block absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl overflow-hidden">
-                    <div class="px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white">
-                        <p class="font-semibold"><?= session()->get('nama') ?? 'User' ?></p>
-                        <p class="text-xs text-blue-100"><?= session()->get('email') ?? 'user@lelanginaja.com' ?></p>
-                    </div>
-                    <div class="py-2">
-                        <a href="<?= base_url('user/profil') ?>" 
-                           class="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-blue-50 transition">
-                            <i class="fas fa-user-circle w-5 text-blue-500"></i>
-                            <span class="text-sm">Profil Saya</span>
-                        </a>
-                        <a href="<?= base_url('user/barang-saya') ?>" 
-                           class="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-blue-50 transition">
-                            <i class="fas fa-box w-5 text-blue-500"></i>
-                            <span class="text-sm">Barang Saya</span>
-                        </a>
-                        <a href="<?= base_url('user/riwayat-penawaran') ?>" 
-                           class="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-blue-50 transition">
-                            <i class="fas fa-history w-5 text-blue-500"></i>
-                            <span class="text-sm">Riwayat Penawaran</span>
-                        </a>
-                        <a href="<?= base_url('user/status-pemenang') ?>" 
-                           class="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-blue-50 transition">
-                            <i class="fas fa-trophy w-5 text-yellow-500"></i>
-                            <span class="text-sm">Status Pemenang</span>
-                        </a>
-                        <hr class="my-2 border-gray-200">
-                        <a href="<?= base_url('/') ?>" 
-                           class="flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 transition"
-                           onclick="return confirm('Yakin ingin logout?')">
-                            <i class="fas fa-sign-out-alt w-5"></i>
-                            <span class="text-sm font-medium">Logout</span>
-                        </a>
-                    </div>
-                </div>
+    
+    <!-- User Info -->
+    <div class="px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+        <p class="font-semibold"><?= session()->get('nama') ?: 'Pengguna' ?></p>
+        <p class="text-xs text-blue-100"><?= session()->get('email') ?: '-' ?></p>
+    </div>
+
+    <div class="py-2">
+        <a href="<?= base_url('user/profil') ?>"
+           class="flex items-center gap-3 px-4 py-2 hover:bg-blue-50 transition text-gray-700">
+            <i class="fas fa-user-circle w-5 text-blue-500"></i>
+            <span class="text-sm">Profil Saya</span>
+        </a>
+
+        <a href="<?= base_url('user/barang-saya') ?>" 
+           class="flex items-center gap-3 px-4 py-2 hover:bg-blue-50 transition text-gray-700">
+            <i class="fas fa-box w-5 text-blue-500"></i>
+            <span class="text-sm">Barang Saya</span>
+        </a>
+
+        <a href="<?= base_url('user/riwayat-penawaran') ?>"
+           class="flex items-center gap-3 px-4 py-2 hover:bg-blue-50 transition text-gray-700">
+            <i class="fas fa-history w-5 text-blue-500"></i>
+            <span class="text-sm">Riwayat Penawaran</span>
+        </a>
+
+        <a href="<?= base_url('user/status-pemenang') ?>"
+           class="flex items-center gap-3 px-4 py-2 hover:bg-blue-50 transition text-gray-700">
+            <i class="fas fa-trophy w-5 text-yellow-500"></i>
+            <span class="text-sm">Status Pemenang</span>
+        </a>
+
+        <hr class="my-2 border-gray-200">
+
+        <a href="<?= base_url('/logout') ?>"
+           onclick="return confirm('Yakin ingin logout?')"
+           class="flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 transition">
+            <i class="fas fa-sign-out-alt w-5"></i>
+            <span class="text-sm font-medium">Logout</span>
+        </a>
+    </div>
+
+</div>
+
             </div>
         </div>
     </div>

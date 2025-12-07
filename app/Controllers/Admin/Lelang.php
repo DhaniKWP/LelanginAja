@@ -58,9 +58,54 @@ class Lelang extends BaseController
         return redirect()->to('/admin/lelang/jadwal')->with('success','Jadwal lelang berhasil dibuat!');
     }
 
+    /* ========================================================
+       4. EDIT LELANG
+    ======================================================== */
+    public function edit($id)
+    {
+        $data['lelang'] = $this->lelang
+            ->select('transaksi_lelang.*, barang.nama_barang')
+            ->join('barang','barang.id_barang = transaksi_lelang.id_barang')
+            ->find($id);
+
+        if(!$data['lelang']) return redirect()->back()->with('error','Data tidak ditemukan');
+
+        $data['barang'] = $this->barang->where('status_pengajuan','approved')->findAll();
+
+        return view('admin/lelang/edit', $data);
+    }
 
     /* ========================================================
-       4. LELANG AKTIF
+       5. UPDATE LELANG
+    ======================================================== */
+    public function update($id)
+    {
+        $this->lelang->update($id,[
+            'id_barang'       => $this->request->getPost('id_barang'),
+            'tanggal_mulai'   => $this->request->getPost('tanggal_mulai'),
+            'tanggal_selesai' => $this->request->getPost('tanggal_selesai'),
+            'status'          => $this->request->getPost('status'),
+        ]);
+
+        return redirect()->to('/admin/lelang/jadwal')->with('success','Lelang berhasil diperbarui!');
+    }
+
+    /* ========================================================
+       6. DELETE LELANG
+    ======================================================== */
+    public function delete($id)
+    {
+        // Hapus penawaran lelang yang terkait
+        $this->penawaran->where('id_lelang',$id)->delete();
+
+        // Hapus jadwal lelang
+        $this->lelang->delete($id);
+
+        return redirect()->back()->with('success','Lelang berhasil dihapus!');
+    }
+
+    /* ========================================================
+       7. LELANG AKTIF
     ======================================================== */
     public function aktif()
     {
@@ -70,11 +115,11 @@ class Lelang extends BaseController
             ->where('transaksi_lelang.status','aktif')
             ->findAll();
 
-        // ambil highest bid
+        // Ambil highest bid
         foreach($data['lelang'] as &$l){
             $highest = $this->penawaran->where('id_lelang',$l['id_lelang'])
-                                      ->orderBy('harga_penawaran','DESC')
-                                      ->first();
+                ->orderBy('harga_penawaran','DESC')
+                ->first();
 
             $l['highest_bid'] = $highest['harga_penawaran'] ?? $l['harga_awal'];
         }
@@ -82,9 +127,8 @@ class Lelang extends BaseController
         return view('admin/lelang/aktif',$data);
     }
 
-
     /* ========================================================
-       5. STOP LELANG
+       8. STOP LELANG
     ======================================================== */
     public function stop($id)
     {
@@ -92,10 +136,8 @@ class Lelang extends BaseController
         return redirect()->back()->with('success','Lelang dihentikan.');
     }
 
-
     /* ========================================================
-       6. MONITORING LELANG (REALTIME VIEW)
-       Nanti kita isi penawaran realtime
+       9. MONITORING REALTIME
     ======================================================== */
     public function monitoring($id)
     {
