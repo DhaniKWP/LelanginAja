@@ -22,17 +22,13 @@
                         class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500">
                 </div>
 
-                <div>
-                    <label class="font-medium text-gray-700">Kategori</label>
-                    <select name="kategori_id" class="w-full border rounded px-3 py-2">
-                        <?php foreach($kategori as $k): ?>
-                            <option value="<?= $k['id_kategori']; ?>"
-                                <?= $barang['kategori_id']==$k['id_kategori']?'selected':''; ?>>
-                                <?= $k['nama_kategori']; ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+                <select name="nama_kategori" class="form-control" required>
+                    <?php foreach($kategoriList as $k): ?>
+                        <option value="<?= $k ?>" <?= ($k == $barang['nama_kategori']) ? 'selected':'' ?>>
+                            <?= $k ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
 
                 <div>
                     <label class="font-medium text-gray-700">Kondisi Barang</label>

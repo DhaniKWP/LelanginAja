@@ -4,23 +4,18 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\BarangModel;
-use App\Models\KategoriModel;
 use App\Models\KondisiModel;
 
 class Barang extends BaseController
 {
-    protected $barang, $kategori, $kondisi;
+    protected $barang, $kondisi;
 
     public function __construct()
     {
-        $this->barang = new BarangModel();
-        $this->kategori = new KategoriModel();
-        $this->kondisi = new KondisiModel();
+        $this->barang  = new BarangModel();
+        $this->kondisi = new KondisiModel(); 
     }
 
-    /* ======================
-    | LIST SEMUA BARANG
-    =======================*/
     public function index()
     {
         $data['barang'] = $this->barang->orderBy('id_barang','DESC')->findAll();
@@ -32,32 +27,39 @@ class Barang extends BaseController
     =======================*/
     public function edit($id)
     {
-        $data['barang']   = $this->barang->find($id);
-        $data['kategori'] = $this->kategori->findAll();
-        $data['kondisi']  = $this->kondisi->findAll();
+        $data['barang']  = $this->barang->find($id);
+        $data['kondisi'] = $this->kondisi->findAll();
+
+        // kategori list fix 5 opsi (karena tabel kategori dihapus)
+        $data['kategoriList'] = [
+            'Properti',
+            'Roda Dua',
+            'Roda Empat',
+            'Elektronik',
+            'Fashion'
+        ];
 
         return view('admin/barang/edit', $data);
     }
 
     /* ======================
-    | UPDATE BARANG (NO tanggal)
+    | UPDATE BARANG
     =======================*/
     public function update($id)
     {
         $file = $this->request->getFile('foto');
 
-        // cek foto update atau tidak
         if ($file && $file->isValid() && !$file->hasMoved()) {
             $newName = $file->getRandomName();
             $file->move('uploads/barang/', $newName);
             $foto = $newName;
         } else {
-            $foto = $this->request->getPost('foto_lama'); 
+            $foto = $this->request->getPost('foto_lama');
         }
 
         $this->barang->update($id, [
             'nama_barang'      => $this->request->getPost('nama_barang'),
-            'kategori_id'      => $this->request->getPost('kategori_id'),
+            'nama_kategori'    => $this->request->getPost('nama_kategori'),
             'kondisi_id'       => $this->request->getPost('kondisi_id'),
             'harga_awal'       => $this->request->getPost('harga_awal'),
             'deskripsi'        => $this->request->getPost('deskripsi'),
@@ -78,7 +80,7 @@ class Barang extends BaseController
     }
 
     /* ======================
-    | PENGAJUAN PENDING
+    | LIST PENGAJUAN PENDING
     =======================*/
     public function pengajuan()
     {
@@ -87,12 +89,12 @@ class Barang extends BaseController
     }
 
     /* ======================
-    | APPROVE / REJECT BARANG
+    | APPROVE / REJECT
     =======================*/
     public function approve($id)
     {
         $this->barang->update($id,['status_pengajuan'=>'approved']);
-        return redirect()->back()->with('success','Barang berhasil disetujui! Silakan atur jadwal lelang pada menu lelang.');
+        return redirect()->back()->with('success','Barang disetujui! silakan buat jadwal lelang.');
     }
 
     public function reject($id)

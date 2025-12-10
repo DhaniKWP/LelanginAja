@@ -11,8 +11,8 @@ class BarangModel extends Model
 
     protected $allowedFields = [
         'nama_barang',
-        'kategori_id',
-        'kondisi_id',
+        'kategori_barang',
+        'kondisi_id', 
         'id_user',
         'harga_awal',
         'deskripsi',

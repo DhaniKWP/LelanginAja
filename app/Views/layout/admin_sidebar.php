@@ -20,21 +20,17 @@
                     <i class="fas fa-chevron-down text-sm"></i>
                 </button>
                 <ul id="master-submenu" class="ml-8 mt-2 space-y-1 hidden">
-                    <li><a href="<?= base_url('admin/user') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Manage User</a></li>
-                    <li><a href="<?= base_url('admin/kategori') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Manage Kategori</a></li>
-                    <li><a href="<?= base_url('admin/kondisi') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Manage Kondisi</a></li>
-                    <li><a href="<?= base_url('admin/barang') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Manage Barang</a></li>
-                    <li><a href="<?= base_url('admin/peserta') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Manage Peserta</a></li>
+                    <li><a href="<?= base_url('admin/user') ?>" class="block px-4 py-2 hover:bg-gray-100 text-gray-600 text-sm">Manage User</a></li>
+                    <li><a href="<?= base_url('admin/kondisi') ?>" class="block px-4 py-2 hover:bg-gray-100 text-gray-600 text-sm">Manage Kondisi</a></li>
+                    <li><a href="<?= base_url('admin/barang') ?>" class="block px-4 py-2 hover:bg-gray-100 text-gray-600 text-sm">Manage Barang</a></li>
+                    <li><a href="<?= base_url('admin/peserta') ?>" class="block px-4 py-2 hover:bg-gray-100 text-gray-600 text-sm">Manage Peserta</a></li>
                 </ul>
             </li>
 
             <!-- Pengajuan Barang -->
             <li>
-                <a href="<?= base_url('admin/pengajuanbarang') ?>" class="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 transition">
-                    <div class="flex items-center gap-3">
-                        <i class="fas fa-inbox w-5"></i>
-                        <span>Pengajuan Barang</span>
-                    </div>
+                <a href="<?= base_url('admin/pengajuanbarang') ?>" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 transition">
+                    <i class="fas fa-inbox w-5 mr-3"></i> Pengajuan Barang
                 </a>
             </li>
 
@@ -43,30 +39,21 @@
                 <button class="w-full flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 transition" onclick="toggleSubmenu('lelang')">
                     <div class="flex items-center gap-3">
                         <i class="fas fa-gavel w-5"></i>
-                        <span>Proses Lelang</span>
+                        <span>Lelang</span>
                     </div>
                     <i class="fas fa-chevron-down text-sm"></i>
                 </button>
                 <ul id="lelang-submenu" class="ml-8 mt-2 space-y-1 hidden">
-                    <li><a href="<?= base_url('admin/lelang/jadwal') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Jadwal Lelang</a></li>
-                    <li><a href="<?= base_url('admin/lelang/aktif') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Lelang Aktif</a></li>
+                    <li><a href="<?= base_url('admin/lelang/jadwal') ?>" class="block px-4 py-2 hover:bg-gray-100 text-gray-600 text-sm">Jadwal Lelang</a></li>
+                    <li><a href="<?= base_url('admin/lelang/aktif') ?>" class="block px-4 py-2 hover:bg-gray-100 text-gray-600 text-sm">Lelang Aktif</a></li>
                 </ul>
             </li>
 
-            <!-- Penawaran & Pemenang -->
+            <!-- Pemenang -->
             <li>
-                <button class="w-full flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 transition" onclick="toggleSubmenu('penawaran')">
-                    <div class="flex items-center gap-3">
-                        <i class="fas fa-trophy w-5"></i>
-                        <span>Penawaran</span>
-                    </div>
-                    <i class="fas fa-chevron-down text-sm"></i>
-                </button>
-                <ul id="penawaran-submenu" class="ml-8 mt-2 space-y-1 hidden">
-                    <li><a href="<?= base_url('admin/penawaran-list') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Daftar Penawaran</a></li>
-                    <li><a href="<?= base_url('admin/pemenang') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Tentukan Pemenang</a></li>
-                    <li><a href="<?= base_url('admin/transaksi-pemenang') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Transaksi Pemenang</a></li>
-                </ul>
+                <a href="<?= base_url('admin/pemenang') ?>" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 transition">
+                    <i class="fas fa-trophy w-5 mr-3"></i> Pemenang Lelang
+                </a>
             </li>
 
             <!-- Pembayaran -->
@@ -76,11 +63,9 @@
                         <i class="fas fa-money-check-alt w-5"></i>
                         <span>Pembayaran</span>
                     </div>
-                    <span class="bg-orange-500 text-white text-xs rounded-full px-2 py-1">8</span>
                 </button>
                 <ul id="pembayaran-submenu" class="ml-8 mt-2 space-y-1 hidden">
-                    <li><a href="<?= base_url('admin/verifikasi') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Verifikasi Pembayaran</a></li>
-                    <li><a href="<?= base_url('admin/riwayat-bayar') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Riwayat Pembayaran</a></li>
+                    <li><a href="<?= base_url('admin/pembayaran') ?>" class="block px-4 py-2 hover:bg-gray-100 text-gray-600 text-sm">Verifikasi Pembayaran</a></li>
                 </ul>
             </li>
 
@@ -94,18 +79,11 @@
                     <i class="fas fa-chevron-down text-sm"></i>
                 </button>
                 <ul id="laporan-submenu" class="ml-8 mt-2 space-y-1 hidden">
-                    <li><a href="<?= base_url('admin/lap-barang') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Laporan Barang</a></li>
-                    <li><a href="<?= base_url('admin/lap-pemenang') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Laporan Pemenang</a></li>
-                    <li><a href="<?= base_url('admin/lap-transaksi') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Laporan Transaksi</a></li>
-                    <li><a href="<?= base_url('admin/lap-export') ?>" class="block px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-600 text-sm">Export Data</a></li>
+                    <li><a href="<?= base_url('admin/lap-barang') ?>" class="block px-4 py-2 hover:bg-gray-100 text-gray-600 text-sm">Laporan Barang</a></li>
+                    <li><a href="<?= base_url('admin/lap-pemenang') ?>" class="block px-4 py-2 hover:bg-gray-100 text-gray-600 text-sm">Laporan Pemenang</a></li>
+                    <li><a href="<?= base_url('admin/lap-transaksi') ?>" class="block px-4 py-2 hover:bg-gray-100 text-gray-600 text-sm">Laporan Transaksi</a></li>
                 </ul>
             </li>
-
-            <!-- Divider -->
-            <li class="pt-4">
-                <hr class="border-gray-200">
-            </li>
-
         </ul>
     </div>
 </aside>

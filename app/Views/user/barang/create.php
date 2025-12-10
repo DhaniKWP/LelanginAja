@@ -13,15 +13,13 @@
                 class="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
 
-        <div>
-            <label class="font-medium text-gray-800">Kategori Barang</label>
-            <select name="kategori_id" required
-                class="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:ring-2 focus:ring-blue-500">
-                <?php foreach($kategori as $k): ?>
-                    <option value="<?= $k['id_kategori'] ?>"><?= $k['nama_kategori'] ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+        <label>Kategori</label>
+        <select name="kategori_barang" class="form-control" required>
+            <option value="" hidden>Pilih kategori</option>
+            <?php foreach($kategoriList as $k): ?>
+                <option value="<?= $k ?>"><?= $k ?></option>
+            <?php endforeach; ?>
+        </select>
 
         <div>
             <label class="font-medium text-gray-800">Kondisi Barang</label>

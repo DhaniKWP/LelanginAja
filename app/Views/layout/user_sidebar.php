@@ -1,127 +1,83 @@
-<!-- User Sidebar Component -->
 <aside class="w-64 bg-white h-screen fixed shadow-xl overflow-y-auto border-r border-gray-200">
     <div class="p-6">
         <ul class="space-y-2">
+
             <!-- Dashboard -->
             <li>
                 <a href="<?= base_url('user/dashboard') ?>" 
-                   class="flex items-center gap-3 px-4 py-3 rounded-xl <?= uri_string() == 'user/dashboard' ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' : 'hover:bg-blue-50 text-gray-700' ?> transition">
-                    <i class="fas fa-home w-5"></i>
-                    <span>Dashboard</span>
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl 
+                   <?= uri_string()=='user/dashboard'?'bg-blue-600 text-white shadow':'hover:bg-blue-50 text-gray-700' ?>">
+                    <i class="fas fa-home w-5"></i> <span>Dashboard</span>
                 </a>
             </li>
 
             <!-- Barang Saya -->
             <li>
-                <button class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-blue-50 text-gray-700 transition" 
-                        onclick="toggleSubmenu('barang')">
+                <button onclick="toggleSubmenu('barang')" 
+                    class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-blue-50 text-gray-700">
                     <div class="flex items-center gap-3">
-                        <i class="fas fa-box w-5 text-blue-500"></i>
-                        <span>Barang Saya</span>
+                        <i class="fas fa-box w-5 text-blue-500"></i><span>Barang Saya</span>
                     </div>
-                    <i class="fas fa-chevron-down text-sm transition-transform" id="barang-icon"></i>
+                    <i id="barang-icon" class="fas fa-chevron-down text-sm"></i>
                 </button>
+
                 <ul id="barang-submenu" class="ml-8 mt-2 space-y-1 hidden">
-                    <li>
-                        <a href="<?= base_url('user/barang/create') ?>" 
-                           class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm transition">
-                            Ajukan Barang
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url('user/barang/') ?>" 
-                           class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm transition">
-                            Status Barang
-                        </a>
-                    </li>
+                    <li><a href="<?= base_url('user/barang/create') ?>" 
+                        class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm">Ajukan Barang</a></li>
+
+                    <li><a href="<?= base_url('user/barang') ?>" 
+                        class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm">Status Barang</a></li>
                 </ul>
             </li>
 
             <!-- Lelang -->
             <li>
-                <button class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-blue-50 
-                    text-gray-700 transition"
-                    onclick="toggleSubmenu('lelang')">
-
+                <button onclick="toggleSubmenu('lelang')" 
+                    class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-blue-50 text-gray-700">
                     <div class="flex items-center gap-3">
-                        <i class="fas fa-gavel w-5 text-blue-500"></i>
-                        <span>Lelang</span>
+                        <i class="fas fa-gavel w-5 text-blue-500"></i><span>Lelang</span>
                     </div>
-
-                    <i class="fas fa-chevron-down text-sm transition-transform" id="lelang-icon"></i>
+                    <i id="lelang-icon" class="fas fa-chevron-down text-sm"></i>
                 </button>
 
-                <ul id="lelang-submenu" class="ml-8 mt-2 space-y-1 
-                    <?= (service('uri')->getSegment(2) == 'lelang') ? '' : 'hidden' ?>">
-                    
-                    <li>
-                        <a href="<?= base_url('user/lelang/aktif') ?>" 
-                        class="block px-4 py-2 rounded-lg text-sm transition
-                            <?= (service('uri')->getSegment(3)=='aktif') ? 'bg-blue-100 text-blue-700 font-semibold' : 'hover:bg-blue-50 text-gray-600' ?>">
-                            Lelang Aktif
-                        </a>
-                    </li>
+                <ul id="lelang-submenu" class="ml-8 mt-2 space-y-1 hidden">
+                    <li><a href="<?= base_url('user/lelang/aktif') ?>" 
+                        class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm">Lelang Aktif</a></li>
 
-                    <li>
-                        <a href="<?= base_url('user/lelang/riwayat') ?>" 
-                        class="block px-4 py-2 rounded-lg text-sm transition
-                            <?= (service('uri')->getSegment(3)=='riwayat') ? 'bg-blue-100 text-blue-700 font-semibold' : 'hover:bg-blue-50 text-gray-600' ?>">
-                            Riwayat Penawaran
-                        </a>
-                    </li>
+                    <li><a href="<?= base_url('user/lelang/riwayat') ?>" 
+                        class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm">Riwayat Penawaran</a></li>
 
-                    <li>
-                        <a href="<?= base_url('user/lelang/pemenang') ?>" 
-                        class="block px-4 py-2 rounded-lg text-sm transition
-                            <?= (service('uri')->getSegment(3)=='pemenang') ? 'bg-blue-100 text-blue-700 font-semibold' : 'hover:bg-blue-50 text-gray-600' ?>">
-                            Status Pemenang
-                        </a>
-                    </li>
-
+                    <li><a href="<?= base_url('user/lelang/pemenang') ?>" 
+                        class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm">Status Pemenang</a></li>
                 </ul>
             </li>
 
             <!-- Pembayaran -->
             <li>
-                <button class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-blue-50 text-gray-700 transition" 
-                        onclick="toggleSubmenu('pembayaran')">
+                <button onclick="toggleSubmenu('pembayaran')" 
+                    class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-blue-50 text-gray-700">
                     <div class="flex items-center gap-3">
-                        <i class="fas fa-credit-card w-5 text-blue-500"></i>
-                        <span>Pembayaran</span>
+                        <i class="fas fa-credit-card w-5 text-blue-500"></i><span>Pembayaran</span>
                     </div>
-                    <i class="fas fa-chevron-down text-sm transition-transform" id="pembayaran-icon"></i>
+                    <i id="pembayaran-icon" class="fas fa-chevron-down text-sm"></i>
                 </button>
+
                 <ul id="pembayaran-submenu" class="ml-8 mt-2 space-y-1 hidden">
-                    <li>
-                        <a href="<?= base_url('user/pembayaran') ?>" 
-                           class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm transition">
-                            Upload Bukti
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url('user/status-pembayaran') ?>" 
-                           class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm transition">
-                            Status Pembayaran
-                        </a>
-                    </li>
+                    <li><a href="<?= base_url('user/pembayaran') ?>" 
+                        class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm">Upload Bukti</a></li>
                 </ul>
             </li>
 
-            <!-- Divider -->
-            <li class="pt-4">
-                <hr class="border-gray-200">
-            </li>
-
+            <li class="pt-4"><hr class="border-gray-200"></li>
         </ul>
     </div>
 </aside>
 
 <script>
 function toggleSubmenu(id) {
-    const submenu = document.getElementById(id + '-submenu');
+    const menu = document.getElementById(id + '-submenu');
     const icon = document.getElementById(id + '-icon');
-    
-    submenu.classList.toggle('hidden');
+    menu.classList.toggle('hidden');
     icon.classList.toggle('rotate-180');
 }
 </script>

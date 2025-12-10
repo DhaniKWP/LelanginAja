@@ -83,7 +83,6 @@
 
         <div class="bg-blue-50 border-l-4 border-blue-500 p-3 rounded text-sm text-blue-800 mb-3">
             Pantau riwayat penawaran secara langsung di bawah.  
-            (Bisa di-refresh berkala atau nanti pakai AJAX realtime.)
         </div>
 
         <a href="<?= base_url('admin/lelang/stop/'.$lelang['id_lelang']) ?>"
