@@ -32,12 +32,20 @@
                     <td class="px-4 py-2 text-gray-600"><?= $r['email'] ?></td>
                     <td class="px-4 py-2"><?= $r['tanggal_daftar'] ?></td>
                     <td class="px-4 py-2">
-                        <?php if($r['status']=='pending'): ?>
-                            <span class="px-3 py-1 rounded bg-yellow-400 text-sm font-medium">Pending</span>
-                        <?php elseif($r['status']=='approved'): ?>
-                            <span class="px-3 py-1 rounded bg-green-500 text-white text-sm font-medium">Approved</span>
-                        <?php else: ?>
-                            <span class="px-3 py-1 rounded bg-red-500 text-white text-sm font-medium">Rejected</span>
+                        <?php if($r['status'] === 'pending'): ?>
+                            <span class="px-3 py-1 rounded bg-yellow-400 text-sm font-medium">
+                                Pending
+                            </span>
+
+                        <?php elseif($r['status'] === 'disetujui'): ?>
+                            <span class="px-3 py-1 rounded bg-green-500 text-white text-sm font-medium">
+                                Disetujui
+                            </span>
+
+                        <?php elseif($r['status'] === 'ditolak'): ?>
+                            <span class="px-3 py-1 rounded bg-red-500 text-white text-sm font-medium">
+                                Ditolak
+                            </span>
                         <?php endif; ?>
                     </td>
                     <td class="px-4 py-2 text-center">

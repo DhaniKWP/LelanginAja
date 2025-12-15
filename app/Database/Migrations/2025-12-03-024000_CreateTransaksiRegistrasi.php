@@ -3,7 +3,6 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
-use CodeIgniter\Database\RawSql;
 
 class CreateTransaksiRegistrasi extends Migration
 {
@@ -11,26 +10,33 @@ class CreateTransaksiRegistrasi extends Migration
     {
         $this->forge->addField([
             'id_reg' => [
-                'type' => 'SERIAL',
-                'null' => false,
+                'type'           => 'INT',
+                'unsigned'       => true,
+                'auto_increment' => true,
             ],
             'id_user' => [
-                'type' => 'INT',
-                'null' => false,
+                'type'     => 'INT',
+                'unsigned' => true,
             ],
             'tanggal_daftar' => [
                 'type' => 'TIMESTAMP',
-                'default' => new RawSql('CURRENT_TIMESTAMP')
+                'null' => false,
             ],
             'status' => [
-                'type' => 'VARCHAR',
+                'type'       => 'VARCHAR',
                 'constraint' => 20,
-                'default' => 'aktif',
+                'default'    => 'pending',
             ],
         ]);
 
         $this->forge->addKey('id_reg', true);
-        $this->forge->addForeignKey('id_user', 'users', 'id_user', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey(
+            'id_user',
+            'users',
+            'id_user',
+            'CASCADE',
+            'CASCADE'
+        );
 
         $this->forge->createTable('transaksi_registrasi');
     }

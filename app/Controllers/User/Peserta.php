@@ -13,54 +13,94 @@ class Peserta extends BaseController
 
     public function __construct()
     {
-        $this->peserta = new PesertaModel();
+        $this->peserta    = new PesertaModel();
         $this->registrasi = new TransaksiRegistrasiModel();
     }
 
+    // ================= HALAMAN STATUS PESERTA =================
     public function index()
     {
         $id_user = session()->get('id_user');
 
         $data['registrasi'] = $this->registrasi
-                                   ->where('id_user',$id_user)
-                                   ->orderBy('id_reg','DESC')
-                                   ->first();
+            ->where('id_user', $id_user)
+            ->orderBy('id_reg', 'DESC')
+            ->first();
 
         $data['peserta'] = $this->peserta
-                               ->where('id_user',$id_user)
-                               ->first(); // hanya ada kalau sudah di-approve admin
+            ->where('id_user', $id_user)
+            ->first();
 
         return view('user/peserta/index', $data);
     }
 
+    // ================= FORM DAFTAR PESERTA =================
     public function daftar()
     {
         $id_user = session()->get('id_user');
 
-        // Jika sudah pernah daftar & pending approve
-        if($this->registrasi->where('id_user',$id_user)->where('status','pending')->first()){
-            return redirect()->to('/user/peserta')->with('info','Pengajuan sedang menunggu verifikasi admin.');
+        // 🔒 Masih pending
+        if ($this->registrasi
+            ->where('id_user', $id_user)
+            ->where('status', 'pending')
+            ->first()) {
+            return redirect()->to('/user/peserta')
+                ->with('info', 'Pengajuan kamu masih menunggu persetujuan admin.');
         }
 
-        // Jika sudah peserta resmi
-        if($this->peserta->where('id_user',$id_user)->first()){
-            return redirect()->to('/user/peserta')->with('success','Kamu sudah menjadi peserta.');
+        // ✅ Sudah peserta AKTIF
+        if ($this->peserta
+            ->where('id_user', $id_user)
+            ->where('is_active', true)
+            ->first()) {
+            return redirect()->to('/user/peserta')
+                ->with('success', 'Kamu sudah menjadi peserta.');
         }
 
+        // ❌ Belum daftar → boleh isi form
         return view('user/peserta/register');
     }
 
+    // ================= SIMPAN PENDAFTARAN =================
     public function store()
     {
         $id_user = session()->get('id_user');
 
-        // Insert ke tabel registrasi bukan peserta
-        $this->registrasi->save([
-            'id_user' => $id_user,
-            'tanggal_daftar' => date('Y-m-d H:i:s'),
-            'status' => 'pending'
+        // 🔒 Kalau masih pending, tolak
+        if ($this->registrasi
+            ->where('id_user', $id_user)
+            ->where('status', 'pending')
+            ->first()) {
+            return redirect()->to('/user/peserta')
+                ->with('info', 'Pengajuan kamu masih diproses.');
+        }
+
+        // 🔒 Kalau sudah aktif, tolak
+        if ($this->peserta
+            ->where('id_user', $id_user)
+            ->where('is_active', true)
+            ->first()) {
+            return redirect()->to('/user/peserta')
+                ->with('success', 'Kamu sudah menjadi peserta.');
+        }
+
+        // 1️⃣ SIMPAN DATA PROFIL PESERTA (BELUM AKTIF)
+        $this->peserta->insert([
+            'id_user'   => $id_user,
+            'alamat'    => $this->request->getPost('alamat'),
+            'no_hp'     => $this->request->getPost('no_hp'),
+            'is_active' => false,
+            'tanggal_disetujui' => null
         ]);
 
-        return redirect()->to('/user/peserta')->with('success','Pendaftaran peserta dikirim, menunggu persetujuan admin.');
+        // 2️⃣ SIMPAN STATUS REGISTRASI
+        $this->registrasi->insert([
+            'id_user'        => $id_user,
+            'tanggal_daftar' => date('Y-m-d H:i:s'),
+            'status'         => 'pending'
+        ]);
+
+        return redirect()->to('/user/peserta')
+            ->with('success', 'Pendaftaran berhasil, menunggu persetujuan admin.');
     }
 }

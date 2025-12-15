@@ -5,7 +5,7 @@ namespace App\Database\Migrations;
 use CodeIgniter\Database\Migration;
 use CodeIgniter\Database\RawSql;
 
-class CreateBarangFinal extends Migration
+class CreateBarang extends Migration
 {
     public function up()
     {

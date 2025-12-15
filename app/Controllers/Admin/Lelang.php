@@ -147,9 +147,15 @@ class Lelang extends BaseController
             ->find($id);
 
         $data['penawaran'] = $this->penawaran
-            ->where('id_lelang',$id)
-            ->orderBy('harga_penawaran','DESC')
+            ->select('
+                transaksi_penawaran.*,
+                users.nama
+            ')
+            ->join('users', 'users.id_user = transaksi_penawaran.id_user')
+            ->where('transaksi_penawaran.id_lelang', $id)
+            ->orderBy('transaksi_penawaran.harga_penawaran', 'DESC')
             ->findAll();
+
 
         return view('admin/lelang/monitoring', $data);
     }

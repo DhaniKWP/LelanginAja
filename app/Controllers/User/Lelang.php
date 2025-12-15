@@ -41,7 +41,7 @@ class Lelang extends BaseController
         $userId = session()->get('id_user');
 
         $data['lelang'] = $this->lelang
-            ->select('transaksi_lelang.*, barang.nama_barang, barang.harga_awal, barang.deskripsi, barang.foto, tanggal_selesai')
+            ->select('transaksi_lelang.*, barang.nama_barang, barang.harga_awal, barang.deskripsi, barang.foto, transaksi_lelang.tanggal_selesai')
             ->join('barang','barang.id_barang = transaksi_lelang.id_barang')
             ->where('id_lelang', $id_lelang)
             ->first();

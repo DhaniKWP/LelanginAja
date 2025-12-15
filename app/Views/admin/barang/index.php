@@ -37,7 +37,7 @@
                     <!-- GANTI kategori_id -> nama_kategori -->
                     <td class="px-4 py-3">
                         <span class="px-2 py-1 text-xs bg-blue-50 text-blue-700 rounded font-medium">
-                            <?= $b['kategori_barang'] ?: '-' ?>
+                            <?= $b['nama_kategori'] ?: '-' ?>
                         </span>
                     </td>
 

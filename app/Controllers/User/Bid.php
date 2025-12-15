@@ -19,48 +19,58 @@ class Bid extends BaseController
     }
 
     public function submit($id_lelang)
-    {
-        $userId = session()->get('id_user');
+{
+    $userId = session()->get('id_user');
 
-        // 1. Pastikan user sudah jadi peserta
-        if (!$this->peserta->where('id_user', $userId)->first()) {
-            return redirect()->back()->with('error', 'Daftar peserta dulu untuk ikut lelang.');
-        }
+    // 1️⃣ WAJIB: cek peserta AKTIF
+    $pesertaAktif = $this->peserta
+        ->where('id_user', $userId)
+        ->where('is_active', true)
+        ->first();
 
-        // 2. Ambil data lelang + harga_awal dari tabel barang
-        $lelang = $this->lelang
-            ->select('transaksi_lelang.*, barang.harga_awal')
-            ->join('barang', 'barang.id_barang = transaksi_lelang.id_barang')
-            ->where('transaksi_lelang.id_lelang', $id_lelang)
-            ->first();
-
-        if (!$lelang) {
-            return redirect()->back()->with('error', 'Lelang tidak ditemukan.');
-        }
-
-        // 3. Ambil bid tertinggi sekarang
-        $lastBid = $this->penawaran->where('id_lelang', $id_lelang)
-                                   ->orderBy('harga_penawaran', 'DESC')
-                                   ->first();
-
-        $harga = (int) $this->request->getPost('harga_penawaran');
-
-        // 4. Minimal bid = bid tertinggi atau harga_awal kalau belum ada bid
-        $minBid = $lastBid ? (int) $lastBid['harga_penawaran'] : (int) $lelang['harga_awal'];
-
-        if ($harga <= $minBid) {
-            return redirect()->back()
-                ->with('error', 'Bid harus lebih tinggi dari Rp ' . number_format($minBid));
-        }
-
-        // 5. Simpan penawaran
-        $this->penawaran->save([
-            'id_lelang'       => $id_lelang,
-            'id_user'         => $userId,
-            'harga_penawaran' => $harga,
-            'waktu_penawaran' => date('Y-m-d H:i:s'),
-        ]);
-
-        return redirect()->back()->with('success', 'Penawaran berhasil dikirim!');
+    if (!$pesertaAktif) {
+        return redirect()->to('/user/peserta')
+            ->with('error', 'Akun kamu belum disetujui admin.');
     }
+
+    // 2️⃣ Ambil data lelang + harga awal
+    $lelang = $this->lelang
+        ->select('transaksi_lelang.*, barang.harga_awal')
+        ->join('barang', 'barang.id_barang = transaksi_lelang.id_barang')
+        ->where('transaksi_lelang.id_lelang', $id_lelang)
+        ->where('transaksi_lelang.status', 'aktif')
+        ->first();
+
+    if (!$lelang) {
+        return redirect()->back()->with('error', 'Lelang tidak ditemukan atau sudah berakhir.');
+    }
+
+    // 3️⃣ Ambil bid tertinggi
+    $lastBid = $this->penawaran
+        ->where('id_lelang', $id_lelang)
+        ->orderBy('harga_penawaran', 'DESC')
+        ->first();
+
+    $harga = (int) $this->request->getPost('harga_penawaran');
+
+    $minBid = $lastBid
+        ? (int) $lastBid['harga_penawaran']
+        : (int) $lelang['harga_awal'];
+
+    if ($harga <= $minBid) {
+        return redirect()->back()
+            ->with('error', 'Bid harus lebih tinggi dari Rp ' . number_format($minBid));
+    }
+
+    // 4️⃣ Simpan bid
+    $this->penawaran->insert([
+        'id_lelang'       => $id_lelang,
+        'id_user'         => $userId,
+        'harga_penawaran' => $harga,
+        'waktu_penawaran' => date('Y-m-d H:i:s'),
+    ]);
+
+    return redirect()->back()->with('success', 'Penawaran berhasil dikirim!');
+}
+
 }

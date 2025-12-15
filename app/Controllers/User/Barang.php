@@ -53,7 +53,7 @@ class Barang extends BaseController
 
         $this->barang->save([
             'nama_barang'       => $this->request->getPost('nama_barang'),
-            'kategori_barang'   => $this->request->getPost('kategori_barang'),
+            'nama_kategori'   => $this->request->getPost('nama_kategori'),
             'kondisi_id'        => $this->request->getPost('kondisi_id'),
             'id_user'           => session('id_user'),
             'harga_awal'        => $this->request->getPost('harga_awal'),
