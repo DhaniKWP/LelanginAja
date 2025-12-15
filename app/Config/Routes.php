@@ -8,6 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 
 $routes->get('/', 'Home::index');
 $routes->get('/dashboard', 'Home::index');
+$routes->get('/lelang/(:num)', 'Home::detail/$1');
 
 /* =========================
 |  AUTH

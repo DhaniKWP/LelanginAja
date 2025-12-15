@@ -33,85 +33,76 @@ Platform Lelang Online Terpercaya
     </div>
 </section>
 
-<!-- Auction Items -->
 <section id="barang" class="py-20 bg-gray-50">
     <div class="container mx-auto px-4">
+
         <div class="text-center mb-12">
-            <h2 class="text-4xl font-bold text-secondary mb-4">Barang Lelang Terbaru</h2>
-            <p class="text-gray-600 text-lg">Jangan lewatkan kesempatan untuk mendapatkan barang favorit Anda</p>
+            <h2 class="text-4xl font-bold text-secondary mb-4">
+                Barang Lelang Terbaru
+            </h2>
+            <p class="text-gray-600 text-lg">
+                Jangan lewatkan kesempatan untuk mendapatkan barang favorit Anda
+            </p>
         </div>
 
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Card 1 -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-                <div class="bg-gradient-to-br from-blue-100 to-blue-50 h-48 flex items-center justify-center">
-                    <i class="fas fa-car text-primary text-7xl"></i>
-                </div>
-                <div class="p-6">
-                    <h5 class="text-xl font-bold text-secondary mb-2">Toyota Avanza 2020</h5>
-                    <div class="text-3xl font-bold text-primary my-3">Rp 150.000.000</div>
-                    <div class="bg-blue-50 text-secondary font-semibold py-2 px-4 rounded-lg text-center mb-4">
-                        <i class="fas fa-clock"></i> 2 Hari 5 Jam
-                    </div>
-                    <button class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-secondary transition-colors">
-                        Lihat Detail
-                    </button>
-                </div>
-            </div>
 
-            <!-- Card 2 -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-                <div class="bg-gradient-to-br from-blue-100 to-blue-50 h-48 flex items-center justify-center">
-                    <i class="fas fa-motorcycle text-primary text-7xl"></i>
+            <?php if (empty($lelang)): ?>
+                <div class="col-span-4 text-center text-gray-500">
+                    Belum ada lelang aktif.
                 </div>
-                <div class="p-6">
-                    <h5 class="text-xl font-bold text-secondary mb-2">Honda Vario 160</h5>
-                    <div class="text-3xl font-bold text-primary my-3">Rp 18.500.000</div>
-                    <div class="bg-blue-50 text-secondary font-semibold py-2 px-4 rounded-lg text-center mb-4">
-                        <i class="fas fa-clock"></i> 1 Hari 12 Jam
-                    </div>
-                    <button class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-secondary transition-colors">
-                        Lihat Detail
-                    </button>
-                </div>
-            </div>
+            <?php endif; ?>
 
-            <!-- Card 3 -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-                <div class="bg-gradient-to-br from-blue-100 to-blue-50 h-48 flex items-center justify-center">
-                    <i class="fas fa-laptop text-primary text-7xl"></i>
-                </div>
-                <div class="p-6">
-                    <h5 class="text-xl font-bold text-secondary mb-2">MacBook Pro M2</h5>
-                    <div class="text-3xl font-bold text-primary my-3">Rp 22.000.000</div>
-                    <div class="bg-blue-50 text-secondary font-semibold py-2 px-4 rounded-lg text-center mb-4">
-                        <i class="fas fa-clock"></i> 3 Hari 8 Jam
-                    </div>
-                    <button class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-secondary transition-colors">
-                        Lihat Detail
-                    </button>
-                </div>
-            </div>
+            <?php foreach ($lelang as $l): ?>
+                <?php
+                    // hitung sisa waktu
+                    $sisa = strtotime($l['tanggal_selesai']) - time();
+                    $hari = floor($sisa / 86400);
+                    $jam  = floor(($sisa % 86400) / 3600);
+                ?>
 
-            <!-- Card 4 -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-                <div class="bg-gradient-to-br from-blue-100 to-blue-50 h-48 flex items-center justify-center">
-                    <i class="fas fa-tshirt text-primary text-7xl"></i>
-                </div>
-                <div class="p-6">
-                    <h5 class="text-xl font-bold text-secondary mb-2">Jaket Kulit Premium</h5>
-                    <div class="text-3xl font-bold text-primary my-3">Rp 1.200.000</div>
-                    <div class="bg-blue-50 text-secondary font-semibold py-2 px-4 rounded-lg text-center mb-4">
-                        <i class="fas fa-clock"></i> 5 Jam 30 Menit
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden
+                            hover:shadow-2xl hover:-translate-y-2 transition-all">
+
+                    <!-- FOTO -->
+                    <div class="h-48 overflow-hidden">
+                        <img src="/uploads/barang/<?= esc($l['foto']) ?>"
+                        onclick="openImageModal(this.src)"
+                        class="w-full h-full object-cover cursor-pointer hover:opacity-90 transition">
+                        <p class="text-sm text-gray-400 text-center mt-2">
+                            Klik foto untuk memperbesar
+                        </p>
                     </div>
-                    <button class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-secondary transition-colors">
-                        Lihat Detail
-                    </button>
+
+                    <div class="p-6">
+                        <h5 class="text-xl font-bold text-secondary mb-2">
+                            <?= esc($l['nama_barang']) ?>
+                        </h5>
+
+                        <div class="text-3xl font-bold text-primary my-3">
+                            Rp <?= number_format($l['harga_awal'], 0, ',', '.') ?>
+                        </div>
+
+                        <div class="bg-blue-50 text-secondary font-semibold
+                                    py-2 px-4 rounded-lg text-center mb-4">
+                            <i class="fas fa-clock"></i>
+                            <?= $hari ?> Hari <?= $jam ?> Jam
+                        </div>
+
+                        <a href="/lelang/<?= $l['id_lelang'] ?>"
+                        class="block w-full bg-primary text-white py-3
+                                rounded-lg font-semibold text-center
+                                hover:bg-secondary transition-colors">
+                            Lihat Detail
+                        </a>
+                    </div>
                 </div>
-            </div>
+            <?php endforeach; ?>
+
         </div>
     </div>
 </section>
+
 
 <!-- Categories -->
 <section class="py-20 bg-white">
@@ -209,5 +200,35 @@ Platform Lelang Online Terpercaya
         </div>
     </div>
 </section>
+
+<!-- IMAGE PREVIEW MODAL -->
+<div id="imageModal"
+     class="fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center z-50">
+
+    <button onclick="closeImageModal()"
+            class="absolute top-6 right-6 text-white text-3xl font-bold hover:text-red-400">
+        &times;
+    </button>
+
+    <img id="modalImage"
+         class="max-w-[90%] max-h-[90%] rounded-xl shadow-2xl">
+</div>
+
+<script>
+function openImageModal(src) {
+    const modal = document.getElementById('imageModal');
+    const img   = document.getElementById('modalImage');
+
+    img.src = src;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeImageModal() {
+    const modal = document.getElementById('imageModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+</script>
 
 <?= $this->endSection() ?>
