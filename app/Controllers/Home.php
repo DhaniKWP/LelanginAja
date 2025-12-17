@@ -29,7 +29,7 @@ class Home extends BaseController
             ->orderBy('transaksi_lelang.tanggal_mulai', 'DESC')
             ->findAll();
 
-        return view('home/index', $data); // public landing page
+        return view('home/index', $data); 
     }
 
             public function detail($id_lelang)
@@ -57,7 +57,6 @@ class Home extends BaseController
             );
         }
 
-        // hitung sisa waktu
         $sisa = strtotime($lelang['tanggal_selesai']) - time();
         $hari = floor($sisa / 86400);
         $jam  = floor(($sisa % 86400) / 3600);

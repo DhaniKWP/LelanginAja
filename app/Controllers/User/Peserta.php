@@ -56,8 +56,7 @@ class Peserta extends BaseController
             return redirect()->to('/user/peserta')
                 ->with('success', 'Kamu sudah menjadi peserta.');
         }
-
-        // ❌ Belum daftar → boleh isi form
+        
         return view('user/peserta/register');
     }
 

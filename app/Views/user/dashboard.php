@@ -8,7 +8,7 @@
     <p class="text-gray-600">
         Selamat datang kembali, 
         <span class="font-semibold text-blue-600">
-            <?= esc($user['nama'] ?? 'John Doe') ?>
+            <?= esc($users['nama'] ?? 'Manusia') ?>
         </span>!
     </p>
 </div>

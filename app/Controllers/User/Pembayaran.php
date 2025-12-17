@@ -16,14 +16,12 @@ class Pembayaran extends BaseController
         $this->pembayaran = new PembayaranModel();
     }
 
-    // form bayar
     public function form($id_pemenang)
     {
         $data['pemenang'] = $this->pemenang->find($id_pemenang);
         return view('user/lelang/pembayaran_form', $data);
     }
 
-    // proses upload pembayaran
     public function submit($id_pemenang)
     {
         $file = $this->request->getFile('bukti_transfer');

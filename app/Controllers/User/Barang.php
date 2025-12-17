@@ -16,9 +16,6 @@ class Barang extends BaseController
         $this->kondisi = new KondisiModel();
     }
 
-    /* ========================
-    | BARANG SAYA
-    =========================*/
     public function index()
     {
         $data['barang'] = $this->barang
@@ -29,9 +26,6 @@ class Barang extends BaseController
         return view('user/barang/index',$data);
     }
 
-    /* ========================
-    | FORM AJUKAN BARANG
-    =========================*/
     public function create()
     {
         $data = [
@@ -42,9 +36,6 @@ class Barang extends BaseController
         return view('user/barang/create',$data);
     }
 
-    /* ========================
-    | SIMPAN BARANG USER
-    =========================*/
     public function store()
     {
         $file = $this->request->getFile('foto');
