@@ -26,22 +26,30 @@
     </div>
 
     <script>
-        function toggleSubmenu(id) {
-            const submenu = document.getElementById(id + '-submenu');
-            submenu.classList.toggle('hidden');
-        }
+    function toggleSubmenu(id) {
+        const submenu = document.getElementById(id + '-submenu');
 
-        // Smooth scroll untuk anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId !== '#logout') {
-                    console.log('Navigating to:', targetId);
-                }
-            });
+        // Toggle submenu
+        submenu.classList.toggle('hidden');
+
+        // Simpan state ke localStorage
+        const isOpen = !submenu.classList.contains('hidden');
+        localStorage.setItem('submenu-' + id, isOpen);
+    }
+
+    // Restore submenu state saat page load
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('[id$="-submenu"]').forEach(submenu => {
+            const id = submenu.id.replace('-submenu', '');
+            const isOpen = localStorage.getItem('submenu-' + id);
+
+            if (isOpen === 'true') {
+                submenu.classList.remove('hidden');
+            }
         });
-    </script>
+    });
+</script>
+
     <?= $this->renderSection('scripts') ?>
 
 </body>
