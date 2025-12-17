@@ -6,18 +6,21 @@ use App\Controllers\BaseController;
 use App\Models\BarangModel;
 use App\Models\TransaksiLelangModel;
 use App\Models\TransaksiPenawaranModel;
+use App\Models\TransaksiPemenangModel;
 
 class Lelang extends BaseController
 {
     protected $lelang;
     protected $barang;
     protected $penawaran;
+    protected $pemenang;
 
     public function __construct()
     {
         $this->lelang     = new TransaksiLelangModel();
         $this->barang     = new BarangModel();
         $this->penawaran  = new TransaksiPenawaranModel();
+        $this->pemenang  = new TransaksiPemenangModel();
     }
 
     /* ========================================================
@@ -132,8 +135,50 @@ class Lelang extends BaseController
     ======================================================== */
     public function stop($id)
     {
-        $this->lelang->update($id, ['status'=>'selesai']);
-        return redirect()->back()->with('success','Lelang dihentikan.');
+        // Ambil data lelang
+        $lelang = $this->lelang->find($id);
+        if (!$lelang) {
+            return redirect()->back()->with('error', 'Lelang tidak ditemukan.');
+        }
+
+        // Cegah stop dua kali
+        if ($lelang['status'] === 'selesai') {
+            return redirect()->back()->with('info', 'Lelang sudah selesai.');
+        }
+
+        // Ambil bid tertinggi
+        $winner = $this->penawaran
+            ->where('id_lelang', $id)
+            ->orderBy('harga_penawaran', 'DESC')
+            ->first();
+
+        // Jika ada penawaran → simpan pemenang
+        if ($winner) {
+            $exists = $this->pemenang
+                ->where('id_lelang', $id)
+                ->first();
+
+            if (!$exists) {
+                $this->pemenang->insert([
+                    'id_lelang'      => $id,
+                    'id_user'        => $winner['id_user'],
+                    'harga_menang'   => $winner['harga_penawaran'],
+                    'tanggal_menang' => date('Y-m-d H:i:s'),
+                ]);
+            }
+        }
+
+        // Update status lelang
+        $this->lelang->update($id, [
+            'status' => 'selesai'
+        ]);
+
+        return redirect()->back()->with(
+            'success',
+            $winner
+                ? 'Lelang dihentikan & pemenang otomatis ditentukan.'
+                : 'Lelang dihentikan (tidak ada penawaran).'
+        );
     }
 
     /* ========================================================

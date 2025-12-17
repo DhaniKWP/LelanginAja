@@ -51,7 +51,8 @@
 
             <!-- Pemenang -->
             <li>
-                <a href="<?= base_url('admin/pemenang') ?>" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 transition">
+                <a href="<?= base_url('admin/pemenang') ?>"
+                class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 transition">
                     <i class="fas fa-trophy w-5 mr-3"></i> Pemenang Lelang
                 </a>
             </li>

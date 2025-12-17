@@ -3,62 +3,79 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
-use App\Models\TransaksiPenawaranModel;
 use App\Models\TransaksiPemenangModel;
-use App\Models\TransaksiLelangModel;
-use App\Models\UserModel;
 
 class Pemenang extends BaseController
 {
-    protected $penawaran, $pemenang, $lelang, $user;
+    protected $pemenang;
 
     public function __construct()
     {
-        $this->penawaran = new TransaksiPenawaranModel();
-        $this->pemenang  = new TransaksiPemenangModel();
-        $this->lelang    = new TransaksiLelangModel();
-        $this->user      = new UserModel();
+        $this->pemenang = new TransaksiPemenangModel();
     }
 
-    // ================== LIST LELANG SELESAI ==================
+    // ================= LIST PEMENANG =================
     public function index()
     {
-        $data['lelang'] = $this->lelang
-            ->select('transaksi_lelang.*, barang.nama_barang, barang.foto, barang.harga_awal')
-            ->join('barang','barang.id_barang=transaksi_lelang.id_barang')
-            ->where('transaksi_lelang.status','selesai')
+        $data['pemenang'] = $this->pemenang
+            ->select('
+                transaksi_pemenang.*,
+                barang.nama_barang,
+                barang.foto,
+                users.nama
+            ')
+            ->join('transaksi_lelang','transaksi_lelang.id_lelang = transaksi_pemenang.id_lelang')
+            ->join('barang','barang.id_barang = transaksi_lelang.id_barang')
+            ->join('users','users.id_user = transaksi_pemenang.id_user')
+            ->orderBy('transaksi_pemenang.tanggal_menang','DESC')
             ->findAll();
-        
-        return view('admin/pemenang/index',$data);
+
+        return view('admin/pemenang/index', $data);
     }
 
-    // ================== TENTUKAN PEMENANG ==================
-    public function pilih($id_lelang)
+    // ================= DETAIL PEMENANG =================
+   public function detail($id_lelang)
     {
-        $winner = $this->penawaran
-            ->select('transaksi_penawaran.*, users.nama')
-            ->join('users','users.id_user=transaksi_penawaran.id_user')
-            ->where('id_lelang',$id_lelang)
-            ->orderBy('harga_penawaran','DESC')
+        $pemenang = $this->pemenang
+            ->select('
+                transaksi_pemenang.*,
+
+                users.nama,
+                users.email,
+
+                peserta.no_hp,
+                peserta.alamat,
+
+                barang.nama_barang,
+                barang.foto,
+                barang.harga_awal,
+
+                transaksi_lelang.tanggal_selesai,
+
+                transaksi_pembayaran.metode,
+                transaksi_pembayaran.bukti_transfer,
+                transaksi_pembayaran.status AS status_bayar,
+                transaksi_pembayaran.tanggal_bayar
+            ')
+            ->join('users', 'users.id_user = transaksi_pemenang.id_user')
+            ->join('peserta', 'peserta.id_user = users.id_user')
+            ->join('transaksi_lelang', 'transaksi_lelang.id_lelang = transaksi_pemenang.id_lelang')
+            ->join('barang', 'barang.id_barang = transaksi_lelang.id_barang')
+
+            // 🔥 INI YANG KURANG
+            ->join(
+                'transaksi_pembayaran',
+                'transaksi_pembayaran.id_pemenang = transaksi_pemenang.id_pemenang',
+                'left'
+            )
+
+            ->where('transaksi_pemenang.id_lelang', $id_lelang)
             ->first();
 
-        if(!$winner){
-            return redirect()->back()->with('error','⚠ Tidak ada penawaran pada lelang ini.');
+        if (!$pemenang) {
+            return redirect()->back()->with('error', 'Data pemenang tidak ditemukan');
         }
 
-        // simpan pemenang
-        $this->pemenang->save([
-            'id_lelang'     => $id_lelang,
-            'id_user'       => $winner['id_user'],
-            'harga_menang'  => $winner['harga_penawaran'],
-            'tanggal_menang'=> date('Y-m-d H:i:s')
-        ]);
-
-        // update status lelang --> tetap selesai
-        $this->lelang->update($id_lelang, ['status' => 'selesai']);
-
-        return redirect()->to('/admin/pemenang')
-                        ->with('success','🏆 Pemenang berhasil ditentukan: '.$winner['nama']);
+        return view('admin/pemenang/detail', compact('pemenang'));
     }
-
 }

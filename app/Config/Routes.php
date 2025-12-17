@@ -117,8 +117,8 @@ $routes->group('admin', ['filter'=>'admin'], function($routes){
     });
 
     // Pemenang
-    $routes->get('pemenang','Admin\Pemenang::index');
-    $routes->get('pemenang/pilih/(:num)','Admin\Pemenang::pilih/$1');
+    $routes->get('pemenang', 'Admin\Pemenang::index');
+    $routes->get('pemenang/detail/(:num)', 'Admin\Pemenang::detail/$1');
 
     // pembayaran verifikasi
     $routes->get('pembayaran','Admin\Pembayaran::index');

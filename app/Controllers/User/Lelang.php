@@ -40,34 +40,45 @@ class Lelang extends BaseController
     {
         $userId = session()->get('id_user');
 
-        $data['lelang'] = $this->lelang
+        $lelang = $this->lelang
             ->select('transaksi_lelang.*, barang.nama_barang, barang.harga_awal, barang.deskripsi, barang.foto, transaksi_lelang.tanggal_selesai')
             ->join('barang','barang.id_barang = transaksi_lelang.id_barang')
             ->where('id_lelang', $id_lelang)
             ->first();
 
-        if(!$data['lelang']){
-            return redirect()->to('/user/lelang/aktif')->with('error','Data lelang tidak ditemukan');
+        if(!$lelang){
+            return redirect()->to('/user/lelang/aktif')
+                ->with('error','Data lelang tidak ditemukan');
         }
 
-        // cek peserta
-        $data['isPeserta'] = $this->peserta->where('id_user',$userId)->first() ? true : false;
+        // 🔴 CEK WAKTU HABIS ATAU BELUM
+        $isExpired = strtotime($lelang['tanggal_selesai']) <= time();
 
-        // penawaran tertinggi real
-        $data['maxBid'] = $this->penawaran->where('id_lelang',$id_lelang)
-                                          ->orderBy('harga_penawaran','DESC')
-                                          ->first();
+        return view('user/lelang/detail', [
+            'lelang'     => $lelang,
+            'isExpired'  => $isExpired,
 
-        // riwayat penawaran real data
-        $data['riwayat'] = $this->penawaran
-            ->select('transaksi_penawaran.*, users.nama as nama_user')
-            ->join('users','users.id_user = transaksi_penawaran.id_user')
-            ->where('id_lelang',$id_lelang)
-            ->orderBy('harga_penawaran','DESC')
-            ->findAll();
+            // cek peserta
+            'isPeserta'  => $this->peserta
+                                ->where('id_user',$userId)
+                                ->first() ? true : false,
 
-        return view('user/lelang/detail', $data);
+            // bid tertinggi
+            'maxBid'     => $this->penawaran
+                                ->where('id_lelang',$id_lelang)
+                                ->orderBy('harga_penawaran','DESC')
+                                ->first(),
+
+            // riwayat bid
+            'riwayat'    => $this->penawaran
+                                ->select('transaksi_penawaran.*, users.nama as nama_user')
+                                ->join('users','users.id_user = transaksi_penawaran.id_user')
+                                ->where('id_lelang',$id_lelang)
+                                ->orderBy('harga_penawaran','DESC')
+                                ->findAll()
+        ]);
     }
+
 
     // ------------------- RIWAYAT PENAWARAN -------------------
     public function riwayat()

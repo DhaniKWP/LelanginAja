@@ -48,58 +48,96 @@
         <!-- INFO BARANG -->
         <div class="space-y-5">
 
-            <h2 class="text-3xl font-bold text-gray-800"><?= $lelang['nama_barang'] ?></h2>
-            <p class="text-gray-500 text-sm">ID Lelang: <b>#<?= $lelang['id_lelang'] ?></b></p>
+        <h2 class="text-3xl font-bold text-gray-800">
+            <?= $lelang['nama_barang'] ?>
+        </h2>
 
-            <!-- Harga Awal -->
-            <div class="p-4 rounded-lg border bg-blue-50 shadow-sm">
-                <p class="text-md font-medium">Harga Awal</p>
-                <p class="text-3xl text-blue-700 font-extrabold">
-                    Rp <?= number_format($lelang['harga_awal']) ?>
+        <p class="text-gray-500 text-sm">
+            ID Lelang: <b>#<?= $lelang['id_lelang'] ?></b>
+        </p>
+
+        <!-- Harga Awal -->
+        <div class="p-4 rounded-lg border bg-blue-50 shadow-sm">
+            <p class="text-md font-medium">Harga Awal</p>
+            <p class="text-3xl text-blue-700 font-extrabold">
+                Rp <?= number_format($lelang['harga_awal']) ?>
+            </p>
+        </div>
+
+        <!-- Bid Tertinggi -->
+        <div class="p-4 rounded-lg border bg-yellow-50 shadow-sm">
+            <p class="text-md font-medium">Bid Tertinggi Saat Ini</p>
+            <p class="text-3xl text-yellow-700 font-extrabold">
+                <?= $maxBid
+                    ? 'Rp ' . number_format($maxBid['harga_penawaran'])
+                    : 'Belum ada penawaran' ?>
+            </p>
+        </div>
+
+        <!-- Countdown -->
+        <div class="p-4 rounded-lg border bg-green-50 shadow-sm">
+            <p class="font-medium">⏳ Sisa Waktu</p>
+            <p id="countdown" class="text-2xl font-bold text-green-700"></p>
+        </div>
+
+        <!-- ================== LOGIKA BID ================== -->
+
+        <?php if ($isExpired): ?>
+
+            <!-- ⛔ LELANG HABIS -->
+            <div class="p-4 bg-red-100 border border-red-300 rounded-lg text-center shadow">
+                <p class="text-red-700 font-semibold text-lg">
+                    ⛔ Lelang telah berakhir
+                </p>
+                <p class="text-sm text-gray-600 mt-1">
+                    Penawaran sudah ditutup.
                 </p>
             </div>
 
-            <!-- Bid Tertinggi -->
-            <div class="p-4 rounded-lg border bg-yellow-50 shadow-sm">
-                <p class="text-md font-medium">Bid Tertinggi Saat Ini</p>
-                <p class="text-3xl text-yellow-700 font-extrabold">
-                    <?= $maxBid ? "Rp " . number_format($maxBid['harga_penawaran']) : "Belum ada penawaran" ?>
+        <?php elseif (!$isPeserta): ?>
+
+            <!-- ⚠ BELUM PESERTA -->
+            <div class="p-4 bg-yellow-100 border border-yellow-300 rounded-lg text-center shadow">
+                <p class="mb-2 text-gray-700 font-medium">
+                    ⚠ Kamu belum terdaftar sebagai peserta lelang.
                 </p>
+                <a href="/user/peserta/daftar"
+                class="inline-block bg-yellow-500 hover:bg-yellow-600
+                        text-white px-6 py-2 rounded-lg font-semibold">
+                    Daftar Peserta untuk Ikut Bid
+                </a>
             </div>
 
-            <!-- Countdown -->
-            <div class="p-4 rounded-lg border bg-green-50 shadow-sm">
-                <p class="font-medium">⏳ Sisa Waktu</p>
-                <p id="countdown" class="text-2xl font-bold text-green-700"></p>
-            </div>
+        <?php else: ?>
 
-            <!-- Peserta Check -->
-            <?php if(!$isPeserta): ?>
-                <div class="p-4 bg-yellow-100 border border-yellow-300 rounded-lg text-center shadow">
-                    <p class="mb-2 text-gray-700 font-medium">⚠ Kamu belum terdaftar sebagai peserta lelang.</p>
-                    <a href="/user/peserta/daftar" 
-                    class="inline-block bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-lg font-semibold">
-                        Daftar Peserta untuk Ikut Bid
-                    </a>
-                </div>
-            <?php else: ?>
+            <!-- ✅ FORM BID (AMAN) -->
+        <div id="bidSection">
+            <form action="<?= base_url('user/bid/'.$lelang['id_lelang']) ?>"
+                method="POST"
+                class="mt-4 space-y-3 bg-white p-5 rounded-xl shadow-md">
 
-            <!-- Form Bid -->
-            <form action="<?= base_url('user/bid/'.$lelang['id_lelang']) ?>" method="POST" class="mt-4 space-y-3 bg-white p-5 rounded-xl shadow-md">
+                <label class="block text-gray-700 font-medium">
+                    Masukkan Penawaran
+                </label>
 
-                <label class="block text-gray-700 font-medium">Masukkan Penawaran</label>
-                <input type="number" name="harga_penawaran"
-                       class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                       placeholder="contoh: 5500000" required>
+                <input type="number"
+                    name="harga_penawaran"
+                    class="w-full border rounded-lg p-2
+                            focus:ring-2 focus:ring-blue-500"
+                    placeholder="contoh: 5500000"
+                    required>
 
-                <button type="submit" 
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold shadow">
+                <button type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-700
+                            text-white py-3 rounded-lg font-semibold shadow">
                     🚀 Ajukan Penawaran
                 </button>
             </form>
-
-            <?php endif; ?>
         </div>
+
+        <?php endif; ?>
+
+    </div>
 
     </div>
 
@@ -190,11 +228,27 @@ let timer = setInterval(function() {
     let left = endTime - now;
 
     if(left <= 0){
-        cd.innerHTML = "⛔ Lelang Selesai";
-        cd.classList.replace("text-green-700","text-red-600");
-        clearInterval(timer);
-        return;
+    cd.innerHTML = "⛔ Lelang Selesai";
+    cd.classList.replace("text-green-700","text-red-600");
+
+    // 🔴 SEMBUNYIKAN FORM BID SAAT WAKTU HABIS
+    let bidSection = document.getElementById("bidSection");
+    if (bidSection) {
+        bidSection.innerHTML = `
+            <div class="p-4 bg-red-100 border border-red-300 rounded-lg text-center shadow">
+                <p class="text-red-700 font-semibold text-lg">
+                    ⛔ Lelang telah berakhir
+                </p>
+                <p class="text-sm text-gray-600 mt-1">
+                    Penawaran sudah ditutup.
+                </p>
+            </div>
+        `;
     }
+
+    clearInterval(timer);
+    return;
+}
 
     let h = Math.floor(left / (1000 * 60 * 60));
     let m = Math.floor((left % (1000 * 60 * 60)) / (1000 * 60));
