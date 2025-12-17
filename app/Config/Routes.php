@@ -50,6 +50,7 @@ $routes->group('user', ['filter'=>'user'], function($routes){
     // Pembayaran
     $routes->get('pembayaran/(:num)','User\Pembayaran::form/$1');
     $routes->post('pembayaran/submit/(:num)','User\Pembayaran::submit/$1');
+    $routes->get('pembayaran', 'User\Pembayaran::index');
 
     // Peserta lelang
     $routes->get('peserta','User\Peserta::index');

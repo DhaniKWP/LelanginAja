@@ -9,26 +9,7 @@
                    <?= uri_string()=='user/dashboard'?'bg-blue-600 text-white shadow':'hover:bg-blue-50 text-gray-700' ?>">
                     <i class="fas fa-home w-5"></i> <span>Dashboard</span>
                 </a>
-            </li>
-
-            <!-- Barang Saya -->
-            <li>
-                <button onclick="toggleSubmenu('barang')" 
-                    class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-blue-50 text-gray-700">
-                    <div class="flex items-center gap-3">
-                        <i class="fas fa-box w-5 text-blue-500"></i><span>Barang Saya</span>
-                    </div>
-                    <i id="barang-icon" class="fas fa-chevron-down text-sm"></i>
-                </button>
-
-                <ul id="barang-submenu" class="ml-8 mt-2 space-y-1 hidden">
-                    <li><a href="<?= base_url('user/barang/create') ?>" 
-                        class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm">Ajukan Barang</a></li>
-
-                    <li><a href="<?= base_url('user/barang') ?>" 
-                        class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm">Status Barang</a></li>
-                </ul>
-            </li>
+            </li> 
 
             <!-- Lelang -->
             <li>
@@ -52,6 +33,25 @@
                 </ul>
             </li>
 
+            <!-- Barang Saya -->
+            <li>
+                <button onclick="toggleSubmenu('barang')" 
+                    class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-blue-50 text-gray-700">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-box w-5 text-blue-500"></i><span>Barang Saya</span>
+                    </div>
+                    <i id="barang-icon" class="fas fa-chevron-down text-sm"></i>
+                </button>
+
+                <ul id="barang-submenu" class="ml-8 mt-2 space-y-1 hidden">
+                    <li><a href="<?= base_url('user/barang/create') ?>" 
+                        class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm">Ajukan Barang</a></li>
+
+                    <li><a href="<?= base_url('user/barang') ?>" 
+                        class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm">Status Barang</a></li>
+                </ul>
+            </li>
+
             <!-- Pembayaran -->
             <li>
                 <button onclick="toggleSubmenu('pembayaran')" 
@@ -64,7 +64,7 @@
 
                 <ul id="pembayaran-submenu" class="ml-8 mt-2 space-y-1 hidden">
                     <li><a href="<?= base_url('user/pembayaran') ?>" 
-                        class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm">Upload Bukti</a></li>
+                        class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm">history pembayaran</a></li>
                 </ul>
             </li>
 
