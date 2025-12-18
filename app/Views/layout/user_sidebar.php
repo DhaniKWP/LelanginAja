@@ -48,7 +48,10 @@
                         class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm">Ajukan Barang</a></li>
 
                     <li><a href="<?= base_url('user/barang') ?>" 
-                        class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm">Status Barang</a></li>
+                        class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm">Barang Saya</a></li>
+
+                    <li><a href="<?= base_url('user/barang/hasil') ?>" 
+                        class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm">Hasil Lelang</a></li>
                 </ul>
             </li>
 

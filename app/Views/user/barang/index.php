@@ -56,11 +56,12 @@
 
 
     <!-- List Barang -->
-    <div class="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-7">
+    <div class="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-8">
 
         <?php foreach($barang as $b): ?>
 
-        <div class="bg-white rounded-xl shadow hover:shadow-xl transition duration-300 overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-md hover:shadow-xl
+            transition duration-300 overflow-hidden border border-gray-100">
 
             <!-- FOTO -->
             <div class="w-full h-48 bg-gray-100 overflow-hidden">
@@ -84,6 +85,45 @@
                 <p class="text-gray-500 text-sm">Harga Awal:</p>
                 <p class="text-blue-700 font-bold text-xl">Rp <?= number_format($b['harga_awal']) ?></p>
 
+                <?php if($b['status_pengajuan']=='approved'): ?>
+                <div class="mt-3 text-sm">
+
+                    <?php if(empty($b['id_lelang'])): ?>
+                        <div class="flex items-start gap-2 text-blue-700">
+                            <span class="mt-1">⏳</span>
+                            <p>
+                                <b>Menunggu Jadwal Lelang</b><br>
+                                <span class="text-xs text-gray-500">
+                                    Admin akan menentukan waktu mulai dan selesai lelang
+                                </span>
+                            </p>
+                        </div>
+
+                    <?php elseif($b['status_lelang']=='aktif'): ?>
+                        <div class="flex items-start gap-2 text-green-700">
+                            <span class="mt-1">🔴</span>
+                            <p>
+                                <b>Lelang Sedang Berlangsung</b><br>
+                                <span class="text-xs text-gray-500">
+                                    Penawaran masih dibuka sampai waktu berakhir
+                                </span>
+                            </p>
+                        </div>
+
+                    <?php elseif($b['status_lelang']=='selesai'): ?>
+                        <div class="flex items-start gap-2 text-gray-700">
+                            <span class="mt-1">🏁</span>
+                            <p>
+                                <b>Lelang Telah Selesai</b><br>
+                                <span class="text-xs text-gray-500">
+                                    Menunggu konfirmasi admin & pembayaran pemenang
+                                </span>
+                            </p>
+                        </div>
+                    <?php endif; ?>
+
+                </div>
+            <?php endif; ?>
                 <!-- STATUS BADGE -->
                 <span class="
                     inline-block rounded-full px-3 py-1 text-sm font-medium
@@ -97,7 +137,7 @@
                     <?php if($b['status_pengajuan']=='pending'): ?>
                         ⏳ Menunggu verifikasi admin
                     <?php elseif($b['status_pengajuan']=='approved'): ?>
-                        ✔ Disetujui · Menunggu jadwal lelang
+                       
                     <?php else: ?>
                         ❗ Ditolak — silakan ajukan ulang
                     <?php endif; ?>
@@ -108,31 +148,65 @@
             </div>
 
             <!-- ACTION BUTTON -->
-            <div class="p-4 border-t flex gap-2">
+            <div class="p-5 border-t bg-gray-50 space-y-3">
 
-                <?php if($b['status_pengajuan']=='rejected'): ?>
-                    <a href="/user/barang/edit/<?= $b['id_barang'] ?>" 
-                       class="flex-1 text-center bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg font-medium">
-                       Ajukan Ulang
+            <?php if($b['status_pengajuan']=='rejected'): ?>
+                <a href="/user/barang/edit/<?= $b['id_barang'] ?>" 
+                class="block w-full bg-yellow-500 hover:bg-yellow-600
+                        text-white py-3 rounded-xl text-center font-semibold transition">
+                    Ajukan Ulang Barang
+                </a>
+
+            <?php elseif($b['status_pengajuan']=='pending'): ?>
+                <div class="bg-white border border-gray-200 rounded-xl p-4 text-center">
+                    <p class="font-semibold text-gray-700">
+                        Menunggu Review Admin
+                    </p>
+                    <p class="text-sm text-gray-500 mt-1">
+                        Barang akan diperiksa sebelum masuk jadwal lelang
+                    </p>
+                </div>
+
+            <?php elseif($b['status_pengajuan']=='approved'): ?>
+
+                <?php if(empty($b['id_lelang'])): ?>
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-center">
+                        <p class="font-semibold text-blue-800 text-lg">
+                            Barang Disetujui
+                        </p>
+                        <p class="text-sm text-blue-700 mt-1">
+                            Menunggu penjadwalan lelang oleh admin
+                        </p>
+                    </div>
+
+                <?php elseif($b['status_lelang']=='aktif'): ?>
+                    <a href="<?= base_url('user/lelang/monitoring/'.$b['id_lelang']) ?>"
+                    class="block w-full bg-green-600 hover:bg-green-700
+                            text-white py-4 rounded-xl text-center font-bold transition">
+                        Monitoring Lelang
+                        <p class="text-xs font-normal opacity-90 mt-1">
+                            Lelang sedang berlangsung
+                        </p>
                     </a>
-                <?php elseif($b['status_pengajuan']=='pending'): ?>
-                    <button disabled class="flex-1 bg-gray-400 text-white py-2 rounded-lg opacity-80 cursor-not-allowed">
-                        Menunggu Review
-                    </button>
-                <?php elseif($b['status_pengajuan']=='approved'): ?>
-                    <span class="flex-1 text-center bg-green-600 text-white py-2 rounded-lg font-medium">
-                        Disetujui ✔
-                    </span>
+
+                <?php elseif($b['status_lelang']=='selesai'): ?>
+                    <a href="<?= base_url('user/barang/hasil') ?>"
+                    class="block w-full bg-gray-900 hover:bg-black
+                            text-white py-4 rounded-xl text-center font-semibold transition">
+                        Lihat Hasil Lelang
+                        <p class="text-xs font-normal opacity-80 mt-1">
+                            Status pemenang & pembayaran
+                        </p>
+                    </a>
                 <?php endif; ?>
+
+            <?php endif; ?>
 
             </div>
 
         </div>
-
         <?php endforeach; ?>
-
     </div>
-
     <?php endif; ?>
 </div>
 

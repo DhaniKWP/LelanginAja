@@ -110,4 +110,83 @@ class Lelang extends BaseController
 
         return view('user/lelang/riwayat', ['riwayat'=>$riwayat]);
     }
+
+    // ------------------- JADWAL LELANG BARANG SAYA -------------------
+    public function jadwalBarang()
+    {
+        $id_user = session()->get('id_user');
+
+        $data['lelang'] = $this->lelang
+            ->select('
+                transaksi_lelang.*,
+                barang.nama_barang,
+                barang.foto,
+                barang.harga_awal
+            ')
+            ->join('barang','barang.id_barang = transaksi_lelang.id_barang')
+            ->where('barang.id_user', $id_user)
+            ->orderBy('tanggal_mulai','DESC')
+            ->findAll();
+
+        return view('user/barang/jadwal_lelang', $data);
+    }
+        // ------------------- HASIL LELANG BARANG SAYA -------------------
+    public function hasilBarang()
+    {
+        $id_user = session()->get('id_user');
+
+        $data['hasil'] = $this->lelang
+            ->select('
+                transaksi_lelang.id_lelang,
+                barang.nama_barang,
+                barang.foto,
+                pemenang.harga_menang,
+                users.nama AS nama_pemenang,
+                pembayaran.status AS status_bayar
+            ')
+            ->join('barang','barang.id_barang = transaksi_lelang.id_barang')
+            ->join('transaksi_pemenang pemenang','pemenang.id_lelang = transaksi_lelang.id_lelang','left')
+            ->join('users','users.id_user = pemenang.id_user','left')
+            ->join('transaksi_pembayaran pembayaran','pembayaran.id_pemenang = pemenang.id_pemenang','left')
+            ->where('barang.id_user', $id_user)
+            ->where('transaksi_lelang.status','selesai')
+            ->orderBy('transaksi_lelang.tanggal_selesai','DESC')
+            ->findAll();
+
+        return view('user/barang/hasil_lelang', $data);
+    }
+
+    // ------------------- MONITORING LELANG BARANG SAYA -------------------
+    public function monitoringBarang($id_lelang)
+    {
+        $id_user = session()->get('id_user');
+
+        // pastikan ini barang milik user
+        $lelang = $this->lelang
+            ->select('
+                transaksi_lelang.*,
+                barang.nama_barang,
+                barang.foto
+            ')
+            ->join('barang','barang.id_barang = transaksi_lelang.id_barang')
+            ->where('barang.id_user', $id_user)
+            ->where('transaksi_lelang.id_lelang', $id_lelang)
+            ->first();
+
+        if(!$lelang){
+            return redirect()->back()->with('error','Lelang tidak ditemukan');
+        }
+
+        $penawaran = $this->penawaran
+            ->select('transaksi_penawaran.*, users.nama')
+            ->join('users','users.id_user = transaksi_penawaran.id_user')
+            ->where('id_lelang',$id_lelang)
+            ->orderBy('harga_penawaran','DESC')
+            ->findAll();
+
+        return view('user/lelang/monitoring', [
+            'lelang'    => $lelang,
+            'penawaran' => $penawaran
+        ]);
+    }
 }

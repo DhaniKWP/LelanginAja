@@ -32,6 +32,13 @@ $routes->group('user', ['filter'=>'user'], function($routes){
     $routes->get('barang','User\Barang::index');
     $routes->get('barang/create','User\Barang::create');
     $routes->post('barang/store','User\Barang::store');
+    $routes->get('barang/edit/(:num)', 'User\Barang::edit/$1');
+    $routes->post('barang/update/(:num)', 'User\Barang::update/$1');
+
+    // Jadwal & Hasil Lelang
+    $routes->get('barang/jadwal', 'User\Lelang::jadwalBarang');
+    $routes->get('barang/hasil',  'User\Lelang::hasilBarang');
+    $routes->get('lelang/monitoring/(:num)', 'User\Lelang::monitoringBarang/$1');
 
     // Lelang
     $routes->get('lelang/aktif','User\Lelang::aktif');
