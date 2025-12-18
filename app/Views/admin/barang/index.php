@@ -1,100 +1,122 @@
 <?= $this->extend('layout/admin_main') ?>
 <?= $this->section('content') ?>
 
-<div class="p-6">
-    
-    <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-semibold text-gray-800">📦 Manajemen Semua Barang Lelang</h2>
-    </div>
+<!-- HEADER -->
+<div class="mb-5">
+    <h2 class="text-2xl font-bold text-gray-800">
+        Manajemen Barang Lelang
+    </h2>
+    <p class="text-sm text-gray-500">
+        Daftar seluruh barang yang diajukan untuk lelang
+    </p>
+</div>
 
-    <div class="bg-white shadow rounded-lg overflow-hidden">
+<?php if(session()->getFlashdata('success')): ?>
+<div class="mb-4 text-sm text-green-600">
+    <?= session()->getFlashdata('success') ?>
+</div>
+<?php endif; ?>
 
-        <table class="w-full text-left border-collapse text-sm">
-            <thead class="bg-blue-600 text-white">
-                <tr>
-                    <th class="px-4 py-3">Foto</th>
-                    <th class="px-4 py-3">Nama Barang</th>
-                    <th class="px-4 py-3">Kategori</th>
-                    <th class="px-4 py-3">Kondisi</th>
-                    <th class="px-4 py-3">Harga Awal</th>
-                    <th class="px-4 py-3">Status Pengajuan</th>
-                    <th class="px-4 py-3">Pengajuan</th>
-                    <th class="px-4 py-3 text-center w-48">Aksi</th>
-                </tr>
-            </thead>
+<!-- TABLE -->
+<div class="bg-white border rounded-lg overflow-hidden">
+<table class="w-full text-sm border-collapse">
 
-            <tbody>
-                <?php foreach($barang as $b): ?>
-                <tr class="border-b hover:bg-gray-50">
+    <thead class="bg-gray-50 text-gray-700">
+        <tr>
+            <th class="p-3 border">Foto</th>
+            <th class="p-3 border text-left">Nama Barang</th>
+            <th class="p-3 border text-left">Kategori</th>
+            <th class="p-3 border text-left">Kondisi</th>
+            <th class="p-3 border text-right">Harga Awal</th>
+            <th class="p-3 border text-center">Status</th>
+            <th class="p-3 border text-center">Tanggal</th>
+            <th class="p-3 border text-center">Aksi</th>
+        </tr>
+    </thead>
 
-                    <td class="px-4 py-3">
-                        <img src="/uploads/barang/<?= $b['foto'] ?>" 
-                             class="w-14 h-14 object-cover rounded-md shadow-sm">
-                    </td>
+    <tbody>
+    <?php if(empty($barang)): ?>
+        <tr>
+            <td colspan="8" class="p-4 text-center text-gray-500">
+                Data barang belum tersedia
+            </td>
+        </tr>
+    <?php else: ?>
 
-                    <td class="px-4 py-3 font-semibold"><?= $b['nama_barang'] ?></td>
+        <?php foreach($barang as $b): ?>
+        <tr class="hover:bg-gray-50">
 
-                    <!-- GANTI kategori_id -> nama_kategori -->
-                    <td class="px-4 py-3">
-                        <span class="px-2 py-1 text-xs bg-blue-50 text-blue-700 rounded font-medium">
-                            <?= $b['nama_kategori'] ?: '-' ?>
-                        </span>
-                    </td>
+            <!-- FOTO -->
+            <td class="p-3 border text-center">
+                <img src="/uploads/barang/<?= esc($b['foto']) ?>"
+                     class="w-12 h-12 object-cover rounded">
+            </td>
 
-                    <!-- Kondisi tampilkan nilai ID atau bisa mapping -->
-                    <td class="px-4 py-3">
-                        <span class="px-2 py-1 rounded text-xs bg-gray-100 text-gray-700">
-                            Kondisi ID: <?= $b['kondisi_id'] ?>
-                        </span>
-                    </td>
+            <!-- NAMA -->
+            <td class="p-3 border font-medium">
+                <?= esc($b['nama_barang']) ?>
+            </td>
 
-                    <td class="px-4 py-3 text-blue-700 font-medium">
-                        Rp <?= number_format($b['harga_awal']) ?>
-                    </td>
+            <!-- KATEGORI -->
+            <td class="p-3 border">
+                <?= esc($b['nama_kategori'] ?? '-') ?>
+            </td>
 
-                    <td class="px-4 py-3">
-                        <?php if($b['status_pengajuan']=='pending'): ?>
-                            <span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded text-xs font-medium">Pending</span>
-                        <?php elseif($b['status_pengajuan']=='approved'): ?>
-                            <span class="bg-green-200 text-green-800 px-2 py-1 rounded text-xs font-medium">Approved</span>
-                        <?php else: ?>
-                            <span class="bg-red-200 text-red-800 px-2 py-1 rounded text-xs font-medium">Rejected</span>
-                        <?php endif; ?>
-                    </td>
+            <!-- KONDISI -->
+            <td class="p-3 border">
+                <?= esc($b['kondisi_id'] ?? '-') ?>
+            </td>
 
-                    <td class="px-4 py-3 text-gray-600"><?= date('d M Y', strtotime($b['tanggal_pengajuan'])) ?></td>
+            <!-- HARGA -->
+            <td class="p-3 border text-right text-blue-700 font-medium">
+                Rp <?= number_format($b['harga_awal']) ?>
+            </td>
 
-                    <td class="px-4 py-3 text-center flex justify-center gap-2 flex-wrap">
+            <!-- STATUS -->
+            <td class="p-3 border text-center">
+                <?= ucfirst($b['status_pengajuan']) ?>
+            </td>
 
-                        <?php if($b['status_pengajuan']=='pending'): ?>
-                            <a href="/admin/barang/approve/<?= $b['id_barang'] ?>" 
-                                class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs shadow">
-                                Approve
-                            </a>
-                            <a href="/admin/barang/reject/<?= $b['id_barang'] ?>" 
-                                class="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white rounded text-xs shadow">
-                                Reject
-                            </a>
-                        <?php endif; ?>
+            <!-- TANGGAL -->
+            <td class="p-3 border text-center text-gray-500">
+                <?= date('d M Y', strtotime($b['tanggal_pengajuan'])) ?>
+            </td>
 
-                        <a href="/admin/barang/edit/<?= $b['id_barang'] ?>" 
-                           class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs shadow">
-                           Edit
-                        </a>
+            <!-- AKSI -->
+            <td class="p-3 border text-center space-x-3">
 
-                        <a href="/admin/barang/delete/<?= $b['id_barang'] ?>" 
-                           onclick="return confirm('Hapus barang ini?')" 
-                           class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs shadow">
-                           Hapus
-                        </a>
-                    </td>
+                <?php if($b['status_pengajuan'] === 'pending'): ?>
+                    <a href="<?= base_url('admin/barang/approve/'.$b['id_barang']) ?>"
+                       class="text-green-600 hover:underline">
+                        Approve
+                    </a>
 
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                    <a href="<?= base_url('admin/barang/reject/'.$b['id_barang']) ?>"
+                       class="text-yellow-600 hover:underline">
+                        Reject
+                    </a>
+                <?php endif; ?>
 
-    </div>
+                <a href="<?= base_url('admin/barang/edit/'.$b['id_barang']) ?>"
+                   class="text-blue-600 hover:underline">
+                    Edit
+                </a>
+
+                <a href="<?= base_url('admin/barang/delete/'.$b['id_barang']) ?>"
+                   onclick="return confirm('Yakin ingin menghapus barang ini?')"
+                   class="text-red-600 hover:underline">
+                    Hapus
+                </a>
+
+            </td>
+
+        </tr>
+        <?php endforeach; ?>
+
+    <?php endif; ?>
+    </tbody>
+
+</table>
 </div>
 
 <?= $this->endSection() ?>

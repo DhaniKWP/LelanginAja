@@ -1,70 +1,103 @@
 <?= $this->extend('layout/admin_main') ?>
 <?= $this->section('content') ?>
 
-<div class="p-6">
-
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-semibold text-blue-700">📅 Jadwal Lelang Barang</h2>
-        <a href="/admin/lelang/create" 
-           class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow">
-            + Buat Jadwal Lelang
-        </a>
+<!-- HEADER -->
+<div class="mb-5 flex justify-between items-center">
+    <div>
+        <h2 class="text-2xl font-bold text-gray-800">
+            Jadwal Lelang Barang
+        </h2>
+        <p class="text-sm text-gray-500">
+            Daftar jadwal lelang yang telah dibuat
+        </p>
     </div>
 
-    <?php if(session()->getFlashdata('success')): ?>
-        <div class="p-3 mb-4 bg-green-100 border-l-4 border-green-600 text-green-700 rounded">
-            <?= session()->getFlashdata('success') ?>
-        </div>
-    <?php endif; ?>
+    <a href="<?= base_url('admin/lelang/create') ?>"
+       class="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
+        + Buat Jadwal Lelang
+    </a>
+</div>
 
-    <!-- Card Grid -->
-    <div class="grid md:grid-cols-3 sm:grid-cols-2 gap-5">
+<?php if(session()->getFlashdata('success')): ?>
+    <div class="mb-4 text-sm text-green-600">
+        <?= session()->getFlashdata('success') ?>
+    </div>
+<?php endif; ?>
+
+<!-- TABLE -->
+<div class="bg-white border rounded-lg overflow-hidden">
+<table class="w-full text-sm border-collapse">
+
+    <thead class="bg-gray-50 text-gray-700">
+        <tr>
+            <th class="p-3 border">Foto</th>
+            <th class="p-3 border text-left">Nama Barang</th>
+            <th class="p-3 border text-left">Mulai</th>
+            <th class="p-3 border text-left">Selesai</th>
+            <th class="p-3 border text-center">Status</th>
+            <th class="p-3 border text-center">Aksi</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    <?php if(empty($lelang)): ?>
+        <tr>
+            <td colspan="6" class="p-4 text-center text-gray-500">
+                Belum ada jadwal lelang
+            </td>
+        </tr>
+    <?php else: ?>
 
         <?php foreach($lelang as $l): ?>
-        <div class="bg-white shadow-md rounded-xl overflow-hidden hover:shadow-lg transition p-4">
+        <tr class="hover:bg-gray-50">
 
-            <img src="/uploads/barang/<?= $l['foto'] ?>" 
-                 class="w-full h-40 object-cover rounded-lg mb-3">
+            <td class="p-3 border text-center">
+                <img src="/uploads/barang/<?= esc($l['foto']) ?>"
+                     class="w-14 h-14 object-cover rounded border">
+            </td>
 
-            <h3 class="text-lg font-bold text-gray-800"><?= $l['nama_barang'] ?></h3>
+            <td class="p-3 border font-medium">
+                <?= esc($l['nama_barang']) ?>
+            </td>
 
-            <p class="text-gray-600 text-sm mt-1">Mulai: 
-                <b><?= date('d M Y H:i',strtotime($l['tanggal_mulai'])) ?></b>
-            </p>
-            <p class="text-gray-600 text-sm">Selesai: 
-                <b><?= date('d M Y H:i',strtotime($l['tanggal_selesai'])) ?></b>
-            </p>
+            <td class="p-3 border">
+                <?= date('d M Y H:i', strtotime($l['tanggal_mulai'])) ?>
+            </td>
 
-            <!-- Status Badge -->
-            <div class="mt-2">
-                <?php if($l['status']=="aktif"): ?>
-                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded text-xs font-medium">Aktif</span>
-                <?php elseif($l['status']=="selesai"): ?>
-                    <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded text-xs font-medium">Selesai</span>
+            <td class="p-3 border">
+                <?= date('d M Y H:i', strtotime($l['tanggal_selesai'])) ?>
+            </td>
+
+            <td class="p-3 border text-center">
+                <?php if($l['status']=='aktif'): ?>
+                    <span class="text-green-600 font-medium">Aktif</span>
+                <?php elseif($l['status']=='selesai'): ?>
+                    <span class="text-gray-600 font-medium">Selesai</span>
                 <?php else: ?>
-                    <span class="bg-red-100 text-red-700 px-3 py-1 rounded text-xs font-medium">Dibatalkan</span>
+                    <span class="text-red-600 font-medium">Dibatalkan</span>
                 <?php endif; ?>
-            </div>
+            </td>
 
-            <!-- Aksi -->
-            <div class="flex gap-2 mt-4">
-
-                <a href="/admin/lelang/edit/<?= $l['id_lelang'] ?>"
-                   class="flex-1 text-center bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded text-sm">
+            <td class="p-3 border text-center space-x-4">
+                <a href="<?= base_url('admin/lelang/edit/'.$l['id_lelang']) ?>"
+                   class="text-blue-600 hover:underline">
                     Edit
                 </a>
-                
-                <a href="/admin/lelang/delete/<?= $l['id_lelang'] ?>" 
-                   onclick="return confirm('Hapus jadwal ini?')"
-                   class="flex-1 text-center bg-red-600 hover:bg-red-700 text-white py-2 rounded text-sm">
-                    Delete
-                </a>
-            </div>
 
-        </div>
+                <a href="<?= base_url('admin/lelang/delete/'.$l['id_lelang']) ?>"
+                   onclick="return confirm('Hapus jadwal lelang ini?')"
+                   class="text-red-600 hover:underline">
+                    Hapus
+                </a>
+            </td>
+
+        </tr>
         <?php endforeach; ?>
 
-    </div>
+    <?php endif; ?>
+    </tbody>
+
+</table>
 </div>
 
 <?= $this->endSection() ?>

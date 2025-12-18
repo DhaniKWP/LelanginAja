@@ -64,6 +64,7 @@
                         <i class="fas fa-money-check-alt w-5"></i>
                         <span>Pembayaran</span>
                     </div>
+                    <i class="fas fa-chevron-down text-sm"></i>
                 </button>
                 <ul id="pembayaran-submenu" class="ml-8 mt-2 space-y-1 hidden">
                     <li><a href="<?= base_url('admin/pembayaran') ?>" class="block px-4 py-2 hover:bg-gray-100 text-gray-600 text-sm">Verifikasi Pembayaran</a></li>
@@ -85,6 +86,7 @@
                     <li><a href="<?= base_url('admin/lap-transaksi') ?>" class="block px-4 py-2 hover:bg-gray-100 text-gray-600 text-sm">Laporan Transaksi</a></li>
                 </ul>
             </li>
+            <li class="pt-4"><hr class="border-gray-200"></li>
         </ul>
     </div>
 </aside>

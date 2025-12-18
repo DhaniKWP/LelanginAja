@@ -1,29 +1,38 @@
 <?= $this->extend('layout/admin_main') ?>
 <?= $this->section('content') ?>
 
-<div class="flex justify-center items-center min-h-[75vh] p-6">
+<div class="p-6 max-w-xl">
 
-    <div class="w-full max-w-lg bg-white p-6 rounded-lg shadow">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-5 text-center">✏ Edit Kondisi Barang</h2>
+    <h2 class="text-2xl font-semibold text-gray-800 mb-1">
+        Edit Kondisi Barang
+    </h2>
+    <p class="text-sm text-gray-500 mb-6">
+        Perbarui data kondisi barang
+    </p>
 
-        <form action="/admin/kondisi/update/<?= $kondisi['id_kondisi'] ?>" method="POST" class="space-y-4">
+    <div class="bg-white rounded-lg shadow-sm p-6 border">
+        <form action="<?= base_url('admin/kondisi/update/'.$kondisi['id_kondisi']) ?>" method="POST" class="space-y-4">
 
             <div>
-                <label class="block mb-1 font-medium text-gray-700">Nama Kondisi</label>
-                <input type="text" name="nama_kondisi" 
-                       value="<?= $kondisi['nama_kondisi'] ?>" required
-                       class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Nama Kondisi
+                </label>
+                <input type="text" name="nama_kondisi"
+                       value="<?= esc($kondisi['nama_kondisi']) ?>" required
+                       class="w-full border rounded px-3 py-2 text-sm
+                              focus:ring-1 focus:ring-blue-500 focus:outline-none">
             </div>
 
-            <div class="flex gap-3 justify-center pt-3">
-                <button class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow">
+            <div class="flex gap-3 pt-3">
+                <button class="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
                     Update
                 </button>
-                <a href="/admin/kondisi" 
-                   class="px-5 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md shadow">
-                   Kembali
+                <a href="<?= base_url('admin/kondisi') ?>"
+                   class="px-4 py-2 border rounded text-sm hover:bg-gray-50">
+                    Kembali
                 </a>
             </div>
+
         </form>
     </div>
 

@@ -1,50 +1,86 @@
 <?= $this->extend('layout/admin_main') ?>
 <?= $this->section('content') ?>
 
-<div class="flex justify-between items-center mb-4">
-    <h2 class="text-xl font-bold text-blue-700">👥 Manajemen User</h2>
-    <a href="/admin/user/create" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">+ Tambah User</a>
+<!-- HEADER -->
+<div class="mb-5">
+    <h2 class="text-2xl font-bold text-gray-800">
+        Manajemen User
+    </h2>
+    <p class="text-sm text-gray-500">
+        Daftar pengguna yang terdaftar pada sistem lelang
+    </p>
+</div>
+
+<div class="flex justify-end mb-4">
+    <a href="<?= base_url('admin/user/create') ?>"
+       class="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
+        + Tambah User
+    </a>
 </div>
 
 <?php if(session()->getFlashdata('success')): ?>
-<div class="bg-green-100 text-green-700 px-4 py-2 rounded mb-3">
+<div class="mb-4 text-sm text-green-600">
     <?= session()->getFlashdata('success') ?>
 </div>
 <?php endif; ?>
 
-<div class="bg-white shadow rounded p-4">
-<table class="w-full text-sm">
-    <thead class="bg-gray-100">
+<!-- TABLE -->
+<div class="bg-white border rounded-lg overflow-hidden">
+<table class="w-full text-sm border-collapse">
+
+    <thead class="bg-gray-50 text-gray-700">
         <tr>
-            <th class="p-2">#</th>
-            <th class="p-2">Nama</th>
-            <th class="p-2">Username</th>
-            <th class="p-2">Email</th>
-            <th class="p-2">Role</th>
-            <th class="p-2" width="150">Aksi</th>
+            <th class="p-3 border">No</th>
+            <th class="p-3 border text-left">Nama</th>
+            <th class="p-3 border text-left">Username</th>
+            <th class="p-3 border text-left">Email</th>
+            <th class="p-3 border text-center">Role</th>
+            <th class="p-3 border text-center">Aksi</th>
         </tr>
     </thead>
 
     <tbody>
-        <?php $no=1; foreach($users as $u): ?>
-        <tr class="border-b">
-            <td class="p-2"><?= $no++ ?></td>
-            <td class="p-2"><?= $u['nama'] ?></td>
-            <td class="p-2"><?= $u['username'] ?></td>
-            <td class="p-2"><?= $u['email'] ?></td>
-            <td class="p-2">
-                <span class="px-2 py-1 text-xs rounded 
-                <?= $u['role']=='admin' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700' ?>">
-                    <?= $u['role'] ?>
-                </span>
+    <?php if(empty($users)): ?>
+        <tr>
+            <td colspan="6" class="p-4 text-center text-gray-500">
+                Data user belum tersedia
             </td>
-            <td class="p-2">
-                <a href="/admin/user/edit/<?= $u['id_user'] ?>" class="text-yellow-600 hover:underline mr-2">Edit</a>
-                <a href="/admin/user/delete/<?= $u['id_user'] ?>" onclick="return confirm('Hapus user ini?')" class="text-red-600 hover:underline">Delete</a>
+        </tr>
+    <?php else: ?>
+
+        <?php $no=1; foreach($users as $u): ?>
+        <tr class="hover:bg-gray-50">
+
+            <td class="p-3 border text-center"><?= $no++ ?></td>
+
+            <td class="p-3 border"><?= esc($u['nama']) ?></td>
+
+            <td class="p-3 border"><?= esc($u['username']) ?></td>
+
+            <td class="p-3 border"><?= esc($u['email']) ?></td>
+
+            <td class="p-3 border text-center">
+                <?= ucfirst($u['role']) ?>
+            </td>
+
+            <td class="p-3 border text-center space-x-3">
+                <a href="<?= base_url('admin/user/edit/'.$u['id_user']) ?>"
+                   class="text-blue-600 hover:underline">
+                    Edit
+                </a>
+
+                <a href="<?= base_url('admin/user/delete/'.$u['id_user']) ?>"
+                   onclick="return confirm('Yakin ingin menghapus user ini?')"
+                   class="text-red-600 hover:underline">
+                    Hapus
+                </a>
             </td>
         </tr>
         <?php endforeach; ?>
+
+    <?php endif; ?>
     </tbody>
+
 </table>
 </div>
 

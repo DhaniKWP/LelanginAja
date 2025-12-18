@@ -41,10 +41,19 @@ class Lelang extends BaseController
        2. FORM BUAT JADWAL LELANG
     ======================================================== */
     public function create()
-    {
-        $data['barang'] = $this->barang->where('status_pengajuan','approved')->findAll();
-        return view('admin/lelang/create', $data);
-    }
+{
+    $data['barang'] = $this->barang
+        ->where('status_pengajuan', 'approved')
+        ->whereNotIn('id_barang', function($builder){
+            $builder->select('id_barang')
+                    ->from('transaksi_lelang');
+        })
+        ->orderBy('id_barang', 'DESC')
+        ->find();
+
+    return view('admin/lelang/create', $data);
+}
+
 
     /* ========================================================
        3. SIMPAN DATA LELANG

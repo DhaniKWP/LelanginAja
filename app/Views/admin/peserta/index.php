@@ -1,76 +1,99 @@
 <?= $this->extend('layout/admin_main') ?>
 <?= $this->section('content') ?>
 
-<div class="p-6">
+<!-- HEADER -->
+<div class="mb-5">
+    <h2 class="text-2xl font-bold text-gray-800">
+        Manajemen Peserta Lelang
+    </h2>
+    <p class="text-sm text-gray-500">
+        Daftar peserta yang mendaftar untuk mengikuti lelang
+    </p>
+</div>
 
-    <h2 class="text-2xl font-semibold text-blue-700 mb-5">👥 Manajemen Peserta Lelang</h2>
+<?php if(session()->getFlashdata('success')): ?>
+<div class="mb-4 text-sm text-green-600">
+    <?= session()->getFlashdata('success') ?>
+</div>
+<?php endif; ?>
 
-    <?php if(session()->getFlashdata('success')): ?>
-    <div class="bg-green-100 border border-green-300 text-green-700 p-3 rounded mb-3">
-        <?= session()->getFlashdata('success') ?>
-    </div>
+<!-- TABLE -->
+<div class="bg-white border rounded-lg overflow-hidden">
+<table class="w-full text-sm border-collapse">
+
+    <thead class="bg-gray-50 text-gray-700">
+        <tr>
+            <th class="p-3 border text-center">No</th>
+            <th class="p-3 border text-left">Nama</th>
+            <th class="p-3 border text-left">Email</th>
+            <th class="p-3 border text-center">Tanggal Daftar</th>
+            <th class="p-3 border text-center">Status</th>
+            <th class="p-3 border text-center">Aksi</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    <?php if(empty($registrasi)): ?>
+        <tr>
+            <td colspan="6" class="p-4 text-center text-gray-500">
+                Data peserta belum tersedia
+            </td>
+        </tr>
+    <?php else: ?>
+
+        <?php $no=1; foreach($registrasi as $r): ?>
+        <tr class="hover:bg-gray-50">
+
+            <td class="p-3 border text-center"><?= $no++ ?></td>
+
+            <td class="p-3 border font-medium">
+                <?= esc($r['nama']) ?>
+            </td>
+
+            <td class="p-3 border text-gray-600">
+                <?= esc($r['email']) ?>
+            </td>
+
+            <td class="p-3 border text-center text-gray-600">
+                <?= date('d M Y', strtotime($r['tanggal_daftar'])) ?>
+            </td>
+
+            <td class="p-3 border text-center">
+                <?php if($r['status'] === 'pending'): ?>
+                    <span class="text-yellow-600 font-medium">Pending</span>
+                <?php elseif($r['status'] === 'disetujui'): ?>
+                    <span class="text-green-600 font-medium">Disetujui</span>
+                <?php else: ?>
+                    <span class="text-red-600 font-medium">Ditolak</span>
+                <?php endif; ?>
+            </td>
+
+            <td class="p-3 border text-center space-x-3">
+
+                <?php if($r['status'] === 'pending'): ?>
+                    <a href="<?= base_url('admin/peserta/approve/'.$r['id_reg']) ?>"
+                       class="text-green-600 hover:underline">
+                        Setujui
+                    </a>
+
+                    <a href="<?= base_url('admin/peserta/reject/'.$r['id_reg']) ?>"
+                       onclick="return confirm('Tolak pendaftaran peserta ini?')"
+                       class="text-red-600 hover:underline">
+                        Tolak
+                    </a>
+                <?php else: ?>
+                    <span class="text-gray-400">—</span>
+                <?php endif; ?>
+
+            </td>
+
+        </tr>
+        <?php endforeach; ?>
+
     <?php endif; ?>
+    </tbody>
 
-    <div class="bg-white shadow rounded-lg overflow-hidden">
-        <table class="w-full border-collapse">
-            <thead class="bg-blue-600 text-white">
-                <tr>
-                    <th class="px-4 py-2">No</th>
-                    <th class="px-4 py-2">Nama User</th>
-                    <th class="px-4 py-2">Email</th>
-                    <th class="px-4 py-2">Tanggal Daftar</th>
-                    <th class="px-4 py-2">Status</th>
-                    <th class="px-4 py-2 text-center">Aksi</th>
-                </tr>
-            </thead>
-
-            <tbody>
-            <?php $no=1; foreach($registrasi as $r): ?>
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="px-4 py-2"><?= $no++ ?></td>
-                    <td class="px-4 py-2 font-medium"><?= $r['nama'] ?></td>
-                    <td class="px-4 py-2 text-gray-600"><?= $r['email'] ?></td>
-                    <td class="px-4 py-2"><?= $r['tanggal_daftar'] ?></td>
-                    <td class="px-4 py-2">
-                        <?php if($r['status'] === 'pending'): ?>
-                            <span class="px-3 py-1 rounded bg-yellow-400 text-sm font-medium">
-                                Pending
-                            </span>
-
-                        <?php elseif($r['status'] === 'disetujui'): ?>
-                            <span class="px-3 py-1 rounded bg-green-500 text-white text-sm font-medium">
-                                Disetujui
-                            </span>
-
-                        <?php elseif($r['status'] === 'ditolak'): ?>
-                            <span class="px-3 py-1 rounded bg-red-500 text-white text-sm font-medium">
-                                Ditolak
-                            </span>
-                        <?php endif; ?>
-                    </td>
-                    <td class="px-4 py-2 text-center">
-
-                        <?php if($r['status']=='pending'): ?>
-                            <a href="/admin/peserta/approve/<?= $r['id_reg'] ?>" 
-                                class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-sm">
-                                Approve
-                            </a>
-                            <a href="/admin/peserta/reject/<?= $r['id_reg'] ?>" 
-                                onclick="return confirm('Tolak pendaftaran?')"
-                                class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-sm">
-                                Reject
-                            </a>
-                        <?php else: ?>
-                            <span class="text-gray-500 text-sm">-</span>
-                        <?php endif; ?>
-
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-
-        </table>
-    </div>
+</table>
 </div>
 
 <?= $this->endSection() ?>

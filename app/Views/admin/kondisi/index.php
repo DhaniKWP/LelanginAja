@@ -1,59 +1,84 @@
 <?= $this->extend('layout/admin_main') ?>
 <?= $this->section('content') ?>
 
-<div class="p-6">
+<!-- HEADER -->
+<div class="mb-5">
+    <h2 class="text-2xl font-bold text-gray-800">
+        Manajemen Kondisi Barang
+    </h2>
+    <p class="text-sm text-gray-500">
+        Daftar kondisi barang yang tersedia pada sistem lelang
+    </p>
+</div>
 
-    <div class="flex items-center justify-between mb-5">
-        <h2 class="text-2xl font-semibold text-gray-800">📦 Data Kondisi Barang</h2>
-        
-        <a href="/admin/kondisi/create" 
-           class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow">
-           + Tambah Kondisi
-        </a>
-    </div>
+<div class="flex justify-end mb-4">
+    <a href="<?= base_url('admin/kondisi/create') ?>"
+       class="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
+        + Tambah Kondisi
+    </a>
+</div>
 
-    <?php if(session()->getFlashdata('success')): ?>
-        <div class="mb-4 p-3 bg-green-100 border border-green-300 text-green-700 rounded">
-            <?= session()->getFlashdata('success') ?>
-        </div>
+<?php if(session()->getFlashdata('success')): ?>
+<div class="mb-4 text-sm text-green-600">
+    <?= session()->getFlashdata('success') ?>
+</div>
+<?php endif; ?>
+
+<!-- TABLE -->
+<div class="bg-white border rounded-lg overflow-hidden">
+<table class="w-full text-sm border-collapse">
+
+    <thead class="bg-gray-50 text-gray-700">
+        <tr>
+            <th class="p-3 border">No</th>
+            <th class="p-3 border">ID</th>
+            <th class="p-3 border text-left">Nama Kondisi</th>
+            <th class="p-3 border text-center">Aksi</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    <?php if(empty($kondisi)): ?>
+        <tr>
+            <td colspan="4" class="p-4 text-center text-gray-500">
+                Data kondisi belum tersedia
+            </td>
+        </tr>
+    <?php else: ?>
+
+        <?php $no=1; foreach($kondisi as $k): ?>
+        <tr class="hover:bg-gray-50">
+
+            <td class="p-3 border text-center"><?= $no++ ?></td>
+
+            <td class="p-3 border text-center text-gray-500">
+                <?= esc($k['id_kondisi']) ?>
+            </td>
+
+            <td class="p-3 border font-medium">
+                <?= esc($k['nama_kondisi']) ?>
+            </td>
+
+            <td class="p-3 border text-center space-x-3">
+                <a href="<?= base_url('admin/kondisi/edit/'.$k['id_kondisi']) ?>"
+                   class="text-blue-600 hover:underline">
+                    Edit
+                </a>
+
+                <a href="<?= base_url('admin/kondisi/delete/'.$k['id_kondisi']) ?>"
+                   onclick="return confirm('Yakin ingin menghapus kondisi ini?')"
+                   class="text-red-600 hover:underline">
+                    Hapus
+                </a>
+            </td>
+
+        </tr>
+        <?php endforeach; ?>
+
     <?php endif; ?>
+    </tbody>
 
-    <div class="overflow-auto bg-white rounded-lg shadow">
-        <table class="w-full text-left border-collapse">
-            <thead class="bg-blue-600 text-white">
-                <tr>
-                    <th class="px-4 py-3">No</th>
-                    <th class="px-4 py-3">ID</th>
-                    <th class="px-4 py-3">Nama Kondisi</th>
-                    <th class="px-4 py-3 text-center">Aksi</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <?php $no=1; foreach($kondisi as $k): ?>
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="px-4 py-3"><?= $no++ ?></td>
-                    <td class="px-4 py-3 font-semibold text-blue-700"><?= $k['id_kondisi'] ?></td>
-                    <td class="px-4 py-3"><?= $k['nama_kondisi'] ?></td>
-
-                    <td class="px-4 py-3 flex justify-center gap-2">
-                        <a href="/admin/kondisi/edit/<?= $k['id_kondisi'] ?>" 
-                           class="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white rounded text-sm">
-                           Edit
-                        </a>
-
-                        <a href="/admin/kondisi/delete/<?= $k['id_kondisi'] ?>" 
-                           onclick="return confirm('Hapus kondisi ini?')"
-                           class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-sm">
-                           Hapus
-                        </a>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-
-        </table>
-    </div>
+</table>
 </div>
 
 <?= $this->endSection() ?>
