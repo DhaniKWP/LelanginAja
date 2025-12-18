@@ -48,36 +48,40 @@
         <!-- INFO BARANG -->
         <div class="space-y-5">
 
-        <h2 class="text-3xl font-bold text-gray-800">
+        <h2 class="text-2xl font-bold text-gray-800">
             <?= $lelang['nama_barang'] ?>
         </h2>
 
-        <p class="text-gray-500 text-sm">
-            ID Lelang: <b>#<?= $lelang['id_lelang'] ?></b>
+        <p class="text-sm text-gray-500">
+            ID Lelang <span class="font-mono">#<?= $lelang['id_lelang'] ?></span>
         </p>
 
-        <!-- Harga Awal -->
-        <div class="p-4 rounded-lg border bg-blue-50 shadow-sm">
-            <p class="text-md font-medium">Harga Awal</p>
-            <p class="text-3xl text-blue-700 font-extrabold">
-                Rp <?= number_format($lelang['harga_awal']) ?>
-            </p>
+
+        <div class="p-5 rounded-xl border bg-gray-50 shadow-sm space-y-3">
+            <div>
+                <p class="text-sm text-gray-600">Harga Awal</p>
+                <p class="text-2xl font-bold text-gray-800">
+                    Rp <?= number_format($lelang['harga_awal']) ?>
+                </p>
+            </div>
+
+            <hr>
+
+            <div>
+                <p class="text-sm text-gray-600">Penawaran Tertinggi</p>
+                <p class="text-2xl font-bold text-blue-700">
+                    <?= $maxBid
+                        ? 'Rp ' . number_format($maxBid['harga_penawaran'])
+                        : 'Belum ada penawaran' ?>
+                </p>
+            </div>
         </div>
 
-        <!-- Bid Tertinggi -->
-        <div class="p-4 rounded-lg border bg-yellow-50 shadow-sm">
-            <p class="text-md font-medium">Bid Tertinggi Saat Ini</p>
-            <p class="text-3xl text-yellow-700 font-extrabold">
-                <?= $maxBid
-                    ? 'Rp ' . number_format($maxBid['harga_penawaran'])
-                    : 'Belum ada penawaran' ?>
-            </p>
-        </div>
 
         <!-- Countdown -->
-        <div class="p-4 rounded-lg border bg-green-50 shadow-sm">
-            <p class="font-medium">⏳ Sisa Waktu</p>
-            <p id="countdown" class="text-2xl font-bold text-green-700"></p>
+        <div class="p-4 rounded-xl border bg-white shadow-sm">
+            <p class="text-sm text-gray-600">Sisa Waktu Lelang</p>
+            <p id="countdown" class="text-xl font-semibold text-gray-800"></p>
         </div>
 
         <!-- ================== LOGIKA BID ================== -->
@@ -111,29 +115,37 @@
         <?php else: ?>
 
             <!-- ✅ FORM BID (AMAN) -->
-        <div id="bidSection">
-            <form action="<?= base_url('user/bid/'.$lelang['id_lelang']) ?>"
-                method="POST"
-                class="mt-4 space-y-3 bg-white p-5 rounded-xl shadow-md">
+            <div id="bidSection">
+                <form action="<?= base_url('user/bid/'.$lelang['id_lelang']) ?>"
+                    method="POST"
+                    class="mt-4 space-y-3 bg-white p-5 rounded-xl shadow-md">
 
-                <label class="block text-gray-700 font-medium">
-                    Masukkan Penawaran
-                </label>
+                    <label class="block text-gray-700 font-medium">
+                        Masukkan Penawaran
+                    </label>
 
-                <input type="number"
-                    name="harga_penawaran"
-                    class="w-full border rounded-lg p-2
-                            focus:ring-2 focus:ring-blue-500"
-                    placeholder="contoh: 5500000"
-                    required>
+                    <input type="number"
+                        name="harga_penawaran"
+                        class="w-full border rounded-lg p-2
+                                focus:ring-2 focus:ring-blue-500"
+                        placeholder="contoh: 5500000"
+                        required>
 
-                <button type="submit"
+                    <button type="submit"
                         class="w-full bg-blue-600 hover:bg-blue-700
-                            text-white py-3 rounded-lg font-semibold shadow">
-                    🚀 Ajukan Penawaran
-                </button>
-            </form>
-        </div>
+                            text-white py-3 rounded-lg font-semibold">
+                        Ajukan Penawaran
+                    </button>
+                </form>
+                <div class="mt-4 text-sm text-gray-500 bg-gray-50 border rounded-lg p-4">
+                    <p class="font-medium text-gray-700 mb-1">Catatan:</p>
+                    <ul class="list-disc ml-5 space-y-1">
+                        <li>Penawaran tertinggi saat lelang berakhir otomatis menjadi pemenang</li>
+                        <li>Lelang tidak dapat dibatalkan setelah waktu habis</li>
+                        <li>Admin akan memverifikasi hasil & pembayaran pemenang</li>
+                    </ul>
+                </div>
+            </div>
 
         <?php endif; ?>
 
@@ -151,7 +163,10 @@
 
     <!-- RIWAYAT PENAWARAN -->
     <div class="mt-10 bg-white p-6 shadow rounded-lg">
-        <h3 class="text-xl font-semibold mb-4 text-gray-800">📊 Riwayat Penawaran</h3>
+        <h3 class="text-lg font-semibold mb-4 text-gray-800">
+            Riwayat Penawaran
+        </h3>
+
 
         <table class="w-full text-sm border-collapse rounded-xl overflow-hidden shadow-sm">
             <thead class="bg-gray-100 font-medium text-gray-700">
