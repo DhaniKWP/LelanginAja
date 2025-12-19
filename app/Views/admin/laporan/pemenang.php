@@ -108,7 +108,7 @@
     </div>
     <!-- FOOTER INFO -->
     <div class="text-sm text-gray-500">
-        Total data: <b><?= count($pemenang) ?></b> lelang
+        Total data: <b><?= count($pemenang) ?></b> pemenang
     </div>
 
 </div>

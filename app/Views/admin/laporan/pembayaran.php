@@ -33,9 +33,9 @@
                 <label class="text-sm font-medium text-gray-700">Status</label>
                 <select name="status" class="w-full border rounded-lg px-3 py-2">
                     <option value="">Semua Status</option>
-                    <option value="pending" <?= ($filter['status'] ?? '')=='pending'?'selected':'' ?>>Pending</option>
-                    <option value="lunas"   <?= ($filter['status'] ?? '')=='lunas'?'selected':'' ?>>Lunas</option>
-                    <option value="gagal"   <?= ($filter['status'] ?? '')=='gagal'?'selected':'' ?>>Gagal</option>
+                    <option value="pending"  <?= ($filter['status'] ?? '')=='pending'?'selected':'' ?>>Pending</option>
+                    <option value="paid"     <?= ($filter['status'] ?? '')=='paid'?'selected':'' ?>>Paid</option>
+                    <option value="rejected" <?= ($filter['status'] ?? '')=='rejected'?'selected':'' ?>>Rejected</option>
                 </select>
             </div>
 
@@ -43,9 +43,9 @@
                 <label class="text-sm font-medium text-gray-700">Metode</label>
                 <select name="metode" class="w-full border rounded-lg px-3 py-2">
                     <option value="">Semua Metode</option>
-                    <option value="transfer" <?= ($filter['metode'] ?? '')=='transfer'?'selected':'' ?>>Transfer</option>
-                    <option value="ewallet"  <?= ($filter['metode'] ?? '')=='ewallet'?'selected':'' ?>>E-Wallet</option>
-                    <option value="qris"     <?= ($filter['metode'] ?? '')=='qris'?'selected':'' ?>>QRIS</option>
+                    <option value="QRIS" <?= ($filter['metode'] ?? '')=='QRIS'?'selected':'' ?>>QRIS</option>
+                    <option value="Transfer Bank" <?= ($filter['metode'] ?? '')=='Transfer Bank'?'selected':'' ?>>Transfer Bank</option>
+                    <option value="E-Wallet" <?= ($filter['metode'] ?? '')=='E-Wallet'?'selected':'' ?>>E-Wallet</option>
                 </select>
             </div>
 
@@ -82,7 +82,7 @@
             <thead class="bg-gray-100 text-gray-700">
                 <tr>
                     <th class="border p-3 text-center">No</th>
-                    <th class="border p-3">Barang</th>
+                    <th class="border p-3">Nama Barang</th>
                     <th class="border p-3">Pemenang</th>
                     <th class="border p-3 text-right">Harga Menang</th>
                     <th class="border p-3 text-center">Metode</th>
@@ -92,34 +92,34 @@
             </thead>
             <tbody>
 
-                <?php if($pembayaran): $no=1; foreach($pembayaran as $p): ?>
+            <?php if($pembayaran): $no=1; foreach($pembayaran as $p): ?>
                 <tr class="hover:bg-gray-50">
                     <td class="border p-3 text-center"><?= $no++ ?></td>
                     <td class="border p-3"><?= esc($p['nama_barang']) ?></td>
-                    <td class="border p-3"><?= esc($p['pemenang']) ?></td>
+                    <td class="border p-3"><?= esc($p['nama_pemenang']) ?></td>
                     <td class="border p-3 text-right">
                         Rp <?= number_format($p['harga_menang'],0,',','.') ?>
                     </td>
-                    <td class="border p-3 text-center">
-                        <?= strtoupper($p['metode']) ?>
-                    </td>
-                    <td class="border p-3 text-center">
-                        <?= ucfirst($p['status']) ?>
-                    </td>
+                    <td class="border p-3 text-center"><?= strtoupper($p['metode']) ?></td>
+                    <td class="border p-3 text-center"><?= ucfirst($p['status']) ?></td>
                     <td class="border p-3 text-center">
                         <?= date('d-m-Y', strtotime($p['tanggal_bayar'])) ?>
                     </td>
                 </tr>
-                <?php endforeach; else: ?>
+            <?php endforeach; else: ?>
                 <tr>
                     <td colspan="7" class="p-4 text-center text-gray-500">
                         Tidak ada data pembayaran
                     </td>
                 </tr>
-                <?php endif; ?>
+            <?php endif; ?>
 
             </tbody>
         </table>
+    </div>
+<!-- FOOTER INFO -->
+    <div class="text-sm text-gray-500">
+        Total data: <b><?= count($pembayaran) ?></b> pembayaran
     </div>
 
 </div>
