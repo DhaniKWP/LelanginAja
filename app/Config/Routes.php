@@ -137,5 +137,15 @@ $routes->group('admin', ['filter'=>'admin'], function($routes){
     $routes->get('peserta','Admin\Peserta::index');
     $routes->get('peserta/approve/(:num)','Admin\Peserta::approve/$1');
     $routes->get('peserta/reject/(:num)','Admin\Peserta::reject/$1');
+
+    // LAPORAN (ADMIN)
+    $routes->group('laporan', function($routes){
+        $routes->get('barang', 'Admin\Laporan::barang');
+        $routes->get('barang/pdf', 'Admin\Laporan::barangPdf');
+        $routes->get('barang/excel', 'Admin\Laporan::barangExcel');
+
+        $routes->get('pemenang', 'Admin\Laporan::pemenang');
+        $routes->get('transaksi', 'Admin\Laporan::transaksi');
+    });
 });
 
