@@ -150,8 +150,16 @@ $routes->group('admin', ['filter'=>'admin'], function($routes){
         $routes->get('lelang/pdf', 'Admin\Laporan::lelangPdf');
         $routes->get('lelang/excel', 'Admin\Laporan::lelangExcel');
 
+        // Laporan Pemenang
         $routes->get('pemenang', 'Admin\Laporan::pemenang');
-        $routes->get('transaksi', 'Admin\Laporan::transaksi');
+        $routes->get('pemenang/pdf', 'Admin\Laporan::pemenangPdf');
+        $routes->get('pemenang/excel', 'Admin\Laporan::pemenangExcel');
+
+        // Laporan Pembayaran
+        $routes->get('pembayaran', 'Admin\Laporan::pembayaran');
+        $routes->get('pembayaran/pdf', 'Admin\Laporan::pembayaranPdf');
+        $routes->get('pembayaran/excel', 'Admin\Laporan::pembayaranExcel');
+
     });
 });
 

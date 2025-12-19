@@ -83,7 +83,8 @@
                 <ul id="laporan-submenu" class="ml-8 mt-2 space-y-1 hidden">
                     <li><a href="<?= base_url('admin/laporan/barang') ?>" class="block px-4 py-2 hover:bg-gray-100 text-gray-600 text-sm">Laporan Barang</a></li>
                     <li><a href="<?= base_url('admin/laporan/lelang') ?>" class="block px-4 py-2 hover:bg-gray-100 text-gray-600 text-sm">Laporan Lelang</a></li>
-                    <li><a href="<?= base_url('admin/laporan/transaksi') ?>" class="block px-4 py-2 hover:bg-gray-100 text-gray-600 text-sm">Laporan Transaksi</a></li>
+                    <li><a href="<?= base_url('admin/laporan/pemenang') ?>" class="block px-4 py-2 hover:bg-gray-100 text-gray-600 text-sm">Laporan Pemenang</a></li>
+                    <li><a href="<?= base_url('admin/laporan/pembayaran') ?>" class="block px-4 py-2 hover:bg-gray-100 text-gray-600 text-sm">Laporan Pembayaran</a></li>
                 </ul>
             </li>
             <li class="pt-4"><hr class="border-gray-200"></li>
