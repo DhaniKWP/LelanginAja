@@ -8,16 +8,10 @@ use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use Config\Database;
 
 /**
  * Class BaseController
- *
- * BaseController provides a convenient place for loading components
- * and performing functions that are needed by all your controllers.
- * Extend this class in any new controllers:
- *     class Home extends BaseController
- *
- * For security be sure to declare any new methods as protected or private.
  */
 abstract class BaseController extends Controller
 {
@@ -29,30 +23,34 @@ abstract class BaseController extends Controller
     protected $request;
 
     /**
-     * An array of helpers to be loaded automatically upon
-     * class instantiation. These helpers will be available
-     * to all other controllers that extend BaseController.
+     * Helpers yang auto load
      *
      * @var list<string>
      */
     protected $helpers = [];
 
     /**
-     * Be sure to declare properties for any property fetch you initialized.
-     * The creation of dynamic property is deprecated in PHP 8.2.
+     * Database connection
+     *
+     * @var \CodeIgniter\Database\BaseConnection
      */
-    // protected $session;
+    protected $db;
 
     /**
-     * @return void
+     * Constructor Controller
      */
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
-    {
-        // Do Not Edit This Line
+    public function initController(
+        RequestInterface $request,
+        ResponseInterface $response,
+        LoggerInterface $logger
+    ) {
+        // WAJIB
         parent::initController($request, $response, $logger);
 
-        // Preload any models, libraries, etc, here.
+        // 🔥 INIT DATABASE (INI YANG SEBELUMNYA HILANG)
+        $this->db = Database::connect();
 
-        // E.g.: $this->session = service('session');
+        // Contoh kalau mau pakai session:
+        // $this->session = service('session');
     }
 }
