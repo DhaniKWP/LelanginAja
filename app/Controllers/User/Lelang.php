@@ -52,7 +52,11 @@ class Lelang extends BaseController
         }
 
         // 🔴 CEK WAKTU HABIS ATAU BELUM
-        $isExpired = strtotime($lelang['tanggal_selesai']) <= time();
+        $isExpired = (
+            $lelang['status'] === 'selesai'
+            || strtotime($lelang['tanggal_selesai']) <= time()
+        );
+
 
         return view('user/lelang/detail', [
             'lelang'     => $lelang,

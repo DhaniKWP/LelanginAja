@@ -41,8 +41,10 @@ class Bid extends BaseController
         ->where('transaksi_lelang.status', 'aktif')
         ->first();
 
-    if (!$lelang) {
-        return redirect()->back()->with('error', 'Lelang tidak ditemukan atau sudah berakhir.');
+    // 🔒 BLOKIR BID JIKA LELANG SELESAI
+    if (!$lelang || $lelang['status'] === 'selesai') {
+        return redirect()->back()
+            ->with('error', 'Lelang sudah berakhir');
     }
 
     // 3️⃣ Ambil bid tertinggi
