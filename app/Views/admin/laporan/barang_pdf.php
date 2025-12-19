@@ -86,8 +86,9 @@
     <!-- HEADER -->
     <div class="text-center">
         <div class="title">LAPORAN DATA BARANG LELANG</div>
-        <div class="system-name">SISTEM LELANGIN AJA</div>
-        <div class="subtitle">Platform Lelang Barang Online</div>
+        <div class="subtitle">
+            Platform Lelang Barang Online — <b>LelanginAja</b>
+        </div>
     </div>
 
     <!-- PERIODE -->

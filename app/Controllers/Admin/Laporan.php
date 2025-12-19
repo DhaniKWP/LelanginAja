@@ -110,88 +110,352 @@ class Laporan extends BaseController
 
     // ================= EXPORT EXCEL =================
     public function barangExcel()
-    {
-        $builder = $this->barang
-            ->select('
-                barang.nama_barang,
-                barang.nama_kategori,
-                users.nama AS nama_user,
-                barang.harga_awal,
-                barang.status_pengajuan,
-                barang.tanggal_pengajuan
-            ')
-            ->join('users', 'users.id_user = barang.id_user');
+{
+    $builder = $this->barang
+        ->select('
+            barang.nama_barang,
+            barang.nama_kategori,
+            users.nama AS nama_user,
+            barang.harga_awal,
+            barang.status_pengajuan,
+            barang.tanggal_pengajuan
+        ')
+        ->join('users', 'users.id_user = barang.id_user');
 
-        // FILTER TANGGAL
+    // ===== FILTER =====
+    $start  = $this->request->getGet('start_date');
+    $end    = $this->request->getGet('end_date');
+    $status = $this->request->getGet('status');
+
+    if ($start && $end) {
+        $builder->where('DATE(barang.tanggal_pengajuan) >=', $start)
+                ->where('DATE(barang.tanggal_pengajuan) <=', $end);
+    }
+
+    if ($status) {
+        $builder->where('barang.status_pengajuan', $status);
+    }
+
+    $barang = $builder
+        ->orderBy('barang.tanggal_pengajuan', 'DESC')
+        ->findAll();
+
+    // ================= EXCEL =================
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+
+    /* ================= JUDUL ================= */
+    $sheet->mergeCells('A1:G1');
+    $sheet->setCellValue('A1', 'LAPORAN DATA BARANG');
+    $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(15);
+    $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+
+    $sheet->mergeCells('A2:G2');
+    $sheet->setCellValue('A2', 'Sistem LelanginAja');
+    $sheet->getStyle('A2')->getFont()->setItalic(true);
+    $sheet->getStyle('A2')->getAlignment()->setHorizontal('center');
+
+    /* ================= PERIODE ================= */
+    $periode = ($start && $end)
+        ? 'Periode: '.date('d F Y', strtotime($start)).' – '.date('d F Y', strtotime($end))
+        : 'Periode: Semua Data';
+
+    $sheet->mergeCells('A4:G4');
+    $sheet->setCellValue('A4', $periode);
+    $sheet->getStyle('A4')->getAlignment()->setHorizontal('center');
+
+    /* ================= HEADER ================= */
+    $sheet->fromArray([
+        ['No','Nama Barang','Kategori','Pemilik','Harga Awal','Status','Tanggal Pengajuan']
+    ], null, 'A6');
+
+    $sheet->getStyle('A6:G6')->applyFromArray([
+        'font' => ['bold' => true],
+        'alignment' => [
+            'horizontal' => 'center',
+            'vertical'   => 'center'
+        ],
+        'fill' => [
+            'fillType' => 'solid',
+            'color' => ['rgb' => 'F3F4F6']
+        ],
+        'borders' => [
+            'allBorders' => ['borderStyle' => 'thin']
+        ]
+    ]);
+
+    /* ================= DATA ================= */
+    $row = 7;
+    $no  = 1;
+
+    foreach ($barang as $b) {
+        $sheet->fromArray([
+            $no++,
+            $b['nama_barang'],
+            $b['nama_kategori'],
+            $b['nama_user'],
+            $b['harga_awal'],
+            ucfirst($b['status_pengajuan']),
+            date('d-m-Y', strtotime($b['tanggal_pengajuan']))
+        ], null, 'A'.$row);
+
+        $sheet->getStyle("A{$row}:G{$row}")
+            ->getBorders()->getAllBorders()
+            ->setBorderStyle('thin');
+
+        // ALIGNMENT
+        $sheet->getStyle("A{$row}")
+            ->getAlignment()->setHorizontal('center');
+
+        $sheet->getStyle("E{$row}")
+            ->getAlignment()->setHorizontal('right');
+
+        $sheet->getStyle("F{$row}:G{$row}")
+            ->getAlignment()->setHorizontal('center');
+
+        // FORMAT RUPIAH
+        $sheet->getStyle("E{$row}")
+            ->getNumberFormat()
+            ->setFormatCode('#,##0');
+
+        $row++;
+    }
+
+    /* ================= AUTO SIZE ================= */
+    foreach (range('A','G') as $col) {
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+
+    /* ================= FOOTER ================= */
+    $sheet->mergeCells("A".($row+1).":G".($row+1));
+    $sheet->setCellValue(
+        "A".($row+1),
+        'Dicetak pada '.date('d F Y').' melalui Sistem LelanginAja'
+    );
+    $sheet->getStyle("A".($row+1))->getFont()->setItalic(true);
+    $sheet->getStyle("A".($row+1))->getAlignment()->setHorizontal('right');
+
+    /* ================= EXPORT ================= */
+    $writer = new Xlsx($spreadsheet);
+    $filename = 'laporan-barang.xlsx';
+
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header("Content-Disposition: attachment; filename=\"$filename\"");
+    header('Cache-Control: max-age=0');
+
+    $writer->save('php://output');
+    exit;
+}
+
+
+   public function lelang()
+    {
+        $builder = $this->db->table('transaksi_lelang')
+            ->select('
+                transaksi_lelang.id_lelang,
+                barang.nama_barang,
+                users.nama AS pemilik,
+                transaksi_lelang.tanggal_mulai,
+                transaksi_lelang.tanggal_selesai,
+                barang.harga_awal,
+                MAX(transaksi_penawaran.harga_penawaran) AS harga_tertinggi,
+                COUNT(transaksi_penawaran.id_penawaran) AS total_penawaran,
+                transaksi_lelang.status
+            ')
+            ->join('barang', 'barang.id_barang = transaksi_lelang.id_barang')
+            ->join('users', 'users.id_user = barang.id_user')
+            ->join(
+                'transaksi_penawaran',
+                'transaksi_penawaran.id_lelang = transaksi_lelang.id_lelang',
+                'left'
+            )
+            ->groupBy([
+                'transaksi_lelang.id_lelang',
+                'barang.nama_barang',
+                'users.nama',
+                'transaksi_lelang.tanggal_mulai',
+                'transaksi_lelang.tanggal_selesai',
+                'barang.harga_awal',
+                'transaksi_lelang.status'
+            ]);
+
+        // ===== FILTER TANGGAL =====
+        $start = $this->request->getGet('start_date');
+        $end   = $this->request->getGet('end_date');
+
+        if ($start && $end) {
+            $builder->where('DATE(transaksi_lelang.tanggal_mulai) >=', $start)
+                    ->where('DATE(transaksi_lelang.tanggal_mulai) <=', $end);
+        }
+
+        // ===== FILTER STATUS =====
+        $status = $this->request->getGet('status');
+        if ($status) {
+            $builder->where('transaksi_lelang.status', $status);
+        }
+
+        // ===== FILTER HASIL LELANG =====
+        $hasil = $this->request->getGet('hasil');
+        if ($hasil === 'terjual') {
+            $builder->having('MAX(transaksi_penawaran.harga_penawaran) IS NOT NULL');
+        } elseif ($hasil === 'tidak') {
+            $builder->having('MAX(transaksi_penawaran.harga_penawaran) IS NULL');
+        }
+
+        return view('admin/laporan/lelang', [
+            'lelang' => $builder->get()->getResultArray(),
+            'filter' => compact('start','end','status','hasil')
+        ]);
+    }
+    public function lelangPdf()
+    {
+        $builder = $this->db->table('transaksi_lelang')
+            ->select('
+                transaksi_lelang.id_lelang,
+                barang.nama_barang,
+                users.nama AS pemilik,
+                transaksi_lelang.tanggal_mulai,
+                transaksi_lelang.tanggal_selesai,
+                barang.harga_awal,
+                MAX(transaksi_penawaran.harga_penawaran) AS harga_tertinggi,
+                COUNT(transaksi_penawaran.id_penawaran) AS total_penawaran,
+                transaksi_lelang.status
+            ')
+            ->join('barang', 'barang.id_barang = transaksi_lelang.id_barang')
+            ->join('users', 'users.id_user = barang.id_user')
+            ->join(
+                'transaksi_penawaran',
+                'transaksi_penawaran.id_lelang = transaksi_lelang.id_lelang',
+                'left'
+            )
+            ->groupBy([
+                'transaksi_lelang.id_lelang',
+                'barang.nama_barang',
+                'users.nama',
+                'transaksi_lelang.tanggal_mulai',
+                'transaksi_lelang.tanggal_selesai',
+                'barang.harga_awal',
+                'transaksi_lelang.status'
+            ]);
+
+        // FILTER
         $start  = $this->request->getGet('start_date');
         $end    = $this->request->getGet('end_date');
         $status = $this->request->getGet('status');
+        $hasil  = $this->request->getGet('hasil');
 
         if ($start && $end) {
-            $builder->where('DATE(barang.tanggal_pengajuan) >=', $start)
-                    ->where('DATE(barang.tanggal_pengajuan) <=', $end);
+            $builder->where('DATE(transaksi_lelang.tanggal_mulai) >=', $start)
+                    ->where('DATE(transaksi_lelang.tanggal_mulai) <=', $end);
         }
 
-        // FILTER STATUS
         if ($status) {
-            $builder->where('barang.status_pengajuan', $status);
+            $builder->where('transaksi_lelang.status', $status);
         }
 
-        $barang = $builder
-            ->orderBy('barang.tanggal_pengajuan', 'DESC')
-            ->findAll();
+        if ($hasil === 'terjual') {
+            $builder->having('MAX(transaksi_penawaran.harga_penawaran) IS NOT NULL');
+        } elseif ($hasil === 'tidak') {
+            $builder->having('MAX(transaksi_penawaran.harga_penawaran) IS NULL');
+        }
 
-        // ================= BUAT EXCEL =================
+        $data = [
+            'lelang' => $builder->get()->getResultArray(),
+            'filter' => compact('start','end','status','hasil')
+        ];
+
+        $html = view('admin/laporan/lelang_pdf', $data);
+
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+        $dompdf->stream('laporan-lelang.pdf', ['Attachment' => false]);
+    }
+
+    public function lelangExcel()
+    {
+        $builder = $this->db->table('transaksi_lelang')
+            ->select('
+                transaksi_lelang.id_lelang,
+                barang.nama_barang,
+                users.nama AS pemilik,
+                transaksi_lelang.tanggal_mulai,
+                transaksi_lelang.tanggal_selesai,
+                barang.harga_awal,
+                MAX(transaksi_penawaran.harga_penawaran) AS harga_tertinggi,
+                COUNT(transaksi_penawaran.id_penawaran) AS total_penawaran,
+                transaksi_lelang.status
+            ')
+            ->join('barang', 'barang.id_barang = transaksi_lelang.id_barang')
+            ->join('users', 'users.id_user = barang.id_user')
+            ->join('transaksi_penawaran',
+                'transaksi_penawaran.id_lelang = transaksi_lelang.id_lelang',
+                'left'
+            )
+            ->groupBy([
+                'transaksi_lelang.id_lelang',
+                'barang.nama_barang',
+                'users.nama',
+                'transaksi_lelang.tanggal_mulai',
+                'transaksi_lelang.tanggal_selesai',
+                'barang.harga_awal',
+                'transaksi_lelang.status'
+            ]);
+
+        // ===== FILTER =====
+        $start  = $this->request->getGet('start_date');
+        $end    = $this->request->getGet('end_date');
+        $status = $this->request->getGet('status');
+        $hasil  = $this->request->getGet('hasil');
+
+        if ($start && $end) {
+            $builder->where('DATE(transaksi_lelang.tanggal_mulai) >=', $start)
+                    ->where('DATE(transaksi_lelang.tanggal_mulai) <=', $end);
+        }
+
+        if ($status) {
+            $builder->where('transaksi_lelang.status', $status);
+        }
+
+        if ($hasil === 'terjual') {
+            $builder->having('MAX(transaksi_penawaran.harga_penawaran) IS NOT NULL');
+        } elseif ($hasil === 'tidak') {
+            $builder->having('MAX(transaksi_penawaran.harga_penawaran) IS NULL');
+        }
+
+        $lelang = $builder->get()->getResultArray();
+
+        // ================= EXCEL =================
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
-        // ================= JUDUL =================
-        $sheet->mergeCells('A1:G1');
-        $sheet->setCellValue('A1', 'LAPORAN DATA BARANG LELANG');
-        $sheet->getStyle('A1')->applyFromArray([
-            'font' => [
-                'bold' => true,
-                'size' => 14
-            ],
-            'alignment' => [
-                'horizontal' => 'center'
-            ]
-        ]);
+        /* ================= JUDUL ================= */
+        $sheet->mergeCells('A1:I1');
+        $sheet->setCellValue('A1', 'LAPORAN DATA LELANG');
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(15);
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
 
-        // ================= SUB JUDUL =================
-        $sheet->mergeCells('A2:G2');
-        $sheet->setCellValue('A2', 'Sistem Informasi Lelangin Aja');
+        $sheet->mergeCells('A2:I2');
+        $sheet->setCellValue('A2', 'Sistem LelanginAja');
+        $sheet->getStyle('A2')->getFont()->setItalic(true);
         $sheet->getStyle('A2')->getAlignment()->setHorizontal('center');
 
-        // ================= PERIODE =================
-        $sheet->mergeCells('A3:G3');
-        $sheet->setCellValue(
-            'A3',
-            'Periode: ' .
-            ($start && $end
-                ? date('d M Y', strtotime($start)) . ' s/d ' . date('d M Y', strtotime($end))
-                : 'Semua Periode'
-            )
-        );
-        $sheet->getStyle('A3')->getAlignment()->setHorizontal('center');
+        /* ================= PERIODE ================= */
+        $periode = ($start && $end)
+            ? 'Periode: '.date('d F Y', strtotime($start)).' – '.date('d F Y', strtotime($end))
+            : 'Periode: Semua Data';
 
-        // JARAK
-        $sheet->getRowDimension(4)->setRowHeight(10);
+        $sheet->mergeCells('A4:I4');
+        $sheet->setCellValue('A4', $periode);
+        $sheet->getStyle('A4')->getAlignment()->setHorizontal('center');
 
-        // ================= HEADER TABLE =================
-        $headerRow = 5;
+        /* ================= HEADER ================= */
         $sheet->fromArray([
-            'No',
-            'Nama Barang',
-            'Kategori',
-            'Pemilik',
-            'Harga Awal',
-            'Status',
-            'Tanggal'
-        ], null, 'A'.$headerRow);
+            ['No','Nama Barang','Pemilik','Harga Awal','Harga Tertinggi','Total Penawaran','Status','Tanggal Mulai','Tanggal Selesai']
+        ], null, 'A6');
 
-        // STYLE HEADER
-        $sheet->getStyle("A{$headerRow}:G{$headerRow}")->applyFromArray([
+        $sheet->getStyle('A6:I6')->applyFromArray([
             'font' => [
                 'bold' => true
             ],
@@ -201,145 +465,77 @@ class Laporan extends BaseController
             ],
             'fill' => [
                 'fillType' => 'solid',
-                'startColor' => ['rgb' => 'E5E7EB'] // abu2
+                'color' => ['rgb' => 'F3F4F6']
             ],
             'borders' => [
-                'allBorders' => [
-                    'borderStyle' => 'thin'
-                ]
+                'allBorders' => ['borderStyle' => 'thin']
             ]
         ]);
 
-        // ================= DATA =================
-        $row = $headerRow + 1;
+        /* ================= DATA ================= */
+        $row = 7;
         $no  = 1;
 
-        foreach ($barang as $b) {
+        foreach ($lelang as $l) {
             $sheet->fromArray([
                 $no++,
-                $b['nama_barang'],
-                $b['nama_kategori'],
-                $b['nama_user'],
-                $b['harga_awal'],
-                ucfirst($b['status_pengajuan']),
-                date('d-m-Y', strtotime($b['tanggal_pengajuan']))
+                $l['nama_barang'],
+                $l['pemilik'],
+                $l['harga_awal'],
+                $l['harga_tertinggi'] ?? '-',
+                $l['total_penawaran'],
+                ucfirst($l['status']),
+                date('d-m-Y', strtotime($l['tanggal_mulai'])),
+                date('d-m-Y', strtotime($l['tanggal_selesai']))
             ], null, 'A'.$row);
 
-            // BORDER DATA
-            $sheet->getStyle("A{$row}:G{$row}")->getBorders()
-                ->getAllBorders()->setBorderStyle('thin');
-
-            // FORMAT RUPIAH
-            $sheet->getStyle("E{$row}")
-                ->getNumberFormat()
-                ->setFormatCode('#,##0');
-
-            // ALIGN
-            $sheet->getStyle("A{$row}:D{$row}")
-                ->getAlignment()->setVertical('center');
+            $sheet->getStyle("A{$row}:I{$row}")
+                ->getBorders()->getAllBorders()
+                ->setBorderStyle('thin');
 
             $sheet->getStyle("A{$row}")
                 ->getAlignment()->setHorizontal('center');
 
-            $sheet->getStyle("F{$row}:G{$row}")
+            $sheet->getStyle("D{$row}:F{$row}")
+                ->getAlignment()->setHorizontal('right');
+
+            $sheet->getStyle("G{$row}:I{$row}")
                 ->getAlignment()->setHorizontal('center');
 
             $row++;
         }
 
-        // ================= TOTAL =================
-        $sheet->mergeCells("A{$row}:D{$row}");
-        $sheet->setCellValue("A{$row}", 'TOTAL BARANG');
-        $sheet->setCellValue("E{$row}", count($barang));
-        $sheet->mergeCells("F{$row}:G{$row}");
+        /* ================= FORMAT ANGKA ================= */
+        $sheet->getStyle("D7:E{$row}")
+            ->getNumberFormat()
+            ->setFormatCode('#,##0');
 
-        // STYLE TOTAL ROW
-        $sheet->getStyle("A{$row}:G{$row}")->applyFromArray([
-            'font' => [
-                'bold' => true
-            ],
-            'alignment' => [
-                'horizontal' => 'center',
-                'vertical'   => 'center'
-            ],
-            'fill' => [
-                'fillType' => 'solid',
-                'startColor' => ['rgb' => 'F3F4F6'] // abu muda
-            ],
-            'borders' => [
-                'allBorders' => [
-                    'borderStyle' => 'medium'
-                ]
-            ]
-        ]);
-
-        // ================= AUTO WIDTH =================
-        foreach (range('A','G') as $col) {
+        /* ================= AUTO SIZE ================= */
+        foreach (range('A','I') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 
-        // ================= EXPORT =================
+        /* ================= FOOTER ================= */
+        $sheet->mergeCells("A".($row+1).":I".($row+1));
+        $sheet->setCellValue("A".($row+1),
+            'Dicetak pada '.date('d F Y').' melalui Sistem LelanginAja'
+        );
+        $sheet->getStyle("A".($row+1))->getFont()->setItalic(true);
+        $sheet->getStyle("A".($row+1))->getAlignment()->setHorizontal('right');
+
+        /* ================= OUTPUT ================= */
         $writer = new Xlsx($spreadsheet);
-        $filename = 'laporan-barang.xlsx';
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header("Content-Disposition: attachment; filename=\"$filename\"");
+        header('Content-Disposition: attachment; filename="laporan-lelang.xlsx"');
         header('Cache-Control: max-age=0');
 
         $writer->save('php://output');
         exit;
     }
 
-    public function lelang()
-{
-    $builder = $this->db->table('transaksi_lelang')
-        ->select('
-            transaksi_lelang.id_lelang,
-            barang.nama_barang,
-            users.nama AS pemilik,
-            transaksi_lelang.tanggal_mulai,
-            transaksi_lelang.tanggal_selesai,
-            barang.harga_awal,
-            MAX(transaksi_penawaran.harga_penawaran) AS harga_tertinggi,
-            COUNT(transaksi_penawaran.id_penawaran) AS total_penawaran,
-            transaksi_lelang.status
-        ')
-        ->join('barang', 'barang.id_barang = transaksi_lelang.id_barang')
-        ->join('users', 'users.id_user = barang.id_user')
-        ->join(
-            'transaksi_penawaran',
-            'transaksi_penawaran.id_lelang = transaksi_lelang.id_lelang',
-            'left'
-        )
-        ->groupBy('transaksi_lelang.id_lelang');
 
-    // ===== FILTER TANGGAL =====
-    $start = $this->request->getGet('start_date');
-    $end   = $this->request->getGet('end_date');
 
-    if ($start && $end) {
-        $builder->where('DATE(transaksi_lelang.tanggal_mulai) >=', $start)
-                ->where('DATE(transaksi_lelang.tanggal_mulai) <=', $end);
-    }
 
-    // ===== FILTER STATUS =====
-    $status = $this->request->getGet('status');
-    if ($status) {
-        $builder->where('transaksi_lelang.status', $status);
-    }
-
-    // ===== FILTER HASIL =====
-    $hasil = $this->request->getGet('hasil');
-    if ($hasil == 'terjual') {
-        $builder->having('harga_tertinggi IS NOT NULL');
-    } elseif ($hasil == 'tidak') {
-        $builder->having('harga_tertinggi IS NULL');
-    }
-
-    return view('admin/laporan/lelang', [
-        'lelang' => $builder->get()->getResultArray(),
-        'filter' => compact('start','end','status','hasil')
-    ]);
-}
 
 }

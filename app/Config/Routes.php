@@ -140,9 +140,15 @@ $routes->group('admin', ['filter'=>'admin'], function($routes){
 
     // LAPORAN (ADMIN)
     $routes->group('laporan', function($routes){
+        // LAPORAN BARANG
         $routes->get('barang', 'Admin\Laporan::barang');
         $routes->get('barang/pdf', 'Admin\Laporan::barangPdf');
         $routes->get('barang/excel', 'Admin\Laporan::barangExcel');
+
+        // LAPORAN LELANG
+        $routes->get('lelang', 'Admin\Laporan::lelang');
+        $routes->get('lelang/pdf', 'Admin\Laporan::lelangPdf');
+        $routes->get('lelang/excel', 'Admin\Laporan::lelangExcel');
 
         $routes->get('pemenang', 'Admin\Laporan::pemenang');
         $routes->get('transaksi', 'Admin\Laporan::transaksi');
