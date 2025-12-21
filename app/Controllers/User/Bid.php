@@ -33,18 +33,28 @@ class Bid extends BaseController
             ->with('error', 'Akun kamu belum disetujui admin.');
     }
 
-    // 2️⃣ Ambil data lelang + harga awal
+    // 2️⃣ Ambil data lelang + barang
     $lelang = $this->lelang
-        ->select('transaksi_lelang.*, barang.harga_awal')
+        ->select('
+            transaksi_lelang.*,
+            barang.harga_awal,
+            barang.id_user AS pemilik_barang
+        ')
         ->join('barang', 'barang.id_barang = transaksi_lelang.id_barang')
         ->where('transaksi_lelang.id_lelang', $id_lelang)
         ->where('transaksi_lelang.status', 'aktif')
         ->first();
 
-    // 🔒 BLOKIR BID JIKA LELANG SELESAI
+    // 🔒 BLOKIR JIKA LELANG TIDAK ADA / SELESAI
     if (!$lelang || $lelang['status'] === 'selesai') {
         return redirect()->back()
             ->with('error', 'Lelang sudah berakhir');
+    }
+
+    // ⛔ BLOKIR JIKA USER ADALAH PEMILIK BARANG
+    if ((int)$lelang['pemilik_barang'] === (int)$userId) {
+        return redirect()->back()
+            ->with('error', 'Kamu tidak bisa menawar barang milikmu sendiri.');
     }
 
     // 3️⃣ Ambil bid tertinggi
@@ -64,7 +74,7 @@ class Bid extends BaseController
             ->with('error', 'Bid harus lebih tinggi dari Rp ' . number_format($minBid));
     }
 
-    // 4️⃣ Simpan bid
+    // 4️⃣ SIMPAN BID
     $this->penawaran->insert([
         'id_lelang'       => $id_lelang,
         'id_user'         => $userId,
@@ -72,7 +82,9 @@ class Bid extends BaseController
         'waktu_penawaran' => date('Y-m-d H:i:s'),
     ]);
 
-    return redirect()->back()->with('success', 'Penawaran berhasil dikirim!');
+    return redirect()->back()
+        ->with('success', 'Penawaran berhasil dikirim!');
 }
+
 
 }
