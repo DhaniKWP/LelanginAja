@@ -30,7 +30,8 @@ class Lelang extends BaseController
             transaksi_lelang.*,
             barang.nama_barang,
             barang.harga_awal,
-            barang.foto
+            barang.foto,
+            barang.nama_kategori
         ')
         ->join('barang', 'barang.id_barang = transaksi_lelang.id_barang')
         ->where('transaksi_lelang.status', 'aktif') // status belum di-stop admin

@@ -37,7 +37,7 @@
         <?php foreach($lelang as $l): ?>
         <div class="lelang-card bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition"
              data-nama="<?= strtolower($l['nama_barang']) ?>"
-             data-kategori="<?= strtolower($l['kategori_barang'] ?? '') ?>">
+             data-kategori="<?= strtolower($l['nama_kategori'] ?? '') ?>">
 
             <!-- CAROUSEL FOTO -->
             <div class="relative group">
@@ -97,25 +97,23 @@
 </div>
 
 <script>
-// =========================
-// 🔎 SEARCH REALTIME
-// =========================
-document.getElementById('searchInput').addEventListener('keyup', function () {
-    const value = this.value.toLowerCase();
-    document.querySelectorAll('.lelang-card').forEach(card => {
-        card.style.display = card.dataset.nama.includes(value) ? 'block' : 'none';
-    });
-});
+function applyFilter() {
+    const keyword  = document.getElementById('searchInput').value.toLowerCase();
+    const kategori = document.getElementById('kategoriFilter').value.toLowerCase();
 
-// =========================
-// 📌 FILTER KATEGORI
-// =========================
-document.getElementById('kategoriFilter').addEventListener('change', function () {
-    const value = this.value.toLowerCase();
     document.querySelectorAll('.lelang-card').forEach(card => {
-        card.style.display = (!value || card.dataset.kategori === value) ? 'block' : 'none';
+        const nama = card.dataset.nama || '';
+        const kat  = card.dataset.kategori || '';
+
+        const matchNama     = nama.includes(keyword);
+        const matchKategori = !kategori || kat === kategori;
+
+        card.style.display = (matchNama && matchKategori) ? 'block' : 'none';
     });
-});
+}
+
+document.getElementById('searchInput').addEventListener('keyup', applyFilter);
+document.getElementById('kategoriFilter').addEventListener('change', applyFilter);
 
 // =========================
 // ⏳ COUNTDOWN REALTIME
