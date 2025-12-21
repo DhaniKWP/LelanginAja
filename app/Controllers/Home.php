@@ -26,6 +26,7 @@ class Home extends BaseController
             ')
             ->join('barang', 'barang.id_barang = transaksi_lelang.id_barang')
             ->where('transaksi_lelang.status', 'aktif')
+            ->where('transaksi_lelang.tanggal_selesai >', date('Y-m-d H:i:s')) // 🔥 FILTER WAKTU
             ->orderBy('transaksi_lelang.tanggal_mulai', 'DESC')
             ->findAll();
 
@@ -49,6 +50,7 @@ class Home extends BaseController
             ->join('kondisi_barang', 'kondisi_barang.id_kondisi = barang.kondisi_id')
             ->where('transaksi_lelang.id_lelang', $id_lelang)
             ->where('transaksi_lelang.status', 'aktif')
+            ->where('transaksi_lelang.tanggal_selesai >', date('Y-m-d H:i:s')) // 🔥 FILTER WAKTU
             ->first();
 
         if (!$lelang) {

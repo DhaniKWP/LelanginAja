@@ -24,16 +24,22 @@ class Lelang extends BaseController
 
     // ------------------- LELANG AKTIF -------------------
     public function aktif()
-    {
-        $data['lelang'] = $this->lelang
-            ->select('transaksi_lelang.*, barang.nama_barang, barang.harga_awal, barang.foto')
-            ->join('barang','barang.id_barang = transaksi_lelang.id_barang')
-            ->where('transaksi_lelang.status','aktif')
-            ->orderBy('id_lelang','DESC')
-            ->findAll();
+{
+    $data['lelang'] = $this->lelang
+        ->select('
+            transaksi_lelang.*,
+            barang.nama_barang,
+            barang.harga_awal,
+            barang.foto
+        ')
+        ->join('barang', 'barang.id_barang = transaksi_lelang.id_barang')
+        ->where('transaksi_lelang.status', 'aktif') // status belum di-stop admin
+        ->where('transaksi_lelang.tanggal_selesai >', date('Y-m-d H:i:s')) // ⬅️ FILTER WAKTU
+        ->orderBy('barang.nama_barang', 'ASC')
+        ->findAll();
 
-        return view('user/lelang/aktif', $data);
-    }
+    return view('user/lelang/aktif', $data);
+}
 
     // ------------------- DETAIL -------------------
     public function detail($id_lelang)
