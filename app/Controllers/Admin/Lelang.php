@@ -121,19 +121,35 @@ class Lelang extends BaseController
     ======================================================== */
     public function aktif()
     {
-        $data['lelang'] = $this->lelang
+        $filter = $this->request->getGet('filter'); // running | expired
+        $now = time();
+
+        $lelang = $this->lelang
             ->select('transaksi_lelang.*, barang.nama_barang, barang.harga_awal, barang.foto')
             ->join('barang','barang.id_barang = transaksi_lelang.id_barang')
             ->where('transaksi_lelang.status','aktif')
+            ->orderBy('transaksi_lelang.tanggal_selesai','ASC')
             ->findAll();
 
-        // Ambil highest bid
-        foreach($data['lelang'] as &$l){
-            $highest = $this->penawaran->where('id_lelang',$l['id_lelang'])
+        $data['lelang'] = [];
+
+        foreach ($lelang as $l) {
+            $isExpired = strtotime($l['tanggal_selesai']) <= $now;
+
+            // FILTER
+            if ($filter === 'running' && $isExpired) continue;
+            if ($filter === 'expired' && !$isExpired) continue;
+
+            // Highest bid
+            $highest = $this->penawaran
+                ->where('id_lelang',$l['id_lelang'])
                 ->orderBy('harga_penawaran','DESC')
                 ->first();
 
             $l['highest_bid'] = $highest['harga_penawaran'] ?? $l['harga_awal'];
+            $l['is_expired']  = $isExpired;
+
+            $data['lelang'][] = $l;
         }
 
         return view('admin/lelang/aktif',$data);
