@@ -17,25 +17,38 @@ class Pembayaran extends BaseController
     }
 
     public function form($id_lelang)
-    {
-        $data['lelang'] = $this->lelang
-            ->select('
-                transaksi_lelang.id_lelang,
-                barang.nama_barang,
-                barang.harga_awal
-            ')
-            ->join('barang', 'barang.id_barang = transaksi_lelang.id_barang')
-            ->where('transaksi_lelang.id_lelang', $id_lelang)
-            ->first();
+{
+    $id_user = session()->get('id_user');
 
-        if (!$data['lelang']) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException(
-                'Data lelang tidak ditemukan'
-            );
-        }
+    $data['lelang'] = $this->db->table('transaksi_pemenang')
+        ->select('
+            transaksi_lelang.id_lelang,
+            barang.nama_barang,
+            barang.harga_awal,
+            transaksi_pemenang.harga_menang
+        ')
+        ->join(
+            'transaksi_lelang',
+            'transaksi_lelang.id_lelang = transaksi_pemenang.id_lelang'
+        )
+        ->join(
+            'barang',
+            'barang.id_barang = transaksi_lelang.id_barang'
+        )
+        ->where('transaksi_pemenang.id_lelang', $id_lelang)
+        ->where('transaksi_pemenang.id_user', $id_user)
+        ->get()
+        ->getRowArray();
 
-        return view('user/lelang/pembayaran_form', $data);
+    if (!$data['lelang']) {
+        throw new \CodeIgniter\Exceptions\PageNotFoundException(
+            'Data lelang tidak ditemukan'
+        );
     }
+
+    return view('user/lelang/pembayaran_form', $data);
+}
+
 
     public function submit($id_lelang)
     {
