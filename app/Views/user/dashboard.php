@@ -144,7 +144,7 @@
                     </div>
 
                     <div class="text-sm text-gray-600">
-                        Harga Saat Ini:
+                        Harga Start:
                         <span class="font-semibold text-green-600">
                             Rp <?= number_format($barang['harga_saat_ini'], 0, ',', '.') ?>
                         </span>

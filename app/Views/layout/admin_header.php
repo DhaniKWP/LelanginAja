@@ -73,21 +73,6 @@
                     </div>
 
                     <!-- Menu -->
-                    <a href="<?= base_url('admin/profil') ?>"
-                       class="flex items-center gap-3 px-4 py-2.5
-                              text-sm text-gray-600
-                              hover:bg-blue-50 hover:text-blue-600 transition">
-                        <i class="fas fa-user-circle"></i>
-                        Profil
-                    </a>
-
-                    <a href="<?= base_url('admin/pengaturan') ?>"
-                       class="flex items-center gap-3 px-4 py-2.5
-                              text-sm text-gray-600
-                              hover:bg-blue-50 hover:text-blue-600 transition">
-                        <i class="fas fa-cog"></i>
-                        Pengaturan
-                    </a>
 
                     <hr>
 

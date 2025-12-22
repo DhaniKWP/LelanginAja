@@ -60,19 +60,19 @@
                 <span class="text-sm">Profil Saya</span>
             </a>
 
-            <a href="<?= base_url('user/barang-saya') ?>" 
+            <a href="<?= base_url('user/barang') ?>" 
             class="flex items-center gap-3 px-4 py-2 hover:bg-blue-50 transition text-gray-700">
                 <i class="fas fa-box w-5 text-blue-500"></i>
                 <span class="text-sm">Barang Saya</span>
             </a>
 
-            <a href="<?= base_url('user/riwayat-penawaran') ?>"
+            <a href="<?= base_url('user/lelang/riwayat') ?>"
             class="flex items-center gap-3 px-4 py-2 hover:bg-blue-50 transition text-gray-700">
                 <i class="fas fa-history w-5 text-blue-500"></i>
                 <span class="text-sm">Riwayat Penawaran</span>
             </a>
 
-            <a href="<?= base_url('user/status-pemenang') ?>"
+            <a href="<?= base_url('user/lelang/pemenang') ?>"
             class="flex items-center gap-3 px-4 py-2 hover:bg-blue-50 transition text-gray-700">
                 <i class="fas fa-trophy w-5 text-yellow-500"></i>
                 <span class="text-sm">Status Pemenang</span>

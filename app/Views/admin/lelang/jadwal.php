@@ -84,8 +84,8 @@
                     Edit
                 </a>
 
-                <a href="<?= base_url('admin/lelang/delete/'.$l['id_lelang']) ?>"
-                   onclick="return confirm('Hapus jadwal lelang ini?')"
+                <a href="javascript:void(0)"
+                   onclick="return confirmDelete('<?= base_url('admin/lelang/delete/'.$l['id_lelang']) ?>')"
                    class="text-red-600 hover:underline">
                     Hapus
                 </a>
@@ -99,5 +99,22 @@
 
 </table>
 </div>
-
+<script>
+function confirmDelete(url) {
+    Swal.fire({
+        title: 'Yakin ingin menghapus?',
+        text: 'Data lelang yang dihapus tidak bisa dikembalikan!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+        }
+    });
+}
+</script>
 <?= $this->endSection() ?>

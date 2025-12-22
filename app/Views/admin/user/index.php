@@ -69,11 +69,12 @@
                     Edit
                 </a>
 
-                <a href="<?= base_url('admin/user/delete/'.$u['id_user']) ?>"
-                   onclick="return confirm('Yakin ingin menghapus user ini?')"
-                   class="text-red-600 hover:underline">
+                <a href="javascript:void(0)"
+                onclick="confirmDelete('<?= base_url('admin/user/delete/'.$u['id_user']) ?>')"
+                class="text-red-600 hover:underline">
                     Hapus
                 </a>
+
             </td>
         </tr>
         <?php endforeach; ?>
@@ -83,5 +84,23 @@
 
 </table>
 </div>
+<script>
+function confirmDelete(url) {
+    Swal.fire({
+        title: 'Yakin ingin menghapus?',
+        text: 'Data user yang dihapus tidak bisa dikembalikan!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+        }
+    });
+}
+</script>
 
 <?= $this->endSection() ?>

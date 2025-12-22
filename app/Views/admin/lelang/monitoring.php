@@ -108,9 +108,9 @@
         </div>
 
         <?php if ($lelang['status'] === 'aktif'): ?>
-            <a href="<?= base_url('admin/lelang/stop/'.$lelang['id_lelang']) ?>"
-               onclick="return confirm('Yakin ingin menghentikan lelang ini?')"
-               class="block w-full text-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm">
+            <a href="javascript:void(0)"
+            onclick="confirmStopLelang('<?= base_url('admin/lelang/stop/'.$lelang['id_lelang']) ?>')"
+            class="block w-full text-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm">
                 Hentikan Lelang
             </a>
         <?php endif; ?>
@@ -170,5 +170,25 @@
 </div>
 
 <?php endif; ?>
+
+<script>
+function confirmStopLelang(url) {
+    Swal.fire({
+        title: 'Hentikan lelang?',
+        text: 'Lelang yang dihentikan tidak dapat dilanjutkan kembali.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, hentikan',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+        }
+    });
+}
+</script>
+
 
 <?= $this->endSection() ?>

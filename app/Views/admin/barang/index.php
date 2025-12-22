@@ -85,25 +85,13 @@
             <!-- AKSI -->
             <td class="p-3 border text-center space-x-3">
 
-                <?php if($b['status_pengajuan'] === 'pending'): ?>
-                    <a href="<?= base_url('admin/barang/approve/'.$b['id_barang']) ?>"
-                       class="text-green-600 hover:underline">
-                        Approve
-                    </a>
-
-                    <a href="<?= base_url('admin/barang/reject/'.$b['id_barang']) ?>"
-                       class="text-yellow-600 hover:underline">
-                        Reject
-                    </a>
-                <?php endif; ?>
-
                 <a href="<?= base_url('admin/barang/edit/'.$b['id_barang']) ?>"
                    class="text-blue-600 hover:underline">
                     Edit
                 </a>
 
-                <a href="<?= base_url('admin/barang/delete/'.$b['id_barang']) ?>"
-                   onclick="return confirm('Yakin ingin menghapus barang ini?')"
+                <a href="javascript:void(0)"
+                   onclick="confirmDelete('<?= base_url('admin/barang/delete/'.$b['id_barang']) ?>')"
                    class="text-red-600 hover:underline">
                     Hapus
                 </a>
@@ -118,5 +106,23 @@
 
 </table>
 </div>
+<script>
+function confirmDelete(url) {
+    Swal.fire({
+        title: 'Yakin ingin menghapus?',
+        text: 'Data barang yang dihapus tidak bisa dikembalikan!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+        }
+    });
+}
+</script>
 
 <?= $this->endSection() ?>

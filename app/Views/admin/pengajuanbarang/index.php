@@ -64,15 +64,15 @@
 
             <td class="p-3 border text-center space-x-4">
 
-                <a href="<?= base_url('admin/pengajuanbarang/approve/'.$b['id_barang']) ?>"
-                   onclick="return confirm('Setujui barang ini?')"
-                   class="text-green-600 hover:underline">
+                <a href="javascript:void(0)"
+                onclick="confirmApprove('<?= base_url('admin/pengajuanbarang/approve/'.$b['id_barang']) ?>')"
+                class="text-green-600 hover:underline">
                     Approve
                 </a>
 
-                <a href="<?= base_url('admin/pengajuanbarang/reject/'.$b['id_barang']) ?>"
-                   onclick="return confirm('Tolak barang ini?')"
-                   class="text-red-600 hover:underline">
+                <a href="javascript:void(0)"
+                onclick="confirmReject('<?= base_url('admin/pengajuanbarang/reject/'.$b['id_barang']) ?>')"
+                class="text-red-600 hover:underline">
                     Reject
                 </a>
 
@@ -86,5 +86,42 @@
 
 </table>
 </div>
+
+<script>
+function confirmApprove(url) {
+    Swal.fire({
+        title: 'Setujui barang ini?',
+        text: 'Barang akan masuk ke daftar lelang.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#16a34a',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Ya, setujui',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+        }
+    });
+}
+
+function confirmReject(url) {
+    Swal.fire({
+        title: 'Tolak pengajuan barang?',
+        text: 'Barang akan ditolak dan tidak ditampilkan di lelang.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Ya, tolak',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+        }
+    });
+}
+</script>
+
 
 <?= $this->endSection() ?>
