@@ -1,176 +1,204 @@
 <?= $this->extend('layout/user_main') ?>
-
 <?= $this->section('content') ?>
 
-<!-- Page Header -->
-<div class="mb-8">
-    <h2 class="text-3xl font-bold text-gray-800 mb-2">Dashboard</h2>
-    <p class="text-gray-600">
-        Selamat datang kembali, 
-        <span class="font-semibold text-blue-600">
-            <?= esc($users['nama'] ?? 'Manusia') ?>
-        </span>!
-    </p>
-</div>
+<div class="p-6 space-y-6">
 
-<!-- Search Bar -->
-<div class="mb-8">
-    <div class="relative">
-        <input type="text" 
-               placeholder="Cari barang lelang..." 
-               class="w-full px-6 py-4 rounded-2xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pl-14 shadow-sm"
-               id="searchInput">
-        <i class="fas fa-search absolute left-5 top-5 text-gray-400"></i>
-    </div>
-</div>
-
-<!-- Stats Cards -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    
-    <!-- Card 1: Total Barang -->
-    <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-xl p-6 text-white transform hover:scale-105 transition-transform">
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="text-blue-100 text-sm font-medium">Total Barang</p>
-                <h3 class="text-4xl font-bold mt-2"><?= $stats['total_barang'] ?? 0 ?></h3>
-                <p class="text-blue-100 text-xs mt-2">
-                    <i class="fas fa-arrow-up"></i> +<?= $stats['barang_bulan_ini'] ?? 0 ?> bulan ini
-                </p>
-            </div>
-            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center">
-                <i class="fas fa-box text-3xl"></i>
-            </div>
-        </div>
+    <!-- HEADER -->
+    <div>
+        <h2 class="text-2xl font-bold text-gray-800">
+            Dashboard Pengguna
+        </h2>
+        <p class="text-gray-600 mt-1">
+            Selamat datang kembali,
+            <span class="font-semibold text-blue-600">
+                <?= esc($users['nama'] ?? 'Pengguna') ?>
+            </span>.
+            Berikut ringkasan aktivitas akun Anda pada platform lelang.
+        </p>
     </div>
 
-    <!-- Card 2: Barang Aktif -->
-    <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-xl p-6 text-white transform hover:scale-105 transition-transform">
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="text-green-100 text-sm font-medium">Barang Aktif</p>
-                <h3 class="text-4xl font-bold mt-2"><?= $stats['barang_aktif'] ?? 0 ?></h3>
-                <p class="text-green-100 text-xs mt-2">
-                    <i class="fas fa-check-circle"></i> Sedang lelang
-                </p>
-            </div>
-            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center">
-                <i class="fas fa-check-circle text-3xl"></i>
-            </div>
-        </div>
-    </div>
+    <!-- STATISTICS -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-    <!-- Card 3: Lelang Dimenangkan -->
-    <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl shadow-xl p-6 text-white transform hover:scale-105 transition-transform">
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="text-yellow-100 text-sm font-medium">Lelang Dimenangkan</p>
-                <h3 class="text-4xl font-bold mt-2"><?= $stats['total_menang'] ?? 0 ?></h3>
-                <p class="text-yellow-100 text-xs mt-2">
-                    <i class="fas fa-trophy"></i> Total kemenangan
-                </p>
-            </div>
-            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center">
-                <i class="fas fa-trophy text-3xl"></i>
-            </div>
-        </div>
-    </div>
-
-    <!-- Card 4: Total Penawaran -->
-    <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-xl p-6 text-white transform hover:scale-105 transition-transform">
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="text-purple-100 text-sm font-medium">Total Penawaran</p>
-                <h3 class="text-4xl font-bold mt-2"><?= $stats['total_penawaran'] ?? 0 ?></h3>
-                <p class="text-purple-100 text-xs mt-2">
-                    <i class="fas fa-hand-holding-usd"></i> Bid aktif
-                </p>
-            </div>
-            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center">
-                <i class="fas fa-hand-holding-usd text-3xl"></i>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Barang Lelang Populer -->
-<div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
-    <div class="flex items-center justify-between mb-6">
-        <h3 class="text-2xl font-bold text-gray-800">
-            <i class="fas fa-fire text-orange-500"></i> Barang Lelang Populer
-        </h3>
-        <a href="<?= base_url('user/lelang-aktif') ?>" 
-           class="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-2 hover:gap-3 transition-all">
-            Lihat Semua <i class="fas fa-arrow-right"></i>
-        </a>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        
-        <?php if (!empty($barang_populer)): ?>
-            <?php foreach ($barang_populer as $barang): ?>
-                <!-- Item Card -->
-                <div class="border border-gray-200 rounded-2xl overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 bg-white">
-                    <div class="bg-gradient-to-br from-blue-100 to-blue-50 h-48 flex items-center justify-center">
-                        <?php if (!empty($barang['foto'])): ?>
-                            <img src="<?= base_url('uploads/barang/' . $barang['foto']) ?>" 
-                                 alt="<?= esc($barang['nama']) ?>"
-                                 class="w-full h-full object-cover">
-                        <?php else: ?>
-                            <i class="fas fa-box text-blue-500 text-6xl"></i>
-                        <?php endif; ?>
-                    </div>
-                    <div class="p-5">
-                        <h4 class="font-bold text-gray-800 mb-2 text-lg">
-                            <?= esc($barang['nama']) ?>
-                        </h4>
-                        <p class="text-sm text-gray-500 mb-4">
-                            <?= esc($barang['kategori']) ?> • Kondisi: <?= esc($barang['kondisi']) ?>
-                        </p>
-                        <div class="flex justify-between items-center mb-4">
-                            <div>
-                                <p class="text-xs text-gray-500 mb-1">Harga Saat Ini</p>
-                                <p class="text-xl font-bold text-blue-600">
-                                    Rp <?= number_format($barang['harga_saat_ini'], 0, ',', '.') ?>
-                                </p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-xs text-gray-500 mb-1">Total Bid</p>
-                                <p class="text-xl font-bold text-gray-800">
-                                    <?= $barang['total_bid'] ?? 0 ?>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2 text-sm text-orange-600 mb-4 bg-orange-50 px-3 py-2 rounded-lg">
-                            <i class="fas fa-clock"></i>
-                            <span class="font-medium"><?= $barang['waktu_tersisa'] ?></span>
-                        </div>
-                        <a href="<?= base_url('user/lelang-detail/' . $barang['id']) ?>" 
-                           class="block w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg hover:shadow-xl text-center">
-                            <i class="fas fa-gavel"></i> Ikut Lelang
-                        </a>
-                    </div>
+        <!-- TOTAL BARANG -->
+        <div class="bg-white border rounded-2xl p-5 shadow-sm hover:shadow transition">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500">Jumlah Barang Terdaftar</p>
+                    <h3 class="text-3xl font-bold text-gray-800 mt-1">
+                        <?= $stats['total_barang'] ?? 0 ?>
+                    </h3>
                 </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <!-- Empty State -->
-            <div class="col-span-3 text-center py-12">
-                <i class="fas fa-inbox text-gray-300 text-6xl mb-4"></i>
-                <p class="text-gray-500 text-lg">Belum ada barang lelang populer</p>
+                <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600
+                            flex items-center justify-center text-xl">
+                    📦
+                </div>
             </div>
-        <?php endif; ?>
-        
+            <p class="text-xs text-gray-400 mt-3">
+                Total barang yang pernah Anda daftarkan ke sistem.
+            </p>
+        </div>
+
+        <!-- BARANG AKTIF -->
+        <div class="bg-white border rounded-2xl p-5 shadow-sm hover:shadow transition">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500">Lelang Sedang Berlangsung</p>
+                    <h3 class="text-3xl font-bold text-gray-800 mt-1">
+                        <?= $stats['barang_aktif'] ?? 0 ?>
+                    </h3>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-green-100 text-green-600
+                            flex items-center justify-center text-xl">
+                    ⏱️
+                </div>
+            </div>
+            <p class="text-xs text-gray-400 mt-3">
+                Jumlah barang Anda yang sedang dalam proses lelang aktif.
+            </p>
+        </div>
+
+        <!-- TOTAL PENAWARAN -->
+        <div class="bg-white border rounded-2xl p-5 shadow-sm hover:shadow transition">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500">Partisipasi Penawaran</p>
+                    <h3 class="text-3xl font-bold text-gray-800 mt-1">
+                        <?= $stats['total_penawaran'] ?? 0 ?>
+                    </h3>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600
+                            flex items-center justify-center text-xl">
+                    💰
+                </div>
+            </div>
+            <p class="text-xs text-gray-400 mt-3">
+                Total penawaran yang pernah Anda lakukan pada lelang.
+            </p>
+        </div>
+
     </div>
+
+    <!-- INFO NOTE -->
+    <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-blue-700">
+        Statistik di atas menampilkan ringkasan aktivitas akun Anda.
+        Informasi akan terus diperbarui sesuai dengan proses lelang yang berlangsung.
+    </div>
+
+    <!-- BARANG POPULER -->
+    <div>
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">
+            Lelang Aktif Tersedia
+        </h3>
+
+        <?php if (empty($barang_populer)): ?>
+            <div class="bg-white border rounded-xl p-6 text-center text-gray-500">
+                Saat ini belum tersedia data lelang aktif.
+                <div class="text-sm text-gray-400 mt-1">
+                    Data akan ditampilkan setelah aktivitas lelang berlangsung.
+                </div>
+            </div>
+        <?php else: ?>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <?php foreach ($barang_populer as $barang): ?>
+            <div class="bg-white border rounded-2xl overflow-hidden shadow-sm hover:shadow transition">
+
+                <?php if (!empty($barang['foto'])): ?>
+                    <div class="relative h-40 bg-gray-100 group cursor-pointer"
+                        onclick="openImageModal('/uploads/barang/<?= esc($barang['foto']) ?>')">
+
+                        <img src="/uploads/barang/<?= esc($barang['foto']) ?>"
+                            class="w-full h-full object-cover">
+
+                        <!-- OVERLAY -->
+                        <div class="absolute inset-0 bg-black/30 opacity-0
+                                    group-hover:opacity-100 transition
+                                    flex items-center justify-center">
+                            <span class="text-white text-sm font-medium">
+                                Klik untuk memperbesar
+                            </span>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <div class="h-40 bg-gray-100 flex items-center justify-center text-gray-400">
+                        Tidak ada foto
+                    </div>
+                <?php endif; ?>
+
+                <!-- BODY -->
+                <div class="p-4 space-y-2">
+                    <h4 class="font-semibold text-gray-800">
+                        <?= esc($barang['nama']) ?>
+                    </h4>
+
+                    <div class="text-sm text-gray-600">
+                        Kategori:
+                        <span class="font-medium"><?= esc($barang['kategori']) ?></span>
+                    </div>
+
+                    <div class="text-sm text-gray-600">
+                        Kondisi:
+                        <span class="font-medium"><?= esc($barang['kondisi']) ?></span>
+                    </div>
+
+                    <div class="text-sm text-gray-600">
+                        Harga Saat Ini:
+                        <span class="font-semibold text-green-600">
+                            Rp <?= number_format($barang['harga_saat_ini'], 0, ',', '.') ?>
+                        </span>
+                    </div>
+
+                    <div class="text-xs text-gray-500">
+                        Total Penawaran: <?= $barang['total_bid'] ?>
+                    </div>
+
+                    <div class="mt-2 text-xs font-medium text-blue-600">
+                        Sisa Waktu: <?= esc($barang['waktu_tersisa']) ?>
+                    </div>
+
+                    <a href="<?= base_url('user/lelang/detail/'.$barang['id']) ?>"
+                       class="block mt-3 text-center text-sm px-4 py-2
+                              bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Ikut Lelang
+                    </a>
+                </div>
+            </div>
+            <?php endforeach; ?>
+
+        </div>
+        <?php endif; ?>
+    </div>
+
 </div>
+<!-- IMAGE MODAL -->
+<div id="imageModal"
+     class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center">
 
-<?= $this->endSection() ?>
+    <div class="absolute inset-0" onclick="closeImageModal()"></div>
 
-<?= $this->section('scripts') ?>
+    <img id="imagePreview"
+         class="relative max-w-[90vw] max-h-[90vh] rounded-xl shadow-2xl
+                object-contain transform scale-95 transition-all duration-300">
+</div>
 <script>
-// Search functionality
-document.getElementById('searchInput')?.addEventListener('input', function(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    // Implement search logic here
-    console.log('Searching for:', searchTerm);
-});
+    // =========================
+// IMAGE MODAL
+// =========================
+function openImageModal(src) {
+    imagePreview.src = src;
+    imageModal.classList.remove('hidden');
+    setTimeout(() => imagePreview.classList.add('scale-100'), 10);
+    document.body.style.overflow = 'hidden';
+}
+
+function closeImageModal() {
+    imagePreview.classList.remove('scale-100');
+    imagePreview.classList.add('scale-95');
+    setTimeout(() => imageModal.classList.add('hidden'), 200);
+    document.body.style.overflow = '';
+}
 </script>
+
 <?= $this->endSection() ?>

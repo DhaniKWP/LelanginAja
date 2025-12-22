@@ -1,82 +1,114 @@
 <?= $this->extend('layout/user_main') ?>
 <?= $this->section('content') ?>
 
-<div class="p-6">
+<div class="p-6 space-y-6">
 
-    <h2 class="text-2xl font-semibold text-blue-700 mb-5">🔔 Lelang Aktif</h2>
+    <!-- HEADER -->
+    <div>
+        <h2 class="text-2xl font-bold text-gray-800">
+            Lelang Aktif
+        </h2>
+        <p class="text-gray-600 mt-1 text-sm">
+            Daftar lelang yang sedang berlangsung dan dapat diikuti secara real-time.
+        </p>
+    </div>
 
     <!-- SEARCH & FILTER -->
-    <div class="flex flex-wrap gap-3 mb-6">
+    <div class="flex flex-wrap gap-3 bg-white p-4 rounded-xl border shadow-sm">
 
-        <!-- Search -->
         <input type="text" id="searchInput"
-               placeholder="🔍 Cari barang..."
-               class="border border-gray-300 rounded-lg px-4 py-2 flex-1 min-w-[200px] focus:ring-2 focus:ring-blue-500">
+               placeholder="Cari nama barang…"
+               class="flex-1 min-w-[220px] border border-gray-300 rounded-lg px-4 py-2
+                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
 
-        <!-- Filter Kategori -->
         <select id="kategoriFilter"
-                class="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+                class="border border-gray-300 rounded-lg px-4 py-2
+                       focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
             <option value="">Semua Kategori</option>
-            <option value="Properti">Properti</option>
-            <option value="Roda Dua">Roda Dua</option>
-            <option value="Roda Empat">Roda Empat</option>
-            <option value="Elektronik">Elektronik</option>
-            <option value="Fashion">Fashion</option>
+            <option value="properti">Properti</option>
+            <option value="roda dua">Roda Dua</option>
+            <option value="roda empat">Roda Empat</option>
+            <option value="elektronik">Elektronik</option>
+            <option value="fashion">Fashion</option>
         </select>
     </div>
 
-    <?php if(empty($lelang)): ?>
-        <div class="text-center p-6 bg-white shadow rounded">
-            <p class="text-gray-600">Belum ada lelang yang berlangsung saat ini.</p>
+    <?php if (empty($lelang)): ?>
+        <div class="bg-white border rounded-xl p-8 text-center text-gray-500">
+            Saat ini belum tersedia lelang yang dapat diikuti.
         </div>
     <?php endif; ?>
 
-    <!-- LIST LELANG -->
-    <div id="lelangContainer" class="grid md:grid-cols-3 sm:grid-cols-2 gap-6">
+    <!-- LIST LELANG (CARD SAMA DASHBOARD) -->
+    <div id="lelangContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        <?php foreach($lelang as $l): ?>
-        <div class="lelang-card bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition"
+        <?php foreach ($lelang as $l): ?>
+        <div class="lelang-card bg-white border rounded-2xl overflow-hidden
+                    shadow-sm hover:shadow transition"
              data-nama="<?= strtolower($l['nama_barang']) ?>"
              data-kategori="<?= strtolower($l['nama_kategori'] ?? '') ?>">
 
-            <!-- CAROUSEL FOTO -->
-            <div class="relative group">
-                <img src="/uploads/barang/<?= $l['foto'] ?>" 
-                     class="carousel-image w-full h-40 object-cover cursor-pointer"
-                     onclick="openImageModal('/uploads/barang/<?= $l['foto'] ?>')">
+            <!-- IMAGE (SAMA DASHBOARD) -->
+            <div class="relative h-40 bg-gray-100">
+                <?php if (!empty($l['foto'])): ?>
+                    <div class="relative h-40 bg-gray-100 group cursor-pointer"
+                        onclick="openImageModal('/uploads/barang/<?= esc($l['foto']) ?>')">
 
-                <!-- Indicator -->
-                <div class="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
-                    <div class="w-2 h-2 bg-white rounded-full opacity-80"></div>
-                </div>
-            </div>
+                        <img src="/uploads/barang/<?= esc($l['foto']) ?>"
+                            class="w-full h-full object-cover">
 
-            <!-- CONTENT -->
-            <div class="p-4 space-y-2">
+                        <!-- OVERLAY -->
+                        <div class="absolute inset-0 bg-black/30 opacity-0
+                                    group-hover:opacity-100 transition
+                                    flex items-center justify-center">
+                            <span class="text-white text-sm font-medium">
+                                Klik untuk memperbesar
+                            </span>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <div class="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                        Tidak ada foto
+                    </div>
+                <?php endif; ?>
 
-                <h3 class="font-semibold text-lg text-gray-800"><?= $l['nama_barang'] ?></h3>
-
-                <p class="text-gray-500 text-sm">Harga Awal:</p>
-                <p class="text-blue-700 font-bold text-lg">Rp <?= number_format($l['harga_awal']) ?></p>
-
-                <p class="text-gray-600 text-sm"><b>Selesai:</b> <?= date("d M Y H:i", strtotime($l['tanggal_selesai'])) ?></p>
-
-                <!-- COUNTDOWN -->
-                <div class="text-sm font-semibold text-red-600" 
-                    id="cd-<?= $l['id_lelang'] ?>"
-                    data-end="<?= $l['tanggal_selesai'] ?>">
-                </div>
-
-                <span class="inline-block px-3 py-1 bg-green-600 text-white rounded text-sm">
-                    🔥 Aktif
+                <span class="absolute top-3 left-3 bg-green-100 text-green-700
+                             text-xs font-medium px-3 py-1 rounded-full">
+                    Aktif
                 </span>
             </div>
 
-            <!-- BUTTON -->
-            <div class="p-4 border-t">
+            <!-- BODY -->
+            <div class="p-4 space-y-2">
+
+                <h4 class="font-semibold text-gray-800 truncate">
+                    <?= esc($l['nama_barang']) ?>
+                </h4>
+
+                <div class="text-sm text-gray-600">
+                    Kategori:
+                    <span class="font-medium"><?= esc($l['nama_kategori']) ?></span>
+                </div>
+
+                <div class="text-sm text-gray-600">
+                    Harga Saat Ini:
+                    <span class="font-semibold text-green-600">
+                        Rp <?= number_format($l['harga_saat_ini'], 0, ',', '.') ?>
+                    </span>
+                </div>
+
+                <div class="text-xs text-gray-500">
+                    Total Penawaran: <?= $l['total_bid'] ?>
+                </div>
+
+                <div class="text-xs font-medium text-blue-600">
+                    Sisa Waktu: <?= esc($l['waktu_tersisa']) ?>
+                </div>
+
                 <a href="<?= base_url('user/lelang/detail/'.$l['id_lelang']) ?>"
-                   class="block text-center bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">
-                   Ikut Lelang
+                   class="block mt-3 text-center text-sm px-4 py-2
+                          bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    Ikut Lelang
                 </a>
             </div>
 
@@ -86,84 +118,51 @@
     </div>
 </div>
 
-<!-- FULLSCREEN IMAGE MODAL -->
+<!-- IMAGE MODAL (SAMA DASHBOARD) -->
 <div id="imageModal"
-     class="fixed inset-0 bg-black bg-opacity-80 hidden z-50 flex items-center justify-center">
+     class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center">
 
     <div class="absolute inset-0" onclick="closeImageModal()"></div>
 
-    <img id="imagePreview" 
-         class="relative max-w-[90vw] max-h-[90vh] rounded-lg shadow-xl object-contain transform scale-95 transition-all duration-300">
+    <img id="imagePreview"
+         class="relative max-w-[90vw] max-h-[90vh] rounded-xl shadow-2xl
+                object-contain transform scale-95 transition-all duration-300">
 </div>
 
 <script>
+// =========================
+// SEARCH & FILTER
+// =========================
 function applyFilter() {
-    const keyword  = document.getElementById('searchInput').value.toLowerCase();
-    const kategori = document.getElementById('kategoriFilter').value.toLowerCase();
+    const keyword  = searchInput.value.toLowerCase();
+    const kategori = kategoriFilter.value.toLowerCase();
 
     document.querySelectorAll('.lelang-card').forEach(card => {
         const nama = card.dataset.nama || '';
         const kat  = card.dataset.kategori || '';
-
-        const matchNama     = nama.includes(keyword);
-        const matchKategori = !kategori || kat === kategori;
-
-        card.style.display = (matchNama && matchKategori) ? 'block' : 'none';
+        card.style.display =
+            nama.includes(keyword) && (!kategori || kat === kategori)
+            ? 'block' : 'none';
     });
 }
-
-document.getElementById('searchInput').addEventListener('keyup', applyFilter);
-document.getElementById('kategoriFilter').addEventListener('change', applyFilter);
-
-// =========================
-// ⏳ COUNTDOWN REALTIME
-// =========================
-function updateCountdown() {
-    document.querySelectorAll("[id^='cd-']").forEach(el => {
-        const end = new Date(el.dataset.end).getTime();
-        const now = new Date().getTime();
-        const diff = end - now;
-
-        if (diff <= 0) {
-            el.innerHTML = "⛔ Lelang Selesai";
-            el.classList.remove("text-red-600");
-            el.classList.add("text-gray-500");
-            return;
-        }
-
-        const h = Math.floor(diff / (1000 * 60 * 60));
-        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((diff % (1000 * 60)) / 1000);
-
-        el.innerHTML = `⏳ ${h}h ${m}m ${s}s`;
-    });
-}
-setInterval(updateCountdown, 1000);
-updateCountdown();
+searchInput.addEventListener('keyup', applyFilter);
+kategoriFilter.addEventListener('change', applyFilter);
 
 // =========================
-// 🟣 MODAL IMAGE
+// IMAGE MODAL
 // =========================
 function openImageModal(src) {
-    const img = document.getElementById("imagePreview");
-    const modal = document.getElementById("imageModal");
-
-    img.src = src;
-    modal.classList.remove("hidden");
-
-    setTimeout(() => img.classList.add("scale-100"), 10);
-    document.body.style.overflow = "hidden";
+    imagePreview.src = src;
+    imageModal.classList.remove('hidden');
+    setTimeout(() => imagePreview.classList.add('scale-100'), 10);
+    document.body.style.overflow = 'hidden';
 }
 
 function closeImageModal() {
-    const img = document.getElementById("imagePreview");
-    const modal = document.getElementById("imageModal");
-
-    img.classList.remove("scale-100");
-    img.classList.add("scale-95");
-
-    setTimeout(() => modal.classList.add("hidden"), 200);
-    document.body.style.overflow = "";
+    imagePreview.classList.remove('scale-100');
+    imagePreview.classList.add('scale-95');
+    setTimeout(() => imageModal.classList.add('hidden'), 200);
+    document.body.style.overflow = '';
 }
 </script>
 

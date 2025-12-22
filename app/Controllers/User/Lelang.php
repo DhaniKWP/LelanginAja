@@ -22,25 +22,63 @@ class Lelang extends BaseController
         $this->pemenang  = new TransaksiPemenangModel();
     }
 
-    // ------------------- LELANG AKTIF -------------------
+    // ------------------- LELANG AKTIF (USER) -------------------
     public function aktif()
-{
-    $data['lelang'] = $this->lelang
-        ->select('
-            transaksi_lelang.*,
-            barang.nama_barang,
-            barang.harga_awal,
-            barang.foto,
-            barang.nama_kategori
-        ')
-        ->join('barang', 'barang.id_barang = transaksi_lelang.id_barang')
-        ->where('transaksi_lelang.status', 'aktif') // status belum di-stop admin
-        ->where('transaksi_lelang.tanggal_selesai >', date('Y-m-d H:i:s')) // ⬅️ FILTER WAKTU
-        ->orderBy('barang.nama_barang', 'ASC')
-        ->findAll();
+    {
+        $now = date('Y-m-d H:i:s');
 
-    return view('user/lelang/aktif', $data);
-}
+        // =========================
+        // AMBIL DATA LELANG AKTIF
+        // =========================
+        $lelang = $this->lelang
+            ->select('
+                transaksi_lelang.id_lelang,
+                transaksi_lelang.tanggal_mulai,
+                transaksi_lelang.tanggal_selesai,
+                barang.nama_barang,
+                barang.harga_awal,
+                barang.foto,
+                barang.nama_kategori
+            ')
+            ->join('barang', 'barang.id_barang = transaksi_lelang.id_barang')
+            ->where('transaksi_lelang.status', 'aktif') // belum di-stop admin
+            ->where('transaksi_lelang.tanggal_selesai >', $now) // masih berjalan
+            ->orderBy('barang.nama_barang', 'ASC')
+            ->findAll();
+
+        // =========================
+        // OLAH DATA UNTUK CARD (KAYA DASHBOARD)
+        // =========================
+        foreach ($lelang as &$l) {
+
+            // total bid
+            $totalBid = $this->penawaran
+                ->where('id_lelang', $l['id_lelang'])
+                ->countAllResults();
+
+            // harga tertinggi
+            $highest = $this->penawaran
+                ->where('id_lelang', $l['id_lelang'])
+                ->orderBy('harga_penawaran', 'DESC')
+                ->first();
+
+            // sisa waktu
+            $sisa = strtotime($l['tanggal_selesai']) - time();
+            $jam  = floor($sisa / 3600);
+            $mnt  = floor(($sisa % 3600) / 60);
+
+            // inject ke array (UNTUK VIEW)
+            $l['total_bid']      = $totalBid;
+            $l['harga_saat_ini'] = $highest['harga_penawaran'] ?? $l['harga_awal'];
+            $l['waktu_tersisa']  = ($sisa > 0)
+                ? $jam . ' jam ' . $mnt . ' menit'
+                : 'Selesai';
+        }
+
+        return view('user/lelang/aktif', [
+            'lelang' => $lelang
+        ]);
+    }
 
     // ------------------- DETAIL -------------------
     public function detail($id_lelang)
