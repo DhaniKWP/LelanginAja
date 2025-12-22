@@ -24,6 +24,7 @@
             <thead class="bg-gray-50 text-gray-600">
                 <tr>
                     <th class="p-3 border text-center">No</th>
+                    <th class="p-3 border text-center">Barang</th>
                     <th class="p-3 border text-left">Metode</th>
                     <th class="p-3 border text-center">Status</th>
                     <th class="p-3 border text-left">Tanggal Bayar</th>
@@ -35,6 +36,8 @@
             <?php $no = 1; foreach ($history as $h): ?>
                 <tr class="hover:bg-gray-50">
                     <td class="p-3 border text-center"><?= $no++ ?></td>
+
+                    <td class="p-3 border text-center"><?= esc($h['nama_barang']) ?></td>
 
                     <td class="p-3 border font-medium text-gray-800">
                         <?= strtoupper(esc($h['metode'])) ?>

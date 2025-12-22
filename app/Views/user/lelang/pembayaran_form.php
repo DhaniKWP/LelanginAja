@@ -17,13 +17,14 @@
     <div class="bg-white rounded-xl shadow p-5 space-y-3 border-l-4 border-blue-500">
         <p class="text-sm text-gray-500">Barang Lelang</p>
         <p class="text-lg font-semibold text-gray-800">
-            <?= esc($pemenang['nama_barang'] ?? 'Barang Lelang') ?>
+            <?= esc($lelang['nama_barang'] ?? 'Barang Lelang') ?>
         </p>
 
         <div class="flex justify-between items-center pt-3 border-t">
             <span class="text-sm text-gray-500">Total Pembayaran</span>
             <span class="text-xl font-bold text-blue-600">
-                Rp <?= number_format($pemenang['harga_menang']) ?>
+                Rp <?= number_format(
+                    $lelang['harga_menang'] ?? $lelang['harga_awal'],0, ',', '.') ?>
             </span>
         </div>
     </div>
@@ -31,7 +32,7 @@
     <!-- FORM PEMBAYARAN -->
     <div class="bg-white rounded-xl shadow p-6 space-y-5">
 
-        <form action="<?= base_url('user/pembayaran/submit/'.$pemenang['id_pemenang']) ?>"
+        <form action="<?= base_url('user/pembayaran/submit/'.$lelang['id_lelang']) ?>"
               method="POST"
               enctype="multipart/form-data"
               class="space-y-4">

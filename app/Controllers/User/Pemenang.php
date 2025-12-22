@@ -26,7 +26,9 @@ class Pemenang extends BaseController
     $data['pemenang'] = $this->pemenang
         ->select('
             transaksi_pemenang.id_pemenang,
+            transaksi_pemenang.id_lelang,
             transaksi_pemenang.harga_menang,
+
             barang.nama_barang,
 
             transaksi_pembayaran.metode,
@@ -34,18 +36,26 @@ class Pemenang extends BaseController
             transaksi_pembayaran.bukti_transfer,
             transaksi_pembayaran.tanggal_bayar
         ')
-        ->join('transaksi_lelang','transaksi_lelang.id_lelang = transaksi_pemenang.id_lelang')
-        ->join('barang','barang.id_barang = transaksi_lelang.id_barang')
+        ->join(
+            'transaksi_lelang',
+            'transaksi_lelang.id_lelang = transaksi_pemenang.id_lelang'
+        )
+        ->join(
+            'barang',
+            'barang.id_barang = transaksi_lelang.id_barang'
+        )
         ->join(
             'transaksi_pembayaran',
-            'transaksi_pembayaran.id_pemenang = transaksi_pemenang.id_pemenang',
+            'transaksi_pembayaran.id_lelang = transaksi_pemenang.id_lelang
+             AND transaksi_pembayaran.id_pemenang = transaksi_pemenang.id_pemenang',
             'left'
         )
         ->where('transaksi_pemenang.id_user', $id_user)
-        ->orderBy('transaksi_pemenang.tanggal_menang','DESC')
+        ->orderBy('transaksi_pemenang.tanggal_menang', 'DESC')
         ->findAll();
 
     return view('user/lelang/status_pemenang', $data);
 }
+
 
 }

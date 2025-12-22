@@ -105,7 +105,7 @@
 
                 <?php elseif ($status === 'rejected'): ?>
 
-                    <a href="<?= base_url('user/pembayaran/'.$p['id_pemenang']) ?>"
+                    <a href="<?= base_url('user/pembayaran/'.$p['id_lelang']) ?>"
                        class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700
                               text-white text-sm font-semibold">
                         🔄 Upload Ulang Bukti
@@ -120,7 +120,7 @@
 
                 <?php else: ?>
 
-                    <a href="<?= base_url('user/pembayaran/'.$p['id_pemenang']) ?>"
+                    <a href="<?= base_url('user/pembayaran/'.$p['id_lelang']) ?>"
                        class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700
                               text-white text-sm font-semibold">
                         💳 Upload Bukti Pembayaran
