@@ -26,6 +26,19 @@
         .gradient-accent {
             background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
         }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .animate-marquee {
+            animation: marquee 10s linear infinite;
+        }
     </style>
     <?= $this->renderSection('styles') ?>
 </head>

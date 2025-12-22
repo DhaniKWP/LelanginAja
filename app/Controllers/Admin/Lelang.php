@@ -146,7 +146,9 @@ class Lelang extends BaseController
                 ->orderBy('harga_penawaran','DESC')
                 ->first();
 
-            $l['highest_bid'] = $highest['harga_penawaran'] ?? $l['harga_awal'];
+            $l['highest_bid'] = $highest
+                ? $highest['harga_penawaran']
+                : null;
             $l['is_expired']  = $isExpired;
 
             $data['lelang'][] = $l;

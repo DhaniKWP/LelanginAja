@@ -67,7 +67,11 @@
             </td>
 
             <td class="p-3 border text-green-600 font-semibold">
-                Rp <?= number_format($l['highest_bid'],0,',','.') ?>
+                <?php if ($l['highest_bid'] === null): ?>
+                    <span class="text-gray-400">-</span>
+                <?php else: ?>
+                    Rp <?= number_format($l['highest_bid'],0,',','.') ?>
+                <?php endif; ?>
             </td>
 
             <td class="p-3 border">

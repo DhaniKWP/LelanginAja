@@ -50,6 +50,25 @@
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function confirmLogout(url) {
+    Swal.fire({
+        title: 'Yakin ingin logout?',
+        text: 'Kamu akan keluar dari sesi saat ini.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#2563eb',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Logout',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+        }
+    });
+}
+</script>
+
 
     <?= $this->renderSection('scripts') ?>
 

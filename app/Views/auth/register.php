@@ -13,6 +13,8 @@
     <!-- Icons -->
     <script src="https://kit.fontawesome.com/a2e0e6ad53.js" crossorigin="anonymous"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         body { font-family: 'Poppins', sans-serif; }
     </style>
@@ -84,13 +86,6 @@
             Lengkapi data untuk mulai mengikuti lelang
         </p>
 
-        <!-- ALERT -->
-        <?php if(session()->getFlashdata('error')): ?>
-            <div class="mb-4 text-sm text-red-700 bg-red-100 border border-red-200 rounded-lg px-4 py-3">
-                <?= session()->getFlashdata('error') ?>
-            </div>
-        <?php endif ?>
-
         <!-- FORM -->
         <form action="/register/process" method="POST" class="space-y-4">
 
@@ -146,6 +141,31 @@
     </div>
 
 </div>
+
+<?php if(session()->getFlashdata('error')): ?>
+<script>
+Swal.fire({
+    icon: 'error',
+    title: 'Registrasi Gagal',
+    text: '<?= session()->getFlashdata('error') ?>',
+    confirmButtonColor: '#dc2626'
+})
+</script>
+<?php endif; ?>
+
+<?php if(session()->getFlashdata('success')): ?>
+<script>
+Swal.fire({
+    icon: 'success',
+    title: 'Registrasi Berhasil 🎉',
+    text: '<?= session()->getFlashdata('success') ?>',
+    confirmButtonColor: '#2563eb'
+}).then(() => {
+    window.location.href = "/login";
+});
+</script>
+<?php endif; ?>
+
 
 </body>
 </html>

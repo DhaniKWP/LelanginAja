@@ -105,33 +105,61 @@ Platform Lelang Online Terpercaya
 
 
 <!-- Categories -->
-<section class="py-20 bg-white">
+<section class="py-20 bg-white overflow-hidden">
     <div class="container mx-auto px-4">
+
         <div class="text-center mb-12">
             <h2 class="text-4xl font-bold text-secondary mb-4">Kategori Barang</h2>
             <p class="text-gray-600 text-lg">Temukan barang sesuai kebutuhan Anda</p>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div class="bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl text-center border-2 border-transparent hover:border-primary hover:-translate-y-2 transition-all duration-300 cursor-pointer">
-                <i class="fas fa-car text-primary text-6xl mb-4"></i>
-                <h4 class="text-xl font-bold text-secondary">Mobil</h4>
-            </div>
-            <div class="bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl text-center border-2 border-transparent hover:border-primary hover:-translate-y-2 transition-all duration-300 cursor-pointer">
-                <i class="fas fa-motorcycle text-primary text-6xl mb-4"></i>
-                <h4 class="text-xl font-bold text-secondary">Motor</h4>
-            </div>
-            <div class="bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl text-center border-2 border-transparent hover:border-primary hover:-translate-y-2 transition-all duration-300 cursor-pointer">
-                <i class="fas fa-laptop text-primary text-6xl mb-4"></i>
-                <h4 class="text-xl font-bold text-secondary">Elektronik</h4>
-            </div>
-            <div class="bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl text-center border-2 border-transparent hover:border-primary hover:-translate-y-2 transition-all duration-300 cursor-pointer">
-                <i class="fas fa-tshirt text-primary text-6xl mb-4"></i>
-                <h4 class="text-xl font-bold text-secondary">Fashion</h4>
+        <!-- SLIDER -->
+        <div class="relative overflow-hidden">
+            <div class="flex gap-6 animate-marquee hover:[animation-play-state:paused]">
+
+                <!-- ITEM -->
+                <div class="min-w-[220px] bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl text-center border-2 border-transparent hover:border-primary transition">
+                    <i class="fas fa-car text-primary text-6xl mb-4"></i>
+                    <h4 class="text-xl font-bold text-secondary">Mobil</h4>
+                </div>
+
+                <div class="min-w-[220px] bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl text-center border-2 border-transparent hover:border-primary transition">
+                    <i class="fas fa-motorcycle text-primary text-6xl mb-4"></i>
+                    <h4 class="text-xl font-bold text-secondary">Motor</h4>
+                </div>
+
+                <div class="min-w-[220px] bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl text-center border-2 border-transparent hover:border-primary transition">
+                    <i class="fas fa-laptop text-primary text-6xl mb-4"></i>
+                    <h4 class="text-xl font-bold text-secondary">Elektronik</h4>
+                </div>
+
+                <div class="min-w-[220px] bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl text-center border-2 border-transparent hover:border-primary transition">
+                    <i class="fas fa-tshirt text-primary text-6xl mb-4"></i>
+                    <h4 class="text-xl font-bold text-secondary">Fashion</h4>
+                </div>
+
+                <div class="min-w-[220px] bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl text-center border-2 border-transparent hover:border-primary transition">
+                    <i class="fas fa-home text-primary text-6xl mb-4"></i>
+                    <h4 class="text-xl font-bold text-secondary">Property</h4>
+                </div>
+
+                <!-- DUPLIKASI (BIAR LOOP HALUS) -->
+                <div class="min-w-[220px] bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl text-center border-2 border-transparent hover:border-primary transition">
+                    <i class="fas fa-car text-primary text-6xl mb-4"></i>
+                    <h4 class="text-xl font-bold text-secondary">Mobil</h4>
+                </div>
+
+                <div class="min-w-[220px] bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl text-center border-2 border-transparent hover:border-primary transition">
+                    <i class="fas fa-motorcycle text-primary text-6xl mb-4"></i>
+                    <h4 class="text-xl font-bold text-secondary">Motor</h4>
+                </div>
+
             </div>
         </div>
+
     </div>
 </section>
+
 
 <!-- How It Works -->
 <section id="tentang" class="gradient-blue text-white py-20">

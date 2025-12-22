@@ -76,11 +76,11 @@
 
                     <hr>
 
-                    <a href="<?= base_url('logout') ?>"
-                       onclick="return confirm('Yakin ingin logout?')"
-                       class="flex items-center gap-3 px-4 py-2.5
-                              text-sm text-red-600 font-medium
-                              hover:bg-red-50 transition">
+                    <a href="javascript:void(0)"
+                    onclick="confirmLogout('<?= base_url('logout') ?>')"
+                    class="flex items-center gap-3 px-4 py-2.5
+                            text-sm text-red-600 font-medium
+                            hover:bg-red-50 transition">
                         <i class="fas fa-sign-out-alt"></i>
                         Logout
                     </a>

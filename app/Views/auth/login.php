@@ -13,6 +13,8 @@
     <!-- Icon -->
     <script src="https://kit.fontawesome.com/a2e0e6ad53.js" crossorigin="anonymous"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         body { font-family: 'Poppins', sans-serif; }
     </style>
@@ -84,21 +86,8 @@
             Silakan login untuk melanjutkan
         </p>
 
-        <!-- ALERT -->
-        <?php if(session()->getFlashdata('error')): ?>
-            <div class="mb-4 text-sm text-red-700 bg-red-100 border border-red-200 rounded-lg px-4 py-3">
-                <?= session()->getFlashdata('error') ?>
-            </div>
-        <?php endif ?>
-
-        <?php if(session()->getFlashdata('success')): ?>
-            <div class="mb-4 text-sm text-green-700 bg-green-100 border border-green-200 rounded-lg px-4 py-3">
-                <?= session()->getFlashdata('success') ?>
-            </div>
-        <?php endif ?>
-
         <!-- FORM -->
-        <form action="/login/process" method="POST" class="space-y-5">
+        <form action="/login/process" method="POST" onsubmit="showLoading()" class="space-y-5">
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -134,6 +123,42 @@
     </div>
 
 </div>
+
+<?php if(session()->getFlashdata('error')): ?>
+<script>
+Swal.fire({
+    icon: 'error',
+    title: 'Login Gagal',
+    text: '<?= session()->getFlashdata('error') ?>',
+    confirmButtonColor: '#2563eb'
+})
+</script>
+<?php endif; ?>
+
+<?php if(session()->getFlashdata('success')): ?>
+<script>
+Swal.fire({
+    icon: 'success',
+    title: 'Berhasil',
+    text: '<?= session()->getFlashdata('success') ?>',
+    confirmButtonColor: '#2563eb'
+})
+</script>
+<?php endif; ?>
+
+<script>
+function showLoading(){
+    Swal.fire({
+        title: 'Memproses...',
+        text: 'Mohon tunggu',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading()
+        }
+    })
+}
+</script>
+
 
 </body>
 </html>
