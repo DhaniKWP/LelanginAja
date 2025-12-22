@@ -66,7 +66,7 @@
                 </button>
 
                 <ul id="pembayaran-submenu" class="ml-8 mt-2 space-y-1 hidden">
-                    <li><a href="<?= base_url('user/pembayaran') ?>" 
+                    <li><a href="<?= base_url('user/pembayaran/history') ?>" 
                         class="block px-4 py-2 rounded-lg hover:bg-blue-50 text-gray-600 text-sm">history pembayaran</a></li>
                 </ul>
             </li>

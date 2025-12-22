@@ -58,6 +58,8 @@ $routes->group('user', ['filter'=>'user'], function($routes){
     $routes->get('pembayaran/(:num)','User\Pembayaran::form/$1');
     $routes->post('pembayaran/submit/(:num)','User\Pembayaran::submit/$1');
     $routes->get('pembayaran', 'User\Pembayaran::index');
+    $routes->get('pembayaran/history', 'User\HistoryPembayaran::index');
+    $routes->get('pembayaran/detail/(:num)', 'User\HistoryPembayaran::detail/$1');
 
     // Peserta lelang
     $routes->get('peserta','User\Peserta::index');

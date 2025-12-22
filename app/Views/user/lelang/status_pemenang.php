@@ -98,11 +98,10 @@
 
                 <?php if ($status === 'paid'): ?>
 
-                    <a href="<?= base_url('user/pembayaran/detail/'.$p['id_pemenang']) ?>"
-                       class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200
-                              text-gray-700 text-sm font-semibold">
-                        📄 Lihat Detail Pembayaran
-                    </a>
+                    <span class="px-4 py-2 rounded-lg bg-green-100
+                                text-green-700 text-sm font-semibold">
+                        ✅ Pembayaran telah diverifikasi
+                    </span>
 
                 <?php elseif ($status === 'rejected'): ?>
 
