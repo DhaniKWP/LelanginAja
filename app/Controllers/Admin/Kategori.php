@@ -55,3 +55,5 @@ class Kategori extends BaseController
         return redirect()->to('/admin/kategori')->with('success','Kategori berhasil dihapus');
     }
 }
+
+// udah ga kepake karna kategori di handle di barang aja
