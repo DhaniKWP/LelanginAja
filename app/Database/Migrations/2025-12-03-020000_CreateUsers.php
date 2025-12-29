@@ -3,7 +3,6 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
-use CodeIgniter\Database\RawSql;
 
 class CreateUsers extends Migration
 {
@@ -11,7 +10,10 @@ class CreateUsers extends Migration
     {
         $this->forge->addField([
             'id_user' => [
-                'type'       => 'SERIAL',
+                'type'           => 'INT',
+                'constraint'     => 11,
+                'unsigned'       => true,
+                'auto_increment' => true,
             ],
             'nama' => [
                 'type'       => 'VARCHAR',
@@ -37,8 +39,8 @@ class CreateUsers extends Migration
                 'default'    => 'user',
             ],
             'created_at' => [
-                'type'    => 'TIMESTAMP',
-                'default' => new RawSql('CURRENT_TIMESTAMP'),
+                'type' => 'DATETIME',
+                'null' => false,
             ],
         ]);
 

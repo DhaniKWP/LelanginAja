@@ -22,4 +22,5 @@ class BarangModel extends Model
     ];
 
     protected $useTimestamps = false;
+    protected $createdField = 'tanggal_pengajuan';
 }

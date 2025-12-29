@@ -11,31 +11,39 @@ class CreatePeserta extends Migration
         $this->forge->addField([
             'id_peserta' => [
                 'type'           => 'INT',
+                'constraint'     => 11,
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
+
             'id_user' => [
                 'type'     => 'INT',
                 'unsigned' => true,
             ],
+
             'alamat' => [
                 'type' => 'TEXT',
             ],
+
             'no_hp' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 20,
             ],
+
             'is_active' => [
-                'type'    => 'BOOLEAN',
-                'default' => false,
+                'type'       => 'TINYINT',
+                'constraint' => 1,
+                'default'    => 0, // false
             ],
+
             'tanggal_disetujui' => [
-                'type' => 'TIMESTAMP',
-                'null' => true, // WAJIB nullable
+                'type' => 'DATETIME',
+                'null' => true,
             ],
         ]);
 
         $this->forge->addKey('id_peserta', true);
+
         $this->forge->addForeignKey(
             'id_user',
             'users',

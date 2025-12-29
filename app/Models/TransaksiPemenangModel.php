@@ -8,4 +8,7 @@ class TransaksiPemenangModel extends Model
     protected $table = 'transaksi_pemenang';
     protected $primaryKey = 'id_pemenang';
     protected $allowedFields = ['id_lelang','id_user','harga_menang','tanggal_menang'];
+
+    protected $useTimestamps = true;
+    protected $createdField  = 'tanggal_menang';
 }

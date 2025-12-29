@@ -11,17 +11,21 @@ class CreateTransaksiRegistrasi extends Migration
         $this->forge->addField([
             'id_reg' => [
                 'type'           => 'INT',
+                'constraint'     => 11,
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
+
             'id_user' => [
                 'type'     => 'INT',
                 'unsigned' => true,
             ],
+
             'tanggal_daftar' => [
-                'type' => 'TIMESTAMP',
+                'type' => 'DATETIME',
                 'null' => false,
             ],
+
             'status' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 20,
@@ -30,6 +34,7 @@ class CreateTransaksiRegistrasi extends Migration
         ]);
 
         $this->forge->addKey('id_reg', true);
+
         $this->forge->addForeignKey(
             'id_user',
             'users',

@@ -3,7 +3,6 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
-use CodeIgniter\Database\RawSql;
 
 class CreateTransaksiPembayaran extends Migration
 {
@@ -11,34 +10,65 @@ class CreateTransaksiPembayaran extends Migration
     {
         $this->forge->addField([
             'id_bayar' => [
-                'type' => 'SERIAL',
+                'type'           => 'INT',
+                'constraint'     => 11,
+                'unsigned'       => true,
+                'auto_increment' => true,
             ],
+
             'id_pemenang' => [
-                'type' => 'INT',
-                'null' => false,
+                'type'     => 'INT',
+                'unsigned' => true,
             ],
+
+            'id_lelang' => [
+                'type'     => 'INT',
+                'unsigned' => true,
+            ],
+
             'metode' => [
-                'type' => 'VARCHAR',
+                'type'       => 'VARCHAR',
                 'constraint' => 50,
             ],
+
             'bukti_transfer' => [
-                'type' => 'VARCHAR',
+                'type'       => 'VARCHAR',
                 'constraint' => 255,
-                'null' => true,
+                'null'       => true,
             ],
+
             'status' => [
-                'type' => 'VARCHAR',
+                'type'       => 'VARCHAR',
                 'constraint' => 20,
-                'default' => 'pending',
+                'default'    => 'pending',
             ],
+
             'tanggal_bayar' => [
-                'type' => 'TIMESTAMP',
-                'default' => new RawSql('CURRENT_TIMESTAMP')
+                'type' => 'DATETIME',
+                'null' => false,
             ],
         ]);
 
         $this->forge->addKey('id_bayar', true);
-        $this->forge->addForeignKey('id_pemenang', 'transaksi_pemenang', 'id_pemenang', 'CASCADE', 'CASCADE');
+
+        // UNIQUE (id_pemenang, id_lelang)
+        $this->forge->addKey(['id_pemenang', 'id_lelang'], false, true);
+
+        $this->forge->addForeignKey(
+            'id_pemenang',
+            'transaksi_pemenang',
+            'id_pemenang',
+            'CASCADE',
+            'CASCADE'
+        );
+
+        $this->forge->addForeignKey(
+            'id_lelang',
+            'transaksi_lelang',
+            'id_lelang',
+            'CASCADE',
+            'CASCADE'
+        );
 
         $this->forge->createTable('transaksi_pembayaran');
     }

@@ -10,28 +10,43 @@ class CreateTransaksiLelang extends Migration
     {
         $this->forge->addField([
             'id_lelang' => [
-                'type' => 'SERIAL',
+                'type'           => 'INT',
+                'constraint'     => 11,
+                'unsigned'       => true,
+                'auto_increment' => true,
             ],
+
             'id_barang' => [
-                'type' => 'INT',
+                'type'     => 'INT',
+                'unsigned' => true,
             ],
+
             'tanggal_mulai' => [
-                'type' => 'TIMESTAMP',
+                'type' => 'DATETIME',
                 'null' => true,
             ],
+
             'tanggal_selesai' => [
-                'type' => 'TIMESTAMP',
+                'type' => 'DATETIME',
                 'null' => true,
             ],
+
             'status' => [
-                'type' => 'VARCHAR',
+                'type'       => 'VARCHAR',
                 'constraint' => 20,
-                'default' => 'aktif',
+                'default'    => 'aktif',
             ],
         ]);
 
         $this->forge->addKey('id_lelang', true);
-        $this->forge->addForeignKey('id_barang', 'barang', 'id_barang', 'CASCADE', 'CASCADE');
+
+        $this->forge->addForeignKey(
+            'id_barang',
+            'barang',
+            'id_barang',
+            'CASCADE',
+            'CASCADE'
+        );
 
         $this->forge->createTable('transaksi_lelang');
     }

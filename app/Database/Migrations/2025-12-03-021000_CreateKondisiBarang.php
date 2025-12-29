@@ -10,10 +10,13 @@ class CreateKondisiBarang extends Migration
     {
         $this->forge->addField([
             'id_kondisi' => [
-                'type' => 'SERIAL',
+                'type'           => 'INT',
+                'constraint'     => 11,
+                'unsigned'       => true,
+                'auto_increment' => true,
             ],
             'nama_kondisi' => [
-                'type' => 'VARCHAR',
+                'type'       => 'VARCHAR',
                 'constraint' => 100,
             ],
         ]);

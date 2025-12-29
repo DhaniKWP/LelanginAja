@@ -9,3 +9,4 @@ class TransaksiPenawaranModel extends Model
     protected $primaryKey = 'id_penawaran';
     protected $allowedFields = ['id_lelang','id_user','harga_penawaran','waktu_penawaran'];
 }
+
