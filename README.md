@@ -1,3 +1,8 @@
+# LINK WEBSITE
+https://lelanginaja.infinityfreeapp.com/
+
+---
+
 # 🏷️ LelanginAja
 **Platform Lelang Online berbasis CodeIgniter 4**
 
@@ -41,5 +46,3 @@ LelanginAja/
 ├── .env
 ├── composer.json
 └── README.md
-
-https://lelanginaja.infinityfreeapp.com/
